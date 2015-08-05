@@ -1,6 +1,8 @@
 var React = require('react');
 var CatchsItem = require('./CatchsItem');
 
+var myPositionCache;
+
 module.exports = React.createClass({
 	displayName: 'CatchsList',
 
@@ -10,7 +12,7 @@ module.exports = React.createClass({
 
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition( function(position) {
-				console.log(position);
+				myPositionCache = position;
 				_this.setState({myPosition : position})
 			});
 		}
@@ -19,7 +21,7 @@ module.exports = React.createClass({
 	getInitialState()
 	{
 		return {
-			myPosition : undefined
+			myPosition : myPositionCache
 		}
 	},
 
