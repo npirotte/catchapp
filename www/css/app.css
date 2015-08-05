@@ -8286,6 +8286,12 @@ hr.dotted {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   background-size: cover;
+  text-align: center;
+  line-height: 60px;
+  font-size: 30px;
+}
+.ListItem__avatar--initial {
+  background: gray;
 }
 .ListItem__heading {
   font-weight: 500;
@@ -9069,6 +9075,9 @@ hr.dotted {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   background-size: cover;
+  text-align: center;
+  line-height: 120px;
+  font-size: 60px;
   background-color: rgba(255, 255, 255, 0.5);
   margin-bottom: 1em;
 }
@@ -9327,6 +9336,9 @@ hr.dotted {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   background-size: cover;
+  text-align: center;
+  line-height: 40px;
+  font-size: 20px;
 }
 .TalkDetails__details {
   padding: 1em 1em 2em;

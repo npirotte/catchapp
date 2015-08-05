@@ -13,7 +13,7 @@ module.exports = React.createClass({
 
 	render()
 	{
-		var imageUrl = ImageUrl(this.props.catchItem.sender.asset);
+		var imageUrl = this.props.catchItem.sender.asset ? ImageUrl(this.props.catchItem.sender.asset) : null;
 		var fromNow = moment(this.props.catchItem.createdAt).fromNow();
 		var distance;
 
