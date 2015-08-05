@@ -28,7 +28,7 @@ module.exports = React.createClass({
 		var items = this.props.catchs.map(function(catchItem, i)
 		{
 			return <CatchsItem key={'catch_' + i} catchItem={catchItem} myPosition={this.state.myPosition} />
-		});
+		}.bind(this));
 
 		return (
 			<div>
