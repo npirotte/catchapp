@@ -19,10 +19,12 @@ export default React.createClass({
 	renderImage()
 	{
 		var className = AVATAR_CLASSNAME;
-
 		className += ' ListItem__avatar--image';
+
+		var style = { backgroundImage : 'url(' + this.props.src + ')' }
+
 		return (
-			<img alt={this.props.name} src={this.props.src} className={className} />
+			<span alt={this.props.name} style={style} className={className} />
 			);
 	},
 

@@ -8285,7 +8285,7 @@ hr.dotted {
   height: 60px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  border: 3px solid black;
+  background-size: cover;
 }
 .ListItem__heading {
   font-weight: 500;
@@ -9068,7 +9068,7 @@ hr.dotted {
   height: 120px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  border: 3px solid black;
+  background-size: cover;
   background-color: rgba(255, 255, 255, 0.5);
   margin-bottom: 1em;
 }
@@ -9326,7 +9326,7 @@ hr.dotted {
   height: 40px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-  border: 3px solid black;
+  background-size: cover;
 }
 .TalkDetails__details {
   padding: 1em 1em 2em;
