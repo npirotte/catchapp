@@ -8,9 +8,9 @@ export default function distance(lat1, lon1, lat2, lon2) {
   var distance = R * 2 * Math.asin(Math.sqrt(a)) * 1000;
 
   if (distance >= 1000) {
-	    return (distance/1000).toFixed(2) + 'km';
+	    return (distance/1000).toFixed(2) + ' km';
 	} else if(distance > 0) {
-	    return distance + 'm';
+	    return distance.toFixed() + ' m';
 	}
 	else
 	{

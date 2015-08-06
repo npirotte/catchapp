@@ -8289,6 +8289,8 @@ hr.dotted {
   text-align: center;
   line-height: 60px;
   font-size: 30px;
+  text-transform: uppercase;
+  color: white;
 }
 .ListItem__avatar--initial {
   background: gray;
@@ -9078,6 +9080,8 @@ hr.dotted {
   text-align: center;
   line-height: 120px;
   font-size: 60px;
+  text-transform: uppercase;
+  color: white;
   background-color: rgba(255, 255, 255, 0.5);
   margin-bottom: 1em;
 }
@@ -9339,6 +9343,8 @@ hr.dotted {
   text-align: center;
   line-height: 40px;
   font-size: 20px;
+  text-transform: uppercase;
+  color: white;
 }
 .TalkDetails__details {
   padding: 1em 1em 2em;
