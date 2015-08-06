@@ -17,7 +17,7 @@ module.exports = React.createClass({
 		var fromNow = moment(this.props.catchItem.createdAt).fromNow();
 		var distance;
 
-		if (this.props.myPosition && !this.distance) {
+		if (this.props.myPosition && !this.distance && this.props.catchItem.geo) {
 			this.distance = Distance(this.props.myPosition.coords.latitude, this.props.myPosition.coords.longitude, this.props.catchItem.geo[0], this.props.catchItem.geo[1]);
 		};
 
