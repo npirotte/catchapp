@@ -1,0 +1,33 @@
+.pull-to-refresh
+{
+	overflow: hidden;
+	text-align: center;
+
+	height: 0;
+
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+
+	&__content 
+	{
+		padding: 20px;
+		position: absolute;
+	    bottom: 0;
+	    left: 0;
+	    right: 0;
+	    background: fade(@app-primary-dark, 90%);
+	    z-index: 2;
+
+	    & .loader_type_12 
+	    {
+	    	padding: 0;
+
+	    	circle 
+	    	{
+	    		stroke : white;
+	    	}
+	    }
+	}
+}

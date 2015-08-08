@@ -7,8 +7,6 @@ var {Transitions} = require('../../touchstone');
 
 var CatchsList = require('../../components/CatchsList');
 
-var PullToRefreshContainer = require('../../components/PullToRefreshContainer');
-
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 
@@ -71,10 +69,7 @@ module.exports = React.createClass({
 	getData ()
 	{
 		this.setState({catchs : CatchsStore.getCatchs(), loading : false});
-		if (this.refreshing) {
-			this.refs.pullToRefresh.release();
-			this.refreshing = false;
-		};
+		console.log(this.state)
 	},
 
 	render ()
@@ -82,17 +77,24 @@ module.exports = React.createClass({
 		console.log(this.state.catchs);
 		return (
 			<Container direction="column">
-				<PullToRefreshContainer onRefresh={this.onRefresh}  onInfinite={this.loadMore} loading={this.state.loading} ref="pullToRefresh" >
+				<Container fill scrollable={scrollable} onScroll={this.handleScroll} ref="scrollContainer">
 					<CatchsList catchs={this.state.catchs} />
-				</PullToRefreshContainer>
+					{this.loader()}
+				</Container>
 			</Container>
 			)
 	},
 
-	loadMore (event)
+	handleScroll (event)
 	{
-		this.setState({loading : true});
-		CatchsStore.getMoreCatchs();
+		console.log();
+		var pass = (event.target.scrollHeight - event.target.clientHeight - event.target.scrollTop) === 0;
+
+		if (pass && !this.state.loading) {
+			console.log('bingo');
+			this.setState({loading : true});
+			CatchsStore.getMoreCatchs();
+		};
 	},
 
 	loader ()
@@ -102,12 +104,6 @@ module.exports = React.createClass({
 		return (
 			<div>Loading</div>
 			)
-	},
-
-	onRefresh ()
-	{
-		CatchsStore.refresh();
-		this.refreshing = true;
 	}
 
 })

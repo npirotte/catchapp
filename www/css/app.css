@@ -3116,30 +3116,30 @@ fieldset[disabled] .btn-link {
   background: #37d552;
 }
 .btn-info {
-  background-image: -webkit-linear-gradient(top, #3dbdf7 0%, #15aff5 100%);
-  background-image: -o-linear-gradient(top, #3dbdf7 0%, #15aff5 100%);
-  background-image: linear-gradient(to bottom, #3dbdf7 0%, #15aff5 100%);
+  background-image: -webkit-linear-gradient(top, #3092e7 0%, #197dd6 100%);
+  background-image: -o-linear-gradient(top, #3092e7 0%, #197dd6 100%);
+  background-image: linear-gradient(to bottom, #3092e7 0%, #197dd6 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3dbdf7', endColorstr='#ff15aff5', GradientType=0);
-  background-color: #29b6f6;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3092e7', endColorstr='#ff197dd6', GradientType=0);
+  background-color: #1e88e5;
   color: white;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.18);
 }
 .btn-info:hover,
 .btn-info:focus {
-  background-image: -webkit-linear-gradient(top, #50c3f8 0%, #29b6f6 100%);
-  background-image: -o-linear-gradient(top, #50c3f8 0%, #29b6f6 100%);
-  background-image: linear-gradient(to bottom, #50c3f8 0%, #29b6f6 100%);
+  background-image: -webkit-linear-gradient(top, #439be9 0%, #1e88e5 100%);
+  background-image: -o-linear-gradient(top, #439be9 0%, #1e88e5 100%);
+  background-image: linear-gradient(to bottom, #439be9 0%, #1e88e5 100%);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff50c3f8', endColorstr='#ff29b6f6', GradientType=0);
-  background-color: #41bef7;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff439be9', endColorstr='#ff1e88e5', GradientType=0);
+  background-color: #3594e8;
   color: white;
   outline: none;
   text-decoration: none;
 }
 .btn-info:active {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
-  background: #11aef5;
+  background: #187bd1;
 }
 .btn-warning {
   background-image: -webkit-linear-gradient(top, #ffa014 0%, #eb8c00 100%);
@@ -3271,7 +3271,7 @@ fieldset[disabled] .btn-link {
 .panel-button.info,
 .panel-button.info:hover,
 .panel-button.info:focus {
-  color: #29b6f6;
+  color: #1e88e5;
 }
 .panel-button.success,
 .panel-button.success:hover,
@@ -3461,7 +3461,7 @@ fieldset[disabled] .btn-link {
   height: 24px;
   content: "";
   border-radius: 50%;
-  border: 3px solid #29b6f6;
+  border: 3px solid #1e88e5;
   left: 0;
   opacity: .33;
   position: absolute;
@@ -3472,7 +3472,7 @@ fieldset[disabled] .btn-link {
   -o-animation: spin 500ms linear infinite;
   animation: spin 500ms linear infinite;
   border-color: transparent;
-  border-top-color: #29b6f6;
+  border-top-color: #1e88e5;
   display: inline-block;
   opacity: 1;
 }
@@ -6370,7 +6370,7 @@ hr.dotted {
 }
 .text-info,
 .btn-link.text-info {
-  color: #29b6f6 !important;
+  color: #1e88e5 !important;
 }
 .text-warning,
 .btn-link.text-warning {
@@ -6878,7 +6878,7 @@ hr.dotted {
   color: #e91e63 !important;
 }
 .u-text-info {
-  color: #29b6f6 !important;
+  color: #1e88e5 !important;
 }
 .u-text-warning {
   color: #ff9800 !important;
@@ -7052,6 +7052,10 @@ hr.dotted {
   flex: 1 1 0;
   position: relative;
 }
+/**
+ * google-material-color v1.2.6
+ * https://github.com/danlevan/google-material-color
+ */
 /**
  * Copyright 2015 Google Inc. All Rights Reserved.
  *
@@ -8482,6 +8486,37 @@ hr.dotted {
 }
 .ScheduleItem__avatar-img + .ScheduleItem__avatar-img {
   margin-left: -30px;
+}
+.pull-to-refresh {
+  overflow: hidden;
+  text-align: center;
+  height: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.pull-to-refresh__content {
+  padding: 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(216, 27, 96, 0.9);
+  z-index: 2;
+}
+.pull-to-refresh__content .loader_type_12 {
+  padding: 0;
+}
+.pull-to-refresh__content .loader_type_12 circle {
+  stroke: white;
+}
+.loader {
+  text-align: center;
+  padding: 20px;
+}
+.loader_type_12 circle {
+  stroke: black;
 }
 .button {
   border-radius: 3px;
