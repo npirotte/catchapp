@@ -29,10 +29,17 @@ CatchsStore.prototype.getCatchs = function()
 	return this.storage;
 }
 
+CatchsStore.prototype.refresh = function()
+{
+	this.storage = [];
+	this.getMoreCatchs(0);
+}
+
 CatchsStore.prototype.getMoreCatchs = function(skip)
 {
+	console.log(skip);
 	var url = new URI('catchs');
-	url.setSearch({skip : skip || this.storage.length, limit : this.requestSize, sort : 'createdAt DESC'});
+	url.setSearch({skip : skip, limit : this.requestSize, sort : 'createdAt DESC', r : Math.random()});
 
 	var opt = {
 		endpoint : url
@@ -40,10 +47,11 @@ CatchsStore.prototype.getMoreCatchs = function(skip)
 
 	HttpService(opt, (err, res) =>
 	{
-		console.log(err, res);
 		if (err) return false;
 
 		var data = res;
+
+		console.log(this.storage);
 
 		if (this.storage.length) {
 			this.storage = this.storage.concat(data);
