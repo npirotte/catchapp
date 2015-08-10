@@ -1,0 +1,122 @@
+/*=================================
+=            variables            =
+=================================*/
+
+@field-color:                    @app-color;
+@field-label-color:              @app-gray;
+@field-placeholder-color :       @app-gray;
+
+/*-----  End of variables  ------*/
+
+
+
+form .list-item{
+    padding-left: 0;
+}
+
+input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid @app-gray;
+    color: @field-color;
+    border-radius: 0;
+    outline: none;
+    height: 3rem;
+    width: 100%;
+    font-size: 1rem;
+    margin: 0 0 15px 0;
+    padding: 0;
+    box-shadow: none;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    transition: all .3s;
+
+    &::-webkit-input-placeholder {
+       color:  transparent;
+    }
+
+    &:focus, &:valid{
+        border-bottom-color: @app-primary;
+
+        &::-webkit-input-placeholder {
+           color:  @field-placeholder-color;
+        }
+
+        + .field-label{
+            font-size: 0.8rem;
+            -webkit-transform: translateY(-200%);
+            -moz-transform: translateY(-200%);
+            -ms-transform: translateY(-200%);
+            -o-transform: translateY(-200%);
+            transform: translateY(-200%);
+        }
+    }
+
+    &:invalid{
+        color:transparent;
+    }
+
+    &:focus{
+        color: @field-color;
+        + .field-label{
+            color: @app-primary;
+        }  
+    }
+
+
+
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        transition: background-color 5000s ease-in-out 0s;
+    }
+}
+
+.field-item{
+    &:focus{
+        background: red;
+    }
+}
+
+.field-control{
+    width: 100%;
+}
+
+.field-label{
+    color: @app-gray;
+    position: absolute;
+    top: 1.1em;
+    left: 0;
+    z-index: 3;
+    font-size: 1rem;
+    cursor: text;
+    -webkit-transition: .2s ease-out;
+    -moz-transition: .2s ease-out;
+    -o-transition: .2s ease-out;
+    -ms-transition: .2s ease-out;
+    transition: .2s ease-out;
+    width: 100%;
+    text-align: left;
+}
+
+/*==============================
+=            errors            =
+==============================*/
+.errors-message{
+    
+    background: @app-danger;
+    color: white;
+
+    padding: @view-padding;
+    margin-bottom: @app-margin-vertical;
+
+    li{
+        list-style: none;
+    }
+}
+
+
+/*-----  End of errors  ------*/
+
