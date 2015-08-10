@@ -56,7 +56,7 @@ module.exports = React.createClass({
 		});
 
 		// android backbutton handler
-		this.watch(document, 'backbutton', function () {
+		this.watch(document, 'backbutton', event => {
 			self.transitionTo('main:catchs-list', {
 				transition: 'reveal-from-right',
 				viewProps: {}

@@ -4,7 +4,7 @@ var Sentry = require('react-sentry');
 var React = require('react');
 var Tappable = require('react-tappable');
 var async = require('async');
-var {LabelTextarea, Transitions} = require('../../touchstone');
+var {LabelTextarea, Transitions, Link} = require('../../touchstone');
 
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
@@ -112,7 +112,13 @@ module.exports = React.createClass({
 								})}
 						</div>
 						<div>
-							<Tappable onTap={this.handleFormSubmit}>
+							<Link to="main:users-browser" className="button">
+								Ajouter des amis
+							</Link>
+						</div>
+						<br />
+						<div>
+							<Tappable onTap={this.handleFormSubmit} className="button button--raised">
 								Envoyer
 							</Tappable>
 						</div>

@@ -8285,6 +8285,7 @@ hr.dotted {
   background-color: rgba(255, 255, 255, 0.1);
   margin-bottom: 2px;
   padding: 1em;
+  position: relative;
 }
 .ListItem.Tappable-active {
   -webkit-transition: background-color 10ms linear 40ms;

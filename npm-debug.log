@@ -1,165 +1,38 @@
 0 info it worked if it ends with ok
 1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
 1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
-1 verbose cli   'install',
-1 verbose cli   'react-svg-loaders',
-1 verbose cli   '--save' ]
+1 verbose cli   'start' ]
 2 info using npm@2.7.4
 3 info using node@v0.12.2
 4 verbose node symlink C:\Program Files\nodejs\\node.exe
-5 silly cache add args [ 'react-svg-loaders', null ]
-6 verbose cache add spec react-svg-loaders
-7 silly cache add parsed spec { raw: 'react-svg-loaders',
-7 silly cache add   scope: null,
-7 silly cache add   name: 'react-svg-loaders',
-7 silly cache add   rawSpec: '',
-7 silly cache add   spec: '*',
-7 silly cache add   type: 'range' }
-8 verbose addNamed react-svg-loaders@*
-9 silly addNamed semver.valid null
-10 silly addNamed semver.validRange *
-11 silly addNameRange { name: 'react-svg-loaders', range: '*', hasData: false }
-12 silly mapToRegistry name react-svg-loaders
-13 silly mapToRegistry using default registry
-14 silly mapToRegistry registry https://registry.npmjs.org/
-15 silly mapToRegistry uri https://registry.npmjs.org/react-svg-loaders
-16 verbose addNameRange registry:https://registry.npmjs.org/react-svg-loaders not in flight; fetching
-17 verbose request uri https://registry.npmjs.org/react-svg-loaders
-18 verbose request no auth needed
-19 info attempt registry request try #1 at 16:28:22
-20 verbose request id 0f46c23416fff969
-21 http request GET https://registry.npmjs.org/react-svg-loaders
-22 http 200 https://registry.npmjs.org/react-svg-loaders
-23 silly get cb [ 200,
-23 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
-23 silly get     etag: '"7ZCG681LCN52QNU6WJSEMK5Y6"',
-23 silly get     'content-type': 'application/json',
-23 silly get     'cache-control': 'max-age=60',
-23 silly get     'content-length': '4970',
-23 silly get     'accept-ranges': 'bytes',
-23 silly get     date: 'Sat, 08 Aug 2015 14:28:09 GMT',
-23 silly get     via: '1.1 varnish',
-23 silly get     age: '0',
-23 silly get     connection: 'keep-alive',
-23 silly get     'x-served-by': 'cache-lcy1130-LCY',
-23 silly get     'x-cache': 'MISS',
-23 silly get     'x-cache-hits': '0',
-23 silly get     'x-timer': 'S1439044089.375039,VS0,VE174',
-23 silly get     vary: 'Accept' } ]
-24 verbose get saving react-svg-loaders to C:\Users\npirotte\AppData\Roaming\npm-cache\registry.npmjs.org\react-svg-loaders\.cache.json
-25 silly addNameRange number 2 { name: 'react-svg-loaders', range: '*', hasData: true }
-26 silly addNameRange versions [ 'react-svg-loaders', [ '0.0.1', '0.1.0', '0.1.1', '0.1.2' ] ]
-27 verbose addNamed react-svg-loaders@0.1.2
-28 silly addNamed semver.valid 0.1.2
-29 silly addNamed semver.validRange 0.1.2
-30 silly mapToRegistry name react-svg-loaders
-31 silly mapToRegistry using default registry
-32 silly mapToRegistry registry https://registry.npmjs.org/
-33 silly mapToRegistry uri https://registry.npmjs.org/react-svg-loaders
-34 verbose addRemoteTarball https://registry.npmjs.org/react-svg-loaders/-/react-svg-loaders-0.1.2.tgz not in flight; adding
-35 verbose addRemoteTarball [ 'https://registry.npmjs.org/react-svg-loaders/-/react-svg-loaders-0.1.2.tgz',
-35 verbose addRemoteTarball   '584c7b2f9c81f46a43227afd3fe4ac12e22f74cf' ]
-36 info retry fetch attempt 1 at 16:28:22
-37 info attempt registry request try #1 at 16:28:22
-38 http fetch GET https://registry.npmjs.org/react-svg-loaders/-/react-svg-loaders-0.1.2.tgz
-39 http fetch 200 https://registry.npmjs.org/react-svg-loaders/-/react-svg-loaders-0.1.2.tgz
-40 silly fetchAndShaCheck shasum 584c7b2f9c81f46a43227afd3fe4ac12e22f74cf
-41 verbose addTmpTarball C:\Users\npirotte\AppData\Local\Temp\npm-3900-91b879ec\registry.npmjs.org\react-svg-loaders\-\react-svg-loaders-0.1.2.tgz not in flight; adding
-42 verbose addTmpTarball already have metadata; skipping unpack for react-svg-loaders@0.1.2
-43 silly cache afterAdd react-svg-loaders@0.1.2
-44 verbose afterAdd C:\Users\npirotte\AppData\Roaming\npm-cache\react-svg-loaders\0.1.2\package\package.json not in flight; writing
-45 verbose afterAdd C:\Users\npirotte\AppData\Roaming\npm-cache\react-svg-loaders\0.1.2\package\package.json written
-46 silly install resolved [ { name: 'react-svg-loaders',
-46 silly install resolved     version: '0.1.2',
-46 silly install resolved     description: 'react component - gallery of SVG spinners and loaders',
-46 silly install resolved     repository:
-46 silly install resolved      { type: 'git',
-46 silly install resolved        url: 'https://github.com/yonatanmn/react-svg-loaders' },
-46 silly install resolved     keywords:
-46 silly install resolved      [ 'react',
-46 silly install resolved        'widget',
-46 silly install resolved        'spinner',
-46 silly install resolved        'loader',
-46 silly install resolved        'svg',
-46 silly install resolved        'easy to use',
-46 silly install resolved        'javascript',
-46 silly install resolved        'browser',
-46 silly install resolved        'react-component' ],
-46 silly install resolved     peerDependencies: { react: '^0.12.2' },
-46 silly install resolved     devDependencies: {},
-46 silly install resolved     gitHead: '6cf0192f5474962ad76e5be7e2bfea08e97c7f3a',
-46 silly install resolved     bugs: { url: 'https://github.com/yonatanmn/react-svg-loaders/issues' },
-46 silly install resolved     homepage: 'https://github.com/yonatanmn/react-svg-loaders',
-46 silly install resolved     _id: 'react-svg-loaders@0.1.2',
-46 silly install resolved     scripts: {},
-46 silly install resolved     _shasum: '584c7b2f9c81f46a43227afd3fe4ac12e22f74cf',
-46 silly install resolved     _from: 'react-svg-loaders@*',
-46 silly install resolved     _npmVersion: '2.7.0',
-46 silly install resolved     _nodeVersion: '0.10.33',
-46 silly install resolved     _npmUser: { name: 'charm', email: 'yonatanmn@gmail.com' },
-46 silly install resolved     dist:
-46 silly install resolved      { shasum: '584c7b2f9c81f46a43227afd3fe4ac12e22f74cf',
-46 silly install resolved        tarball: 'http://registry.npmjs.org/react-svg-loaders/-/react-svg-loaders-0.1.2.tgz' },
-46 silly install resolved     maintainers: [ [Object] ],
-46 silly install resolved     directories: {},
-46 silly install resolved     _resolved: 'https://registry.npmjs.org/react-svg-loaders/-/react-svg-loaders-0.1.2.tgz' } ]
-47 info install react-svg-loaders@0.1.2 into D:\webapps\new-app2
-48 info installOne react-svg-loaders@0.1.2
-49 verbose installOne of react-svg-loaders to D:\webapps\new-app2 not in flight; installing
-50 verbose lock using C:\Users\npirotte\AppData\Roaming\npm-cache\_locks\react-svg-loaders-2e4bfcf807f27be9.lock for D:\webapps\new-app2\node_modules\react-svg-loaders
-51 silly install write writing react-svg-loaders 0.1.2 to D:\webapps\new-app2\node_modules\react-svg-loaders
-52 silly cache addNamed cb react-svg-loaders@0.1.2
-53 verbose unbuild node_modules\react-svg-loaders
-54 silly gentlyRm D:\webapps\new-app2\node_modules\react-svg-loaders is being purged from base D:\webapps\new-app2
-55 verbose gentlyRm don't care about contents; nuking D:\webapps\new-app2\node_modules\react-svg-loaders
-56 verbose tar unpack C:\Users\npirotte\AppData\Roaming\npm-cache\react-svg-loaders\0.1.2\package.tgz
-57 verbose tar unpacking to D:\webapps\new-app2\node_modules\react-svg-loaders
-58 silly gentlyRm D:\webapps\new-app2\node_modules\react-svg-loaders is being purged
-59 verbose gentlyRm don't care about contents; nuking D:\webapps\new-app2\node_modules\react-svg-loaders
-60 silly gunzTarPerm modes [ '777', '666' ]
-61 silly gunzTarPerm extractEntry package.json
-62 silly gunzTarPerm extractEntry .npmignore
-63 silly gunzTarPerm extractEntry README.md
-64 silly gunzTarPerm extractEntry index.js
-65 silly gunzTarPerm extractEntry bower.json
-66 silly gunzTarPerm extractEntry example/index.html
-67 info preinstall react-svg-loaders@0.1.2
-68 silly prepareForInstallMany adding react@^0.12.2 from react-svg-loaders peerDependencies
-69 warn peerDependencies The peer dependency react@^0.12.2 included from react-svg-loaders will no
-70 warn peerDependencies longer be automatically installed to fulfill the peerDependency
-71 warn peerDependencies in npm 3+. Your application will need to depend on it explicitly.
-72 silly install resolved []
-73 verbose about to build D:\webapps\new-app2\node_modules\react-svg-loaders
-74 info build D:\webapps\new-app2\node_modules\react-svg-loaders
-75 verbose linkStuff [ false, false, false, 'D:\\webapps\\new-app2\\node_modules' ]
-76 info linkStuff react-svg-loaders@0.1.2
-77 verbose linkBins react-svg-loaders@0.1.2
-78 verbose linkMans react-svg-loaders@0.1.2
-79 verbose rebuildBundles react-svg-loaders@0.1.2
-80 info install react-svg-loaders@0.1.2
-81 info postinstall react-svg-loaders@0.1.2
-82 verbose already installed skipping react@^0.12.2 D:\webapps\new-app2
-83 silly install resolved []
-84 verbose unlock done using C:\Users\npirotte\AppData\Roaming\npm-cache\_locks\react-svg-loaders-2e4bfcf807f27be9.lock for D:\webapps\new-app2\node_modules\react-svg-loaders
-85 verbose stack Error: The package react does not satisfy its siblings' peerDependencies requirements!
-85 verbose stack     at C:\Program Files\nodejs\node_modules\npm\lib\install.js:125:32
-85 verbose stack     at C:\Program Files\nodejs\node_modules\npm\lib\install.js:264:7
-85 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:138:5
-85 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:251:14
-85 verbose stack     at cb (C:\Program Files\nodejs\node_modules\npm\node_modules\slide\lib\async-map.js:47:24)
-85 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:251:14
-85 verbose stack     at cb (C:\Program Files\nodejs\node_modules\npm\node_modules\slide\lib\async-map.js:47:24)
-85 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:251:14
-85 verbose stack     at cb (C:\Program Files\nodejs\node_modules\npm\node_modules\slide\lib\async-map.js:47:24)
-85 verbose stack     at C:\Program Files\nodejs\node_modules\npm\node_modules\read-installed\read-installed.js:251:14
-86 verbose cwd D:\webapps\new-app2
-87 error Windows_NT 6.3.9600
-88 error argv "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "react-svg-loaders" "--save"
-89 error node v0.12.2
-90 error npm  v2.7.4
-91 error code EPEERINVALID
-92 error peerinvalid The package react does not satisfy its siblings' peerDependencies requirements!
-92 error peerinvalid Peer react-container@0.2.4 wants react@>=0.13.3
-92 error peerinvalid Peer react-tappable@0.5.7 wants react@>=0.12.0 || 0.14.0-beta1
-92 error peerinvalid Peer react-svg-loaders@0.1.2 wants react@^0.12.2
-93 verbose exit [ 1, true ]
+5 verbose run-script [ 'prestart', 'start', 'poststart' ]
+6 info prestart react-europe@1.0.2
+7 info start react-europe@1.0.2
+8 verbose unsafe-perm in lifecycle true
+9 info react-europe@1.0.2 Failed to exec start script
+10 verbose stack Error: react-europe@1.0.2 start: `gulp clean && gulp dev`
+10 verbose stack Exit status 1
+10 verbose stack     at EventEmitter.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\lifecycle.js:213:16)
+10 verbose stack     at EventEmitter.emit (events.js:110:17)
+10 verbose stack     at ChildProcess.<anonymous> (C:\Program Files\nodejs\node_modules\npm\lib\utils\spawn.js:14:12)
+10 verbose stack     at ChildProcess.emit (events.js:110:17)
+10 verbose stack     at maybeClose (child_process.js:1015:16)
+10 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1087:5)
+11 verbose pkgid react-europe@1.0.2
+12 verbose cwd D:\webapps\new-app2
+13 error Windows_NT 6.3.9600
+14 error argv "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
+15 error node v0.12.2
+16 error npm  v2.7.4
+17 error code ELIFECYCLE
+18 error react-europe@1.0.2 start: `gulp clean && gulp dev`
+18 error Exit status 1
+19 error Failed at the react-europe@1.0.2 start script 'gulp clean && gulp dev'.
+19 error This is most likely a problem with the react-europe package,
+19 error not with npm itself.
+19 error Tell the author that this fails on your system:
+19 error     gulp clean && gulp dev
+19 error You can get their info via:
+19 error     npm owner ls react-europe
+19 error There is likely additional logging output above.
+20 verbose exit [ 1, true ]

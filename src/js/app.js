@@ -118,6 +118,7 @@ var MainViewController = React.createClass({
 
 					<View name="users-list" component={require('./views/users/List')} />
 					<View name="users-details" component={require('./views/users/Details')} />
+					<View name="users-browser" component={require('./views/users/Browser')} />
 				</ViewManager>
 			</Container>
 		);
