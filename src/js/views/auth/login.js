@@ -1,4 +1,5 @@
 var animation = require('../../touchstone/animation');
+var {LabelInput, Link, Transitions} = require('../../touchstone');
 var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
@@ -28,8 +29,8 @@ module.exports = React.createClass({
 						<form onSubmit={this.handleFormSubmission}>
 							{this.renderError()}
 							<div>
-								<input ref="username" name="email" type="email" placeholder="Email" />
-								<input ref="password" name="password" type="password" placeholder="Mot de passe" />
+								<LabelInput ref="username" name="username" type="text" placeholder="Email" label="Email"  required={true} />
+								<LabelInput ref="password" name="password" type="password" placeholder="Mot de passe" label="Mot de passe" required={true} />
 							</div>
 							<br />
 							<Tappable onTap={this.handleFormSubmission} type="submit" className="button button--raised">Connexion</Tappable>
@@ -62,13 +63,13 @@ module.exports = React.createClass({
 		event.preventDefault();
 
 		var data = {
-			username : this.refs['username'].getDOMNode().value,
-			password : this.refs['password'].getDOMNode().value
+			username : this.refs['username'].getDOMNode().querySelector('input').value,
+			password : this.refs['password'].getDOMNode().querySelector('input').value
 		}
 
 		// validation
 		if (!data.username || !data.password) {
-			this.setState({error : "Vous devez remplir tous les champs"});
+			this.setState({error : 'Vous devez remplir tous les champs'});
 			return false;
 		};
 

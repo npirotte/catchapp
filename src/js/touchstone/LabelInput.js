@@ -12,7 +12,9 @@ module.exports = React.createClass({
 		first: React.PropTypes.bool,
 		label: React.PropTypes.string,
 		readOnly: React.PropTypes.bool,
-		value: React.PropTypes.string
+		required: React.PropTypes.bool,
+		value: React.PropTypes.string,
+		type: React.PropTypes.string
 	},
 
 	getDefaultProps () {
@@ -39,10 +41,10 @@ module.exports = React.createClass({
 		return (
 			<label className={className}>
 				<div className="item-inner">
-					<div className="field-label">{this.props.label}</div>
 					<div className="field-control">
 						{renderInput}
 						{this.props.children}
+						<div className="field-label">{this.props.label}</div>
 					</div>
 				</div>
 			</label>

@@ -47,10 +47,11 @@ export default React.createClass({
 						{this.renderErrors()}
 						{this.renderForm()}
 						{this.renderImagePicker()}
-						<br />
-						<Link to="app:login"  viewProps={{}}  transition="reveal-from-right" component="a">
-							Retour
-						</Link>
+						<div className="text-center">
+							<Link to="app:login"  className="button button-return" viewProps={{}}  transition="reveal-from-right" component="a">
+								Retour
+							</Link>
+						</div>
 					</div>
 				</Container>
 			</Container>
@@ -63,14 +64,16 @@ export default React.createClass({
 
 		return (
 			<form onSubmit={this.handleFormSubmission}>
-				<LabelInput ref="lastName" name="lastName" label="Nom" first={true} />
-				<LabelInput ref="firstName" name="firstName" label="Prénom" />
-				<LabelInput ref="username" name="username" label="Email" type="email" />
-				<LabelInput ref="password" name="password" label="Mot de passe" type="password" />
-				<LabelInput ref="passwordConfirm" name="password-confirm" label="Confirmer" type="password" />
-				<button>
-					Suite
-				</button>
+				<LabelInput ref="lastName" name="lastName" placeholder="Nom" label="Nom" required={true} first={true} />
+				<LabelInput ref="firstName" name="firstName" placeholder="Prénom"  label="Prénom"  required={true}/>
+				<LabelInput ref="username" name="username" placeholder="Email" label="Email" type="email"  required={true}/>
+				<LabelInput ref="password" name="password" placeholder="Mot de passe" label="Mot de passe" type="password" required={true}/>
+				<LabelInput ref="passwordConfirm" name="password-confirm" placeholder="Confirmer" label="Confirmer" type="password" required={true}/>
+				<div className="text-center">
+					<button className="button button-primary">
+						Suite
+					</button>
+				</div>
 			</form>
 			)
 	},
@@ -83,13 +86,14 @@ export default React.createClass({
 			style = { width : '100%' };
 
 		return (
-			<div>
+			<div className="text-center">
 				<img src={src} style={style} />
-				<br />
-				<button onClick={this.pickPhoto}>
+				
+				<button className="button button-primary-light" onClick={this.pickPhoto}>
 					Prendre une photo de profil
 				</button>
-				<button onClick={this.register}>
+				
+				<button className="button button-primary" onClick={this.register}>
 					Créer un compte
 				</button>
 			</div>
@@ -102,7 +106,7 @@ export default React.createClass({
 		if (!this.state.errors.length) return false;
 
 		return (
-			<ul className="errors">
+			<ul className="errors-message">
 				{this.state.errors.map(function(error){
 					return (
 						<li key={error.key}>

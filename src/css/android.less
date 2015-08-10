@@ -5,12 +5,6 @@
 
 
 
-// Variables
-// ------------------------------
-
-@android-gutter:                 17px;
-
-
 
 
 // Base
@@ -19,10 +13,18 @@
 .device--Android {
 	font-family: Roboto, Arial, "sans-serif";
 
+	*{
+		box-sizing: border-box;
+	}
+
 	// attempt material design styles
 	.View {
 		background-color: white;
-		color: @gray-darker;
+		color: @app-color;
+	}
+
+	.Container--fill.Container--scrollable{
+		padding: 0 @view-padding;
 	}
 
 
@@ -192,7 +194,7 @@
 		display: none;
 	}
 	.NavigationBarTitle {
-		padding-left: @android-gutter;
+		padding-left: @app-gutter;
 		text-align: left;
 	}
 	.NavigationBar.has-left-arrow .NavigationBarTitle,
@@ -351,7 +353,7 @@
 		color: inherit;
 		display: block;
 		overflow: hidden;
-		padding: @android-gutter 0;
+		padding: @app-gutter 0;
 		text-align: left;
 	}
 

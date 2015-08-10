@@ -5,15 +5,15 @@
 // Colours
 // ------------------------------
 
-@charcoal:                     #1B1D24;
-
 @app-primary:                  @palette-Pink-500 ; // pink
 @app-primary-light:            @palette-Pink-400 ; 
 @app-primary-dark:             @palette-Pink-600 ; 
 
 @app-secondary:                @palette-Green-500 ; // green
-@app-secondary:                @palette-Green-400 ; // green
-@app-secondary:                @palette-Green-600 ; // green
+@app-secondary-ligth:          @palette-Green-400 ; // green
+@app-secondary-dark:           @palette-Green-600 ; // green
+
+@app-gray: 					   #9e9e9e;
 
 @app-info :					   @palette-Blue-600 ;
 @app-warning : 				   @palette-Orange-500 ;
@@ -23,15 +23,15 @@
 @facebook-brand:               #3b5998;
 
 
-// Scaffolding
+
+// General
 // ------------------------------
 
-@body-bg:                      @app-primary;
-@text-color:                   white;
+@app-gutter:                   15px;
+@app-background:			   white;
+@app-font-family: 			   Roboto, Arial, "sans-serif";
 
-@link-color:                   @app-primary;
-@link-hover-color:             lighten(@link-color, 10%);
-
+@app-margin-vertical: 			8px;
 
 
 // Typography
@@ -51,7 +51,13 @@
 @font-size-xl:                24px;
 @font-size-xxl:               32px;
 
+@line-height-base:            1.428571429; // 20/14
+@line-height-computed:        floor((@font-size-base * @line-height-base)); // ~20px
 
+@app-color: 				  @palette-Grey-900;
+
+@link-color:                  @app-primary;
+@link-hover-color:            lighten(@link-color, 10%);
 
 
 // Components
@@ -65,26 +71,13 @@
 
 
 
-
-// Forms
-// ------------------------------
-
-// @field-color:                 black;
-// @field-border:                #ddd;
-// @field-border-focus:          darken(@field-border, 10%);
-// @field-placeholder:           #c7c7cd;
-@field-label-color:           rgba(255, 255, 255, 0.33);
-
-
-
-
 // Bars
 // ------------------------------
 
 
 // header bar
 
-@headerbar-bg:               @charcoal;
+@headerbar-bg:               @app-primary;
 @headerbar-color:            white;
 @headerbar-height:           54px;
 @headerbar-button-color:     lighten(@app-primary, 40%);
@@ -92,7 +85,7 @@
 
 // footer bar
 
-@footerbar-bg:               @charcoal;
+@footerbar-bg:               @app-primary;
 
 
 /*==========  buttons  ==========*/
@@ -102,5 +95,6 @@
 // Views
 // ------------------------------
 
-@details-bg:                 darken(@charcoal, 3%);
+@details-bg:                 darken(@app-primary, 3%);
+@view-padding: 		     	 20px;
 // @details-bg:                 mix(@app-primary, black, 30%);
