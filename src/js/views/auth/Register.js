@@ -42,7 +42,7 @@ export default React.createClass({
 		return (
 			<Container direction="column">
 				<Container fill scrollable={scrollable} ref="scrollContainer">
-					<div>
+					<div className="padding">
 						<h1>Création d un compte</h1>
 						{this.renderErrors()}
 						{this.renderForm()}

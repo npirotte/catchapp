@@ -23,7 +23,7 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
     outline: none;
     height: 3rem;
     width: 100%;
-    font-size: 1rem;
+    font-size: @font-size-base;
     margin: 0 0 15px 0;
     padding: 0;
     box-shadow: none;
@@ -36,7 +36,7 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
        color:  transparent;
     }
 
-    &:focus, &:valid{
+    &:focus{
         border-bottom-color: @app-primary;
 
         &::-webkit-input-placeholder {
@@ -51,10 +51,6 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
             -o-transform: translateY(-200%);
             transform: translateY(-200%);
         }
-    }
-
-    &:invalid{
-        color:transparent;
     }
 
     &:focus{
@@ -74,6 +70,25 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
     }
 }
 
+.active{
+    input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
+        border-bottom-color: @app-gray;
+
+        + .field-label{
+            font-size: 0.8rem;
+            -webkit-transform: translateY(-200%);
+            -moz-transform: translateY(-200%);
+            -ms-transform: translateY(-200%);
+            -o-transform: translateY(-200%);
+            transform: translateY(-200%);
+        }
+
+        &:valid, &:focus{
+            border-bottom-color: @app-primary;
+        }
+    }
+}
+
 .field-item{
     &:focus{
         background: red;
@@ -90,7 +105,7 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
     top: 1.1em;
     left: 0;
     z-index: 3;
-    font-size: 1rem;
+    font-size: @font-size-base;
     cursor: text;
     -webkit-transition: .2s ease-out;
     -moz-transition: .2s ease-out;
