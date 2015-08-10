@@ -62,7 +62,7 @@ export default React.createClass({
 				<form onSubmit={this.handleFormSubmission}>
 					<LabelInput ref="lastName" label="Nom" defaultValue={this.state.user.lastName} />
 					<LabelInput ref="firstName" label="Prénom" defaultValue={this.state.user.firstName} />
-					<LabelInput ref="username" label="Email" defaultValue={this.state.user.username} readOnly={true} />
+					<LabelInput ref="username" label="Email" value={this.state.user.username} readOnly={true} />
 					<br />
 					<button>
 						Enregister

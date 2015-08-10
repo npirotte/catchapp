@@ -24,18 +24,36 @@ module.exports = React.createClass({
 		};
 	},
 
+	getInitialState () {
+		return {
+			value : this.props.value || this.props.defaultValue
+			}
+	},
+
+	onChange (event)
+	{
+		this.setState({ value : event.target.value });
+
+		if (this.props.onChange) {
+			this.props.onChange(event);
+		};
+	},
+
 	render () {
 		var className = classnames(this.props.className, 'list-item', 'field-item', {
 			'align-top': this.props.alignTop,
 			'is-first': this.props.first,
-			'u-selectable': this.props.disabled
+			'u-selectable': this.props.disabled,
+			'active': this.state.value
 		});
 
-		var props = blacklist(this.props, 'alignTop', 'children', 'first', 'readOnly');
+		console.log(className);
+
+		var props = blacklist(this.props, 'alignTop', 'children', 'first', 'readOnly', 'onChange');
 		var renderInput = this.props.readOnly ? (
 			<div className="field u-selectable">{this.props.value}</div>
 		) : (
-			<input className="field" {...props}/>
+			<input className="field" {...props} onChange={this.onChange}/>
 		);
 
 		return (
