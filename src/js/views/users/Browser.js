@@ -43,7 +43,8 @@ module.exports = React.createClass({
 
 		return {
 			friends : friends,
-			selectedFriends : this.props.selectedFriends || []
+			selectedFriends : this.props.selectedFriends || [],
+			query : ''
 		}
 	},
 
@@ -91,15 +92,26 @@ module.exports = React.createClass({
 		console.log(this.state.selectedFriends);
 	},
 
+	filter (event)
+	{
+		var query = event.target.value;
+		this.setState({query : query});
+	},
+
 	render () {
 		return (
 			<Container direction="column">
+				<div className="search-header">
+					<input onChange={this.filter} type="text" placeholder="Rechercher" />
+				</div>
 				<Container fill scrollable={scrollable} onScroll={this.handleScroll} ref="scrollContainer">
 					{this.state.friends.map(function(friend, index) {
+
+						var isFiltred = friend.fullName.search(this.state.query) >= 0;
 						
 						var checked = this.state.selectedFriends.indexOf(friend.id) >= 0;
 						
-						if(checked) return;
+						if(checked || (this.state.query && !isFiltred)) return;
 
 						return <CheckBox key={friend.id} className="ListItem" onChange={this.onChange} value={friend.id} defaultChecked={checked} >{friend.fullName}</CheckBox>
 
