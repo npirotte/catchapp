@@ -35,7 +35,7 @@ module.exports = React.createClass({
 
 	render () {
 
-		var catchImageUrl = ImageUrl(this.props.catchItem.asset),
+		var catchImageUrl = ImageUrl(this.props.catchItem.asset, 960),
 			imageStyle = { width : '100%' };
 		
 		return (

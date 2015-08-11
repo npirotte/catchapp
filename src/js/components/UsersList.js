@@ -7,7 +7,7 @@ module.exports = React.createClass({
 	{
 		var items = this.props.users.map(function(userItem, i)
 		{
-			return <UserItem key={'catch_' + i} userItem={userItem} onSelect={this.props.onSelect} />
+			return <UserItem key={'catch_' + i} userItem={userItem} />
 		});
 
 		return (
