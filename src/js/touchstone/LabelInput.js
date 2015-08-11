@@ -39,6 +39,11 @@ module.exports = React.createClass({
 		};
 	},
 
+	getValue ()
+	{
+		return this.refs.input.getDOMNode().value
+	},
+
 	render () {
 		var className = classnames(this.props.className, 'list-item', 'field-item', {
 			'align-top': this.props.alignTop,
@@ -53,7 +58,7 @@ module.exports = React.createClass({
 		var renderInput = this.props.readOnly ? (
 			<div className="field u-selectable">{this.props.value}</div>
 		) : (
-			<input className="field" {...props} onChange={this.onChange}/>
+			<input ref="input" className="field" {...props} onChange={this.onChange}/>
 		);
 
 		return (
