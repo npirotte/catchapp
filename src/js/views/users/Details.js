@@ -63,7 +63,7 @@ module.exports = React.createClass({
 
 		emitter.once('createNewCatch', event => {
 			var props = {
-				recipents : [this.props.userItem],
+				recipents : [this.props.userItem.id],
 				previousViewProps : this.props,
 				previousView : 'main:users-details'
 			}

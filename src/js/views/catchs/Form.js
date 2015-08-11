@@ -9,6 +9,10 @@ var {LabelTextarea, Transitions, Link} = require('../../touchstone');
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 
+var AuthStore = require('../../stores/AuthStore');
+var FriendsStore = require('../../stores/FriendsStore'),
+	_friendStore = new FriendsStore();
+
 var Toaster = require('../../lib/Toaster');
 var AssetService = require('../../lib/AssetService');
 
@@ -54,10 +58,12 @@ module.exports = React.createClass({
 
 	getInitialState() {
 
-		console.log(dataStore, defaultData);
 		if (this.props.recipents) {
-			dataStore.formData.recipents = dataStore.formData.recipents.concat(this.props.recipents);
+			dataStore.formData.recipents = this.props.recipents;
 		}
+
+		this.userId = AuthStore.user().id;
+		this.friendsData = _friendStore.getManyByIds(this.userId, dataStore.formData.recipents);
 
 		return dataStore;
 	},
@@ -91,7 +97,9 @@ module.exports = React.createClass({
 	},
 
 	render() {
-		console.log(this.state.formData.recipents);
+		//console.log(this.state.formData.recipents);
+		// get recipents model
+
 		return (
 			<Container direction="column">
 				<Container fill scrollable={scrollable} onScroll={this.handleScroll} ref="scrollContainer">
@@ -107,12 +115,15 @@ module.exports = React.createClass({
 
 						<div>
 							{this.state.formData.recipents.map(function(userItem, index)
-								{
-									return userItem.fullName;
-								})}
+							{
+								var friend = this.friendsData[userItem]
+								return (
+									<div className="ListItem">{friend.fullName}</div>
+									);
+							}.bind(this))}
 						</div>
 						<div>
-							<Link to="main:users-browser" className="button">
+							<Link to="main:users-browser" viewProps={{selectedFriends : this.state.formData.recipents}} className="button">
 								Ajouter des amis
 							</Link>
 						</div>
@@ -141,15 +152,35 @@ module.exports = React.createClass({
 
 	handleFormSubmit(event) {
 		var data = this.state.formData;
-		var _this = this
+		var _this = this;
 
-		AssetService(this.state.picture, function(err, res)
-		{
-			if(err) return false;
+		if (this.state.picture) {
 
-			console.log(res);
-			data.asset = res.asset.id;
+			AssetService(this.state.picture, function(err, res)
+			{
+				if(err) return false;
 
+				console.log(res);
+				data.asset = res.asset.id;
+
+				CatchsStore.sendCatch(data, function(err, res) {
+					console.log(err, res);
+					if (err) return false;
+
+					cleanDataStore();
+
+					async.nextTick(() => {
+						Toaster({
+							message : 'Catch envoyé !'
+						});
+					})
+
+					_this.transitionTo('main:catchs-list');
+				});
+
+			});
+
+		} else {
 			CatchsStore.sendCatch(data, function(err, res) {
 				console.log(err, res);
 				if (err) return false;
@@ -164,7 +195,6 @@ module.exports = React.createClass({
 
 				_this.transitionTo('main:catchs-list');
 			});
-
-		});
+		}
 	}
 })

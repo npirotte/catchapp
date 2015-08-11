@@ -8,7 +8,7 @@ var AuthStore = require('../../stores/AuthStore');
 var FriendsStore = require('../../stores/FriendsStore'),
 	_friendStore = new FriendsStore();
 
-var UsersList = require('../../components/UsersList');
+var CheckBox = require('../../components/CheckBox');
 
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
@@ -27,7 +27,9 @@ module.exports = React.createClass({
 			return {
 				leftArrow: true,
 				leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
-				title: 'Ajouter des amis'
+				title: 'Ajouter des amis',
+				rightIcon: 'ion-plus',
+				rightAction : emitter.emit.bind(emitter, 'navigationBarRightAction'),
 			};
 		}
 	},
@@ -40,7 +42,8 @@ module.exports = React.createClass({
 		console.log(_friendStore.getFriends);
 
 		return {
-			friends : friends
+			friends : friends,
+			selectedFriends : this.props.selectedFriends || []
 		}
 	},
 
@@ -55,7 +58,16 @@ module.exports = React.createClass({
 			});
 		});
 
-		_friendStore.emitter.on('update:' + this.userId, this.getData);
+		this.watch(emitter, 'navigationBarRightAction', event => {
+			this.transitionTo('main:catchs-form', {
+				transition: 'reveal-from-right',
+				viewProps: {
+					recipents : this.state.selectedFriends
+				}
+			});
+		});
+
+		this.watch(_friendStore.emitter, 'update:' + this.userId, this.getData);
 
 	},
 
@@ -65,11 +77,33 @@ module.exports = React.createClass({
 		console.log(this.state);
 	},
 
+	onChange (event)
+	{
+		var value = event.target.value,
+			index = this.state.selectedFriends.indexOf(value)
+
+		if (index < 0) {
+			this.state.selectedFriends.push(value)
+		} else {
+			this.state.selectedFriends.splice(index, 1)
+		}
+
+		console.log(this.state.selectedFriends);
+	},
+
 	render () {
 		return (
 			<Container direction="column">
 				<Container fill scrollable={scrollable} onScroll={this.handleScroll} ref="scrollContainer">
-					<UsersList users={this.state.friends} onSelect={this.onSelect} />
+					{this.state.friends.map(function(friend, index) {
+						
+						var checked = this.state.selectedFriends.indexOf(friend.id) >= 0;
+						
+						if(checked) return;
+
+						return <CheckBox key={friend.id} className="ListItem" onChange={this.onChange} value={friend.id} defaultChecked={checked} >{friend.fullName}</CheckBox>
+
+					}.bind(this))}
 				</Container>
 			</Container>
 			)

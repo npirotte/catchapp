@@ -59,6 +59,19 @@ class FriendsStore {
 
 		});
 	}
+
+	getManyByIds(userId, ids)
+	{
+		var friends = {};
+
+		storage[userId].forEach((friend) => {
+			if (ids.indexOf(friend.id) >= 0) {
+				friends[friend.id] = friend;
+			};
+		});
+
+		return friends;
+	}
 }
 
 export default FriendsStore;

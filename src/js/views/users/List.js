@@ -60,7 +60,7 @@ module.exports = React.createClass({
 			body.classList.toggle('android-menu-is-open');
 		});
 
-		_friendStore.emitter.on('update:' + this.userId, this.getData);
+		this.watch(_friendStore.emitter, 'update:' + this.userId, this.getData);
 
 	},
 
