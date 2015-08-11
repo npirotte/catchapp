@@ -1,9 +1,9 @@
 var animation = require('../../touchstone/animation');
-var {LabelInput, Link, Transitions} = require('../../touchstone');
 var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
 var Tappable = require('react-tappable');
+var {LabelInput, Link, Transitions} = require('../../touchstone');
 var { animation, Transitions, Link } = require('../../touchstone');
 
 var AuthStore = require('../../stores/AuthStore');
@@ -25,15 +25,15 @@ module.exports = React.createClass({
 		return (
 			<Container direction="column" className="AuthLogin">
 				<Container justify align="center" direction="column">
-					<div>
+					<div className="padding">
 						<form onSubmit={this.handleFormSubmission}>
 							{this.renderError()}
 							<div>
-								<LabelInput ref="username" name="username" type="text" placeholder="Email" label="Email"  required={true} />
+								<LabelInput ref="username" name="username" type="email" placeholder="Email" label="Email"  required={true} />
 								<LabelInput ref="password" name="password" type="password" placeholder="Mot de passe" label="Mot de passe" required={true} />
 							</div>
 							<br />
-							<Tappable onTap={this.handleFormSubmission} type="submit" className="button button--raised">Connexion</Tappable>
+							<Tappable onTap={this.handleFormSubmission} type="submit" className="button button--raised button-primary">Connexion</Tappable>
 						</form>		
 						<br />
 						<Link to="app:auth-register" viewProps={{}}  transition="show-from-right" component="a" className="button">
@@ -50,7 +50,7 @@ module.exports = React.createClass({
 		if(!this.state.error) return false;
 
 		return (
-			<div className="error-message">
+			<div className="errors-message">
 				{this.state.error}
 			</div>
 			)
