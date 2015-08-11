@@ -1,6 +1,8 @@
 var EventEmitter = require('events').EventEmitter
 var HttpService = require('../lib/HttpService')
-var Storate = require('../lib/localStorage')
+var Storate = require('../lib/localStorage');
+
+const {serverUrl} = require('../config');
 
 const debug= true;
 
@@ -12,11 +14,19 @@ function _saveStorage()
 	Storate.set('AuthStore', storage);
 }
 
+window.socket = io.connect(serverUrl);
+
 function AuthStore()
 {
 	var _this = this;
 
 	this.emitter = new EventEmitter();
+
+	if (this.amRegistered) {
+		socket.post(serverUrl + 'sockets/subscribe', {refreshToken : storage.refreshToken}, function(resData){
+			console.log(resData);
+		});
+	};
 
 	this.login = function (data, cb)
 	{
@@ -31,6 +41,10 @@ function AuthStore()
 
 			storage = res;
 			_saveStorage();
+
+			socket.post(serverUrl + 'sockets/subscribe', {refreshToken : storage.refreshToken}, function(resData){
+				console.log(resData);
+			});
 
 			if (cb) {
 				cb(err, res);

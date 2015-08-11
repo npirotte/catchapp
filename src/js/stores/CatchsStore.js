@@ -16,6 +16,17 @@ function CatchsStore()
 
 	this.storage = Storate.get('CatchsStore') || [];
 	this.requestSize = 12;
+
+	setTimeout(function()
+	{
+		window.socket.on('catchCreated', function(data) {
+			console.log(data);
+			//this.storage.unshift(data);
+			//this.emitter.emit('update');
+		});
+	})
+
+	
 }
 
 CatchsStore.prototype.emitter = new EventEmitter();
