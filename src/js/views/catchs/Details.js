@@ -89,24 +89,40 @@ module.exports = React.createClass({
 		console.log(distance);
 
 		return (
-			<Container className="catch-details">
-				<div className="catch-details__cover">
-					<CoverImage src={catchImageUrl} title={this.props.catchItem.message} />
-				</div>
-				<div className="catch-details__sender">
-					<ItemAvatar src={userThumbUrl} name={this.props.catchItem.sender.fullName} /> {this.props.catchItem.sender.fullName}
-				</div>
-				<div className="catch-details__infos">
-					<div>
-						{fromNow}
+			<Container className="catch-details" fill scrollable={scrollable} ref="scrollContainer">
+				<Container>
+					<div className="catch-details__cover">
+						<CoverImage src={catchImageUrl} title={this.props.catchItem.message} />
 					</div>
-					<div>
-						{distance}
+					<div className="catch-details__sender ListItem ListItem--separated">
+						<ItemAvatar className="ListItem__avatar--small" src={userThumbUrl} name={this.props.catchItem.sender.fullName} />
+						<div className="ListItem__content">
+							<strong>{this.props.catchItem.sender.fullName}</strong>
+						</div>
 					</div>
-					<div>
-						{this.props.catchItem.message}
+					<div className="catch-details__infos list">
+						<div className="ListItem ListItem--small">
+							<i className="ListItem__icon icon ion-android-time" />
+							<div className="ListItem__content">
+								{fromNow}
+							</div>
+						</div>
+						<div className="ListItem-separator--partial" />
+						<div className="ListItem ListItem--small">
+							<i className="ListItem__icon icon ion-ios-location" />
+							<div className="ListItem__content">
+								{distance}
+							</div>
+						</div>
+						<div className="ListItem-separator--partial" />
+						<div className="ListItem ListItem--small">
+							<i className="ListItem__icon icon ion-speakerphone" />
+							<div className="ListItem__content">
+								{this.props.catchItem.message}
+							</div>
+						</div>
 					</div>
-				</div>
+				</Container>
 			</Container>
 			)
 	}
