@@ -1,0 +1,42 @@
+.cover-image
+{
+	background-color: @app-gray;
+	position: relative;
+
+	&:before 
+	{
+		content : '';
+		display: block;
+		padding-top: 100%;
+	}
+
+	&__image 
+	{
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		opacity: .6;
+
+		background-size: cover;
+		background-position: center;
+	}
+
+	&__title 
+	{
+		position: absolute;
+	    bottom: 0;
+	    left: 0;
+	    right: 60px;
+	    padding: 20px;
+	    height: 72px;
+	    color: white;
+	    font-size: 2em;
+	    font-weight: 300;
+		
+		overflow: hidden;
+		text-overflow: ellipsis;
+		word-wrap: break-word;
+	}
+}

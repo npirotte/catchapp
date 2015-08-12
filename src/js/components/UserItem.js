@@ -8,7 +8,7 @@ var ImageUrl = require('../filters/ImageUrl');
 module.exports = React.createClass({
 	render()
 	{
-		var imageUrl = this.props.userItem.asset ? ImageUrl(this.props.userItem.asset) : null;
+		var imageUrl = this.props.userItem.asset ? ImageUrl(this.props.userItem.asset, 180) : null;
 
 		return (
 			<Link to="main:users-details" viewProps={this.props} transition="show-from-right" className="ListItem Person" component="div">

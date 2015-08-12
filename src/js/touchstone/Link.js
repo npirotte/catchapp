@@ -14,7 +14,7 @@ var Link = React.createClass({
 
 	doTransition () {
 		var options = Object.assign({ viewProps: this.props.viewProps, transition: this.props.transition }, this.props.options);
-		console.info('Link to "' + this.props.to + '" using transition "' + this.props.transition + '"' + ' with props ', this.props.viewProps);
+		//console.info('Link to "' + this.props.to + '" using transition "' + this.props.transition + '"' + ' with props ', this.props.viewProps);
 		this.transitionTo(this.props.to, options);
 	},
 

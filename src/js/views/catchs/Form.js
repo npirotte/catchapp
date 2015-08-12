@@ -75,13 +75,12 @@ module.exports = React.createClass({
 			navigator.camera.getPicture( function(imageData) {
 				_this.setState({picture : imageData});
 				dataStore = _this.state;
-			}, function() {}, {});
+			}, function() {}, {targetWidth: 1024, targetHeight: 1024});
 		}
 
 		if (navigator.geolocation && !this.state.formData.geo) {
 			navigator.geolocation.getCurrentPosition( function(position) {
 				_this.state.formData.geo = [position.coords.latitude, position.coords.longitude];
-				console.log(_this.state);
 				_this.setState({formData : _this.state.formData });
 				dataStore = _this.state;
 			});
@@ -118,12 +117,12 @@ module.exports = React.createClass({
 							{
 								var friend = this.friendsData[userItem]
 								return (
-									<div className="ListItem">{friend.fullName}</div>
+									<Tappable onTap={this.deleteUser.bind(this, userItem, friend)} className="ListItem">{friend.fullName}</Tappable>
 									);
 							}.bind(this))}
 						</div>
 						<div>
-							<Link to="main:users-browser" viewProps={{selectedFriends : this.state.formData.recipents}} className="button">
+							<Link to="main:users-browser" viewProps={{selectedFriends : this.state.formData.recipents}} transition="show-from-bottom" className="button">
 								Ajouter des amis
 							</Link>
 						</div>
@@ -137,6 +136,18 @@ module.exports = React.createClass({
 				</Container>
 			</Container>
 			)
+	},
+
+	deleteUser(userId, userModel)
+	{
+		if(confirm('Supprimer ' + userModel.fullName + ' de la liste d\'envoi ?')){
+			console.log(userId);
+			this.state.formData.recipents = this.state.formData.recipents.filter((user) => {
+				return user != userId;
+			});
+			dataStore = this.state;
+			this.setState(dataStore);
+		}
 	},
 
 	handleFormChange(event) {

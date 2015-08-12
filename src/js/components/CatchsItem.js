@@ -13,15 +13,13 @@ module.exports = React.createClass({
 
 	render()
 	{
-		var imageUrl = this.props.catchItem.sender.asset ? ImageUrl(this.props.catchItem.sender.asset) : null;
+		var imageUrl = this.props.catchItem.sender.asset ? ImageUrl(this.props.catchItem.sender.asset, 180) : null;
 		var fromNow = moment(this.props.catchItem.createdAt).fromNow();
 		var distance;
 
 		if (this.props.myPosition && !this.distance && this.props.catchItem.geo) {
 			this.distance = Distance(this.props.myPosition.coords.latitude, this.props.myPosition.coords.longitude, this.props.catchItem.geo[0], this.props.catchItem.geo[1]);
 		};
-
-		console.log(this.props);
 		
 		return (
 			<Link to="main:catchs-details" viewProps={this.props} transition="show-from-right" className="ListItem Person" component="div">

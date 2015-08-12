@@ -64,11 +64,13 @@ class FriendsStore {
 	{
 		var friends = {};
 
-		storage[userId].forEach((friend) => {
-			if (ids.indexOf(friend.id) >= 0) {
-				friends[friend.id] = friend;
-			};
-		});
+		if (storage[userId]) {
+			storage[userId].forEach((friend) => {
+				if (ids.indexOf(friend.id) >= 0) {
+					friends[friend.id] = friend;
+				};
+			});
+		};
 
 		return friends;
 	}

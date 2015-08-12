@@ -124,7 +124,7 @@ export default React.createClass({
 		if (navigator.camera && !this.state.picture) {
 			navigator.camera.getPicture( function(imageData) {
 				_this.setState({picture : imageData});
-			}, function() {}, {});
+			}, function() {}, {targetWidth: 1024, targetHeight: 1024});
 		}
 	},
 

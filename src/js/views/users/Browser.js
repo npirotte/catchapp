@@ -43,7 +43,7 @@ module.exports = React.createClass({
 
 		return {
 			friends : friends,
-			selectedFriends : this.props.selectedFriends || [],
+			selectedFriends : this.props.selectedFriends.slice() || [],
 			query : ''
 		}
 	},
@@ -54,14 +54,14 @@ module.exports = React.createClass({
 		// navbar actions
 		this.watch(emitter, 'navigationBarLeftAction',event => {
 			this.transitionTo('main:catchs-form', {
-				transition: 'reveal-from-right',
+				transition: 'reveal-from-bottom',
 				viewProps: {}
 			});
 		});
 
 		this.watch(emitter, 'navigationBarRightAction', event => {
 			this.transitionTo('main:catchs-form', {
-				transition: 'reveal-from-right',
+				transition: 'reveal-from-bottom',
 				viewProps: {
 					recipents : this.state.selectedFriends
 				}
@@ -107,11 +107,13 @@ module.exports = React.createClass({
 				<Container fill scrollable={scrollable} onScroll={this.handleScroll} ref="scrollContainer">
 					{this.state.friends.map(function(friend, index) {
 
-						var isFiltred = friend.fullName.search(this.state.query) >= 0;
+						var isFiltred = friend.fullName.toLowerCase().search(this.state.query.toLowerCase()) >= 0;
 						
 						var checked = this.state.selectedFriends.indexOf(friend.id) >= 0;
+
+						var allreadySelected = this.props.selectedFriends.indexOf(friend.id) >= 0;
 						
-						if(checked || (this.state.query && !isFiltred)) return;
+						if(allreadySelected || (this.state.query && !isFiltred)) return;
 
 						return <CheckBox key={friend.id} className="ListItem" onChange={this.onChange} value={friend.id} defaultChecked={checked} >{friend.fullName}</CheckBox>
 
