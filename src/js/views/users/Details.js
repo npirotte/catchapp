@@ -46,18 +46,21 @@ module.exports = React.createClass({
 
 	componentDidMount() {
 
+		var previousView = this.props.previousView || 'main:users-list',
+				previousViewProps = this.props.previousViewProps || {};
+
 		this.watch(emitter, 'navigationBarLeftAction', event => {
-			this.transitionTo('main:users-list', {
+			this.transitionTo(previousView, {
 				transition: 'reveal-from-right',
-				viewProps: {}
+				viewProps: previousViewProps
 			});
 		});
 
 		// android backbutton handler
 		this.watch(document, 'backbutton', event => {
-			this.transitionTo('main:users-list', {
+			this.transitionTo(previousView, {
 				transition: 'reveal-from-right',
-				viewProps: {}
+				viewProps: previousViewProps
 			});
 		});
 

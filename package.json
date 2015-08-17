@@ -52,5 +52,28 @@
     "lint": "happiness",
     "start": "gulp clean && gulp dev",
     "watch": "gulp clean && gulp watch"
+  },
+  "eslintConfig": {
+    "ecmaFeatures": {
+      "arrowFunctions" : true,
+      "blockBindings" : true,
+      "classes" : true,
+      "defaultParams": true,
+      "destructuring": true,
+      "restParams": true,
+      "jsx": true,
+      "modules": true
+    },
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "rules": {
+      "quotes": [1, "single"],
+      "key-spacing": [1, {
+          "beforeColon": true,
+          "afterColon": true
+        }]
+    }
   }
 }

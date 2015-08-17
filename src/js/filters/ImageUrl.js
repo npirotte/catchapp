@@ -1,6 +1,6 @@
-const {serverUrl} = require('../config');
+import {serverUrl} from '../config';
 
-module.exports = function(data, imageSize)
+export default function(data, imageSize)
 {
 	if (typeof data === 'undefined') {
 		return './img/no-image.png';
@@ -10,10 +10,10 @@ module.exports = function(data, imageSize)
 		data = {
 			id : data,
 			filename : 'image.jpg'
-		}	
+		};
 	}
 
 	var imageSizeString = imageSize ? (imageSize + 'x' + imageSize + '/') : '';
-	
+
 	return serverUrl + 'assets/' + data.id + '/' + imageSizeString + data.filename;
 }

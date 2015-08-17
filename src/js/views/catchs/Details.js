@@ -3,7 +3,7 @@ var Sentry = require('react-sentry');
 var React = require('react');
 var moment = require('moment');
 var Tappable = require('react-tappable');
-var { animation, Transitions } = require('../../touchstone');
+import { animation, Transitions, Link } from '../../touchstone';
 
 var ImageUrl = require('../../filters/ImageUrl');
 var Distance = require('../../filters/Distance');
@@ -41,7 +41,7 @@ function getNavigation(props)
 	}
 }
 
-module.exports = React.createClass({
+export default React.createClass({
 
 	mixins: [Sentry(), Transitions],
 
@@ -107,12 +107,17 @@ module.exports = React.createClass({
 						<div className="catch-details__cover">
 							<CoverImage src={catchImageUrl} title={this.props.catchItem.message} />
 						</div>
-						<div className="catch-details__sender ListItem ListItem--separated">
+						<Link
+							to="main:users-details"
+							viewProps={{previousView : 'main:catchs-details', previousViewProps: this.props, userItem : this.props.catchItem.sender}}
+							transition="show-from-right"
+							className="catch-details__sender ListItem ListItem--separated"
+						>
 							<ItemAvatar className="ListItem__avatar--small" src={userThumbUrl} name={this.props.catchItem.sender.fullName} />
 							<div className="ListItem__content">
 								<strong>{this.props.catchItem.sender.fullName}</strong>
 							</div>
-						</div>
+						</Link>
 						<div className="catch-details__infos list">
 							<div className="ListItem ListItem--small">
 								<i className="ListItem__icon icon ion-android-time" />
