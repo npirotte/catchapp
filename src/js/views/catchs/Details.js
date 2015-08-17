@@ -17,6 +17,18 @@ var emitter = new EventEmitter();
 var CatchsStore = require('../../stores/CatchsStore');
 
 const scrollable = Container.initScrollable();
+var scrollables = new Map();
+
+function getScrollable(catchId)
+{
+	var scrollable = scrollables.get(catchId);
+	if (!scrollable) {
+		scrollable = Container.initScrollable();
+		scrollables.set(catchId, scrollable);
+	};
+
+	return scrollable;
+}
 
 var myPositionCache;
 
@@ -82,47 +94,54 @@ module.exports = React.createClass({
 		var fromNow = moment(this.props.catchItem.createdAt).fromNow();
 		var distance;
 
-		if (this.state.myPosition) {
+		if (this.state.myPosition && this.props.catchItem) {
 			distance = Distance(this.state.myPosition.coords.latitude, this.state.myPosition.coords.longitude, this.props.catchItem.geo[0], this.props.catchItem.geo[1]);
-		};
-
-		console.log(distance);
+		} else {
+			distance = "Inconnu";
+		}
 
 		return (
-			<Container className="catch-details" fill scrollable={scrollable} ref="scrollContainer">
-				<Container>
-					<div className="catch-details__cover">
-						<CoverImage src={catchImageUrl} title={this.props.catchItem.message} />
-					</div>
-					<div className="catch-details__sender ListItem ListItem--separated">
-						<ItemAvatar className="ListItem__avatar--small" src={userThumbUrl} name={this.props.catchItem.sender.fullName} />
-						<div className="ListItem__content">
-							<strong>{this.props.catchItem.sender.fullName}</strong>
+			<Container className="catch-details" direction="column">
+				<Container fill scrollable={getScrollable(this.props.catchItem.id)} ref="scrollContainer">
+					<div>
+						<div className="catch-details__cover">
+							<CoverImage src={catchImageUrl} title={this.props.catchItem.message} />
 						</div>
-					</div>
-					<div className="catch-details__infos list">
-						<div className="ListItem ListItem--small">
-							<i className="ListItem__icon icon ion-android-time" />
+						<div className="catch-details__sender ListItem ListItem--separated">
+							<ItemAvatar className="ListItem__avatar--small" src={userThumbUrl} name={this.props.catchItem.sender.fullName} />
 							<div className="ListItem__content">
-								{fromNow}
+								<strong>{this.props.catchItem.sender.fullName}</strong>
 							</div>
 						</div>
-						<div className="ListItem-separator--partial" />
-						<div className="ListItem ListItem--small">
-							<i className="ListItem__icon icon ion-ios-location" />
-							<div className="ListItem__content">
-								{distance}
+						<div className="catch-details__infos list">
+							<div className="ListItem ListItem--small">
+								<i className="ListItem__icon icon ion-android-time" />
+								<div className="ListItem__content">
+									{fromNow}
+								</div>
 							</div>
-						</div>
-						<div className="ListItem-separator--partial" />
-						<div className="ListItem ListItem--small">
-							<i className="ListItem__icon icon ion-speakerphone" />
-							<div className="ListItem__content">
-								{this.props.catchItem.message}
+							<div className="ListItem-separator--partial" />
+							<div className="ListItem ListItem--small">
+								<i className="ListItem__icon icon ion-ios-location" />
+								<div className="ListItem__content">
+									{distance}
+								</div>
+							</div>
+							<div className="ListItem-separator--partial" />
+							<div className="ListItem ListItem--small">
+								<i className="ListItem__icon icon ion-speakerphone" />
+								<div className="ListItem__content">
+									{this.props.catchItem.message || 'Aucun message associé'}
+								</div>
 							</div>
 						</div>
 					</div>
 				</Container>
+				<div className="Footer Footer--cta">
+					<Tappable className="button button-primary">
+						Y aller
+					</Tappable>
+				</div>
 			</Container>
 			)
 	}
