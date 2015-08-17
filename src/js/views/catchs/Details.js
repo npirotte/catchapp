@@ -55,7 +55,8 @@ function getTravel(context, mapElm, target)
       context.setState({
         duration : e.legs[0].duration.text,
         distance : e.legs[0].distance.text,
-				location : e.legs[0].end_address
+				location : e.legs[0].end_address,
+				fullRouteData : e
       })
 	  }
 	});
@@ -179,7 +180,7 @@ export default React.createClass({
 					</div>
 				</Container>
 				<div className="Footer Footer--cta">
-					<Link className="button button-primary" to="main:catchs-gps" viewProps={{catchItem : this.props.catchItem, previousViewProps : this.props}}>
+					<Link className="button button-primary" to="main:catchs-gps" viewProps={{catchItem : this.props.catchItem, routeData : this.state.fullRouteData,  previousViewProps : this.props}}>
 						Y aller
 					</Link>
 				</div>
