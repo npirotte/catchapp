@@ -7,7 +7,7 @@ function _getInitial(input)
 	return input[0];
 }
 
-export default React.createClass({
+module.exports = React.createClass({
 
 	render ()
 	{

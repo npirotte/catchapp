@@ -1,6 +1,6 @@
 {
-  "name": "react-europe",
-  "version": "1.0.2",
+  "name": "goopy",
+  "version": "0.1.1",
   "description": "ReactEurope Conference",
   "private": true,
   "main": "src/js/app.js",
@@ -28,7 +28,23 @@
   "devDependencies": {
     "gulp": "^3.9.0",
     "happiness": "^1.0.6",
-    "touchstonejs-tasks": "^0.2.5"
+    "babel-core": "^5.5.5",
+    "babel-plugin-object-assign": "^1.1.0",
+    "babelify": "^6.1.2",
+    "brfs": "^1.4.0",
+    "browserify": "^10.2.4",
+    "bytes": "^2.1.0",
+    "chalk": "^1.0.0",
+    "del": "^1.2.0",
+    "gulp-connect": "^2.2.0",
+    "gulp-less": "^3.0.3",
+    "gulp-plumber": "^1.0.1",
+    "gulp-shell": "^0.4.2",
+    "gulp-util": "^3.0.5",
+    "merge-stream": "^0.1.7",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.2.2",
+    "xtend": "^4.0.0"
   },
   "scripts": {
     "build": "gulp clean && gulp build",
