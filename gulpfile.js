@@ -141,6 +141,8 @@ var xtend = require('xtend');
 
 	gulp.task('dev', ['serve', 'watch']);
 
+	gulp.task('default', ['serve', 'watch']);
+
 	// Cordova
 	gulp.task('prepare', ['build'], function () {
 		return gulp.src('').pipe(plumber()).pipe(shell(['cordova prepare'], { cwd: __dirname }));

@@ -66,7 +66,7 @@ var MainViewController = React.createClass({
 	handleChange (event)
 	{
 		var body = document.getElementsByTagName('body')[0];
-	
+
 		body.classList.remove('android-menu-is-open');
 
 		if (event.value !== 'logoff') {
@@ -79,7 +79,7 @@ var MainViewController = React.createClass({
 	},
 
 	render () {
-		
+
 		const defaultView = 'home';
 
 		return (
@@ -115,6 +115,7 @@ var MainViewController = React.createClass({
 					<View name="catchs-list" component={require('./views/catchs/List')} />
 					<View name="catchs-details" component={require('./views/catchs/Details')} />
 					<View name="catchs-form" component={require('./views/catchs/Form')} />
+					<View name="catchs-gps" component={require('./views/catchs/GPS')} />
 
 					<View name="users-list" component={require('./views/users/List')} />
 					<View name="users-details" component={require('./views/users/Details')} />
@@ -208,4 +209,3 @@ if (window.cordova) {
 } else {
 	startApp();
 }
-

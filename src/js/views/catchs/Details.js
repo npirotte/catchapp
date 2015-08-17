@@ -4,6 +4,7 @@ var React = require('react');
 var moment = require('moment');
 var Tappable = require('react-tappable');
 import { animation, Transitions, Link } from '../../touchstone';
+import GMaps from 'gmaps';
 
 var ImageUrl = require('../../filters/ImageUrl');
 var Distance = require('../../filters/Distance');
@@ -16,7 +17,6 @@ var emitter = new EventEmitter();
 
 var CatchsStore = require('../../stores/CatchsStore');
 
-const scrollable = Container.initScrollable();
 var scrollables = new Map();
 
 function getScrollable(catchId)
@@ -31,6 +31,37 @@ function getScrollable(catchId)
 }
 
 var myPositionCache;
+
+function getTravel(context, mapElm, target)
+{
+	var map = new GMaps({
+		div: mapElm,
+		lat: myPositionCache.coords.latitude,
+		lng: myPositionCache.coords.longitude
+	});
+
+	map.travelRoute({
+	  origin: [myPositionCache.coords.latitude, myPositionCache.coords.longitude],
+	  destination: target,
+	  travelMode: 'walking',
+	  end : function(e)
+	  {
+	  	console.log(e);
+	  	/*$scope.$apply(function(){
+	  		$scope.duration = e.legs[0].duration.text;
+	  		$scope.distance = e.legs[0].distance.text;
+	  		$scope.steps = e.legs[0].steps;
+	  	});*/
+      context.setState({
+        duration : e.legs[0].duration.text,
+        distance : e.legs[0].distance.text,
+				location : e.legs[0].end_address
+      })
+	  }
+	});
+
+  return map;
+}
 
 function getNavigation(props)
 {
@@ -63,9 +94,14 @@ export default React.createClass({
 
 		var _this = this;
 
-		navigator.geolocation.getCurrentPosition( function(position) {
+		if (myPositionCache) {
+			getTravel(this, this.refs.gMaps.getDOMNode(), this.props.catchItem.geo);
+		}
+
+		navigator.geolocation.getCurrentPosition( (position) => {
 			myPositionCache = position;
-			_this.setState({myPosition : position})
+			_this.setState({myPosition : position});
+			getTravel(this, this.refs.gMaps.getDOMNode(), this.props.catchItem.geo);
 		});
 
 		this.watch(emitter, 'navigationBarLeftAction', event => {
@@ -92,13 +128,6 @@ export default React.createClass({
 		var userThumbUrl = this.props.catchItem.sender.asset ? ImageUrl(this.props.catchItem.sender.asset) : null;
 
 		var fromNow = moment(this.props.catchItem.createdAt).fromNow();
-		var distance;
-
-		if (this.state.myPosition && this.props.catchItem) {
-			distance = Distance(this.state.myPosition.coords.latitude, this.state.myPosition.coords.longitude, this.props.catchItem.geo[0], this.props.catchItem.geo[1]);
-		} else {
-			distance = "Inconnu";
-		}
 
 		return (
 			<Container className="catch-details" direction="column">
@@ -129,7 +158,14 @@ export default React.createClass({
 							<div className="ListItem ListItem--small">
 								<i className="ListItem__icon icon ion-ios-location" />
 								<div className="ListItem__content">
-									{distance}
+									{this.state.location}
+								</div>
+							</div>
+							<div className="ListItem-separator--partial" />
+							<div className="ListItem ListItem--small">
+								<i className="ListItem__icon icon ion-android-walk" />
+								<div className="ListItem__content">
+									{this.state.distance}, {this.state.duration}
 								</div>
 							</div>
 							<div className="ListItem-separator--partial" />
@@ -143,10 +179,11 @@ export default React.createClass({
 					</div>
 				</Container>
 				<div className="Footer Footer--cta">
-					<Tappable className="button button-primary">
+					<Link className="button button-primary" to="main:catchs-gps" viewProps={{catchItem : this.props.catchItem, previousViewProps : this.props}}>
 						Y aller
-					</Tappable>
+					</Link>
 				</div>
+				<div ref="gMaps" />
 			</Container>
 			)
 	}
