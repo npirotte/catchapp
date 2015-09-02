@@ -32,13 +32,15 @@ module.exports = React.createClass({
 								<LabelInput ref="username" name="username" type="email" placeholder="Email" label="Email"  required={true} />
 								<LabelInput ref="password" name="password" type="password" placeholder="Mot de passe" label="Mot de passe" required={true} />
 							</div>
-							<br />
 							<Tappable onTap={this.handleFormSubmission} type="submit" className="button button--raised button-primary">Connexion</Tappable>
 						</form>		
-						<br />
-						<Link to="app:auth-register" viewProps={{}}  transition="show-from-right" component="a" className="button">
-							Créer un compte
-						</Link>
+						<br /><br />
+						<div className="AuthRegisterLink">
+							<span className="text-light">Pas encore un compte ? </span>
+							<Link to="app:auth-register" viewProps={{}}  transition="show-from-right" component="a">
+								Créer un compte
+							</Link>
+						</div>
 					</div>
 				</Container>
 			</Container>

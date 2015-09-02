@@ -42,13 +42,16 @@ export default React.createClass({
 		return (
 			<Container direction="column">
 				<Container fill scrollable={scrollable} ref="scrollContainer">
+					<div className="headerPage padding">
+						<h1>Enregistrez-vous</h1>
+					</div>
 					<div className="padding">
-						<h1>Création d un compte</h1>
 						{this.renderErrors()}
 						{this.renderForm()}
 						{this.renderImagePicker()}
+						<br/>
 						<div className="text-center">
-							<Link to="app:login"  className="button button-return" viewProps={{}}  transition="reveal-from-right" component="a">
+							<Link to="app:login"  className="text-light" viewProps={{}}  transition="reveal-from-right" component="a">
 								Retour
 							</Link>
 						</div>
@@ -68,9 +71,9 @@ export default React.createClass({
 				<LabelInput ref="firstName" name="firstName" placeholder="Prénom"  label="Prénom"  required={true}/>
 				<LabelInput ref="username" name="username" placeholder="Email" label="Email" type="email"  required={true}/>
 				<LabelInput ref="password" name="password" placeholder="Mot de passe" label="Mot de passe" type="password" required={true}/>
-				<LabelInput ref="passwordConfirm" name="password-confirm" placeholder="Confirmer" label="Confirmer" type="password" required={true}/>
+				<LabelInput ref="passwordConfirm" name="password-confirm" placeholder="Confirmer le mot de passe" label="Confirmer le mot de passe" type="password" required={true}/>
 				<div className="text-center">
-					<button className="button button-primary">
+					<button className="button button-primary button--raised ">
 						Suite
 					</button>
 				</div>
@@ -89,11 +92,11 @@ export default React.createClass({
 			<div className="text-center">
 				<img src={src} style={style} />
 				
-				<button className="button button-primary-light" onClick={this.pickPhoto}>
-					Prendre une photo de profil
+				<button className="button button-primary-light button--raised " onClick={this.pickPhoto}>
+					Prendre une photo
 				</button>
 				
-				<button className="button button-primary" onClick={this.register}>
+				<button className="button button-primary button--raised " onClick={this.register}>
 					Créer un compte
 				</button>
 			</div>

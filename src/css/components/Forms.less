@@ -4,7 +4,7 @@
 
 @field-color:                    @app-color;
 @field-label-color:              @app-gray;
-@field-placeholder-color :       @app-gray;
+@field-placeholder-color :       @app-gray-light;
 
 /*-----  End of variables  ------*/
 
@@ -45,11 +45,14 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
 
         + .field-label{
             font-size: 0.8rem;
-            -webkit-transform: translateY(-200%);
-            -moz-transform: translateY(-200%);
-            -ms-transform: translateY(-200%);
-            -o-transform: translateY(-200%);
-            transform: translateY(-200%);
+            height: auto;
+            line-height: 0.8rem;
+
+            -webkit-transform: translateY(-100%);
+            -moz-transform: translateY(-100%);
+            -ms-transform: translateY(-100%);
+            -o-transform: translateY(-100%);
+            transform: translateY(-100%);
         }
     }
 
@@ -76,14 +79,17 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
 
         + .field-label{
             font-size: 0.8rem;
-            -webkit-transform: translateY(-200%);
-            -moz-transform: translateY(-200%);
-            -ms-transform: translateY(-200%);
-            -o-transform: translateY(-200%);
-            transform: translateY(-200%);
+            //height: auto;
+            line-height: 0.8rem;
+
+            -webkit-transform: translateY(-100%);
+            -moz-transform: translateY(-100%);
+            -ms-transform: translateY(-100%);
+            -o-transform: translateY(-100%);
+            transform: translateY(-100%);
         }
 
-        &:valid, &:focus{
+        &:focus{
             border-bottom-color: @app-primary;
         }
     }
@@ -97,23 +103,30 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
 
 .field-control{
     width: 100%;
+    padding: 0;
 }
 
-.field-label{
-    color: @app-gray;
+.field-label, .View .field-label{
+    color: @field-label-color;
     position: absolute;
-    top: 1.1em;
+    top: 0px;
     left: 0;
+
+    //height: 3rem;
+    width: 100%;
+
     z-index: 3;
+
     font-size: @font-size-base;
+    line-height: 3rem;
     cursor: text;
+    text-align: left;
+
     -webkit-transition: .2s ease-out;
     -moz-transition: .2s ease-out;
     -o-transition: .2s ease-out;
     -ms-transition: .2s ease-out;
     transition: .2s ease-out;
-    width: 100%;
-    text-align: left;
 }
 
 /*==============================

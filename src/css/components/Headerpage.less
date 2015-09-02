@@ -1,0 +1,29 @@
+.headerPage{
+	position: relative;
+	padding-top:20px;
+	padding-bottom: 20px + 30px;
+
+	text-align: center;
+
+	&:before{
+		content:"";
+
+		background: url('../img/triangle-pattern.png') no-repeat center center;
+		background-size: 200%;
+
+		-webkit-transform: skewY(-3deg);
+
+		position: absolute;
+
+	    top: -20px;
+	    right: 0;
+	    bottom: 20px;
+	    left: 0;
+
+	    z-index: -1;
+	}
+
+	&, h1, h2, h3, h4, a{
+		color: white;
+	}
+}
