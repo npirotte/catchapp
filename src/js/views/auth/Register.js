@@ -43,6 +43,10 @@ export default React.createClass({
 			<Container direction="column">
 				<Container fill scrollable={scrollable} ref="scrollContainer">
 					<div className="headerPage padding">
+						<Link to="app:login"  className="text-light" viewProps={{}}  transition="reveal-from-right" component="a">
+							Retour
+						</Link>
+						<br/>
 						<h1>Enregistrez-vous</h1>
 					</div>
 					<div className="padding">
@@ -50,11 +54,6 @@ export default React.createClass({
 						{this.renderForm()}
 						{this.renderImagePicker()}
 						<br/>
-						<div className="text-center">
-							<Link to="app:login"  className="text-light" viewProps={{}}  transition="reveal-from-right" component="a">
-								Retour
-							</Link>
-						</div>
 					</div>
 				</Container>
 			</Container>
