@@ -1,31 +1,41 @@
 .headerPage{
 	position: relative;
-	padding-top:40px;
-	padding-bottom: 50px;
+	padding-top:5px;
+	padding-bottom: 20px;
 
 	text-align: left;
 
-	font-size: @font-size-lg;
+	font-size: @font-size-base;
+
+	background-color: @headerbar-bg-color;
+	background-image: url( @headerbar-bg-url );
+	background-repeat: no-repeat;
+	background-position: center -@headerbar-height;
+	background-size: 200%;
+
 
 	&:before{
-		content:"";
+	    content: "";
 
-		background: url('../img/triangle-pattern.png') no-repeat center center;
-		background-size: 200%;
+	    width: 0;
+	    height: 0;
 
-		-webkit-transform: skewY(-3deg);
+	    border-style: solid;
+	    border-width: 0 0 20px 500px;
+	    border-color: transparent transparent white transparent;
 
-		position: absolute;
-
-	    top: -20px;
+	    position: absolute;
+	    
 	    right: 0;
-	    bottom: 20px;
-	    left: 0;
-
-	    z-index: -1;
+	    bottom: -5px;
+	    z-index: 3;
 	}
 
 	&, h1, h2, h3, h4, a{
 		color: white;
+	}
+
+	*:first-child{
+		margin-top: 0;
 	}
 }

@@ -41,12 +41,14 @@ export default React.createClass({
 	{
 		return (
 			<Container direction="column">
+				<div className="NavigationBar has-left-icon">
+					<Link to="app:login"  className="text-light" viewProps={{}}  transition="reveal-from-right" component="a">
+						<span className="NavigationBarLeftIcon ion-arrow-left-c"></span>
+						<span className="NavigationBarTitle"> Retour </span>
+					</Link>
+				</div>
 				<Container fill scrollable={scrollable} ref="scrollContainer">
 					<div className="headerPage padding">
-						<Link to="app:login"  className="text-light" viewProps={{}}  transition="reveal-from-right" component="a">
-							Retour
-						</Link>
-						<br/>
 						<h1>Enregistrez-vous</h1>
 					</div>
 					<div className="padding">
@@ -87,19 +89,41 @@ export default React.createClass({
 		var src = this.state.picture || './img/no-image.png',
 			style = { width : '100%' };
 
-		return (
-			<div className="text-center">
-				<img src={src} style={style} />
-				
-				<button className="button button-primary-light button--raised " onClick={this.pickPhoto}>
-					Prendre une photo
-				</button>
-				
-				<button className="button button-primary button--raised " onClick={this.register}>
-					Créer un compte
-				</button>
-			</div>
+		if(!this.state.picture){
+			return (
+				<div className="text-center">
+					<img src={src} style={style} />
+					
+						<button className="button button-primary button--raised" onClick={this.pickPhoto}>
+							Prendre une photo
+						</button>
+						<br/><br/>
+						<div className="text-center">
+							<Link onClick={this.register}>
+								Créer mon compte
+							</Link>
+						</div>
+
+				</div>
 			)
+		}else{
+			return (
+				<div className="text-center">
+					<img src={src} style={style} />
+				
+						<button className="button button-primary button--raised" onClick={this.register}>
+							Créer mon compte
+						</button>
+						<br/><br/>
+						<div className="text-center">
+							<Link onClick={this.pickPhoto}>
+								modifier la photo
+							</Link>
+						</div>
+				</div>
+			)
+		}
+
 	},
 
 	renderErrors()
