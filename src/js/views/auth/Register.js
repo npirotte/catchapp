@@ -42,10 +42,10 @@ export default React.createClass({
 		return (
 			<Container direction="column">
 				<div className="NavigationBar has-left-icon">
-					<Link to="app:login"  className="text-light" viewProps={{}}  transition="reveal-from-right" component="a">
+					<span onClick={this.returnBack} viewProps={{}}  transition="reveal-from-right" component="a">
 						<span className="NavigationBarLeftIcon ion-arrow-left-c"></span>
 						<span className="NavigationBarTitle"> Retour </span>
-					</Link>
+					</span>
 				</div>
 				<Container fill scrollable={scrollable} ref="scrollContainer">
 					<div className="headerPage padding">
@@ -142,6 +142,18 @@ export default React.createClass({
 				})}
 			</ul>
 			)
+	},
+
+	returnBack(){
+		if (this.state.viewState == 'image-picker'){
+			this.state.viewState = 'form';
+			this.setState(this.state);
+		}else{ 
+			this.transitionTo('app:login', {
+				transition: 'reveal-from-right',
+				viewProps: {}
+			});
+		}	
 	},
 
 	pickPhoto()
