@@ -80,7 +80,7 @@ var MainViewController = React.createClass({
 
 		body.classList.remove('android-menu-is-open');
 
-		if (event.value !== 'logoff') {
+		if (view !== 'logoff') {
 			this.refs.viewManager.transitionTo(view, {});
 		}
 		else
@@ -104,6 +104,10 @@ var MainViewController = React.createClass({
 					<Tabs.Tab value="catchs-list" onTap={this.handleChange.bind(this, 'catchs-list')}>
 						<span className="Tabs-Icon Tabs-Icon--schedule" />
 						<Tabs.Label>Goops</Tabs.Label>
+					</Tabs.Tab>
+					<Tabs.Tab onClick={this.handleChange.bind(this, 'search')}>
+						<span className="Tabs-Icon Tabs-Icon--people" />
+						<Tabs.Label>Rechercher</Tabs.Label>
 					</Tabs.Tab>
 					<Tabs.Tab value="users-list" onClick={this.handleChange.bind(this, 'users-list')}>
 						<span className="Tabs-Icon Tabs-Icon--people" />
@@ -133,6 +137,8 @@ var MainViewController = React.createClass({
 					<View name="users-list" component={require('./views/users/List')} />
 					<View name="users-details" component={require('./views/users/Details')} />
 					<View name="users-browser" component={require('./views/users/Browser')} />
+
+					<View name="search" component={require('./views/users/Search')} />
 				</ViewManager>
 			</Container>
 		);

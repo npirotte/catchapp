@@ -18918,7 +18918,7 @@ var MainViewController = React.createClass({
 
 		body.classList.remove('android-menu-is-open');
 
-		if (event.value !== 'logoff') {
+		if (view !== 'logoff') {
 			this.refs.viewManager.transitionTo(view, {});
 		} else {
 			AuthStore.logoff();
@@ -18956,6 +18956,16 @@ var MainViewController = React.createClass({
 							Tabs.Label,
 							null,
 							'Goops'
+						)
+					),
+					React.createElement(
+						Tabs.Tab,
+						{ onClick: this.handleChange.bind(this, 'search') },
+						React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--people' }),
+						React.createElement(
+							Tabs.Label,
+							null,
+							'Rechercher'
 						)
 					),
 					React.createElement(
@@ -19002,7 +19012,8 @@ var MainViewController = React.createClass({
 				React.createElement(View, { name: 'catchs-gps', component: require('./views/catchs/GPS') }),
 				React.createElement(View, { name: 'users-list', component: require('./views/users/List') }),
 				React.createElement(View, { name: 'users-details', component: require('./views/users/Details') }),
-				React.createElement(View, { name: 'users-browser', component: require('./views/users/Browser') })
+				React.createElement(View, { name: 'users-browser', component: require('./views/users/Browser') }),
+				React.createElement(View, { name: 'search', component: require('./views/users/Search') })
 			)
 		);
 	}
@@ -19091,7 +19102,7 @@ if (window.cordova) {
 		startApp();
 	}
 
-},{"./lib/device":96,"./stores/AuthStore":98,"./touchstone":114,"./views/Home":115,"./views/auth/Edit":116,"./views/auth/Register":117,"./views/auth/login":118,"./views/catchs/Details":119,"./views/catchs/Form":120,"./views/catchs/GPS":121,"./views/catchs/List":122,"./views/users/Browser":123,"./views/users/Details":124,"./views/users/List":125,"react-sentry":36,"react/addons":undefined,"touchstonejs":43}],80:[function(require,module,exports){
+},{"./lib/device":96,"./stores/AuthStore":98,"./touchstone":115,"./views/Home":116,"./views/auth/Edit":117,"./views/auth/Register":118,"./views/auth/login":119,"./views/catchs/Details":120,"./views/catchs/Form":121,"./views/catchs/GPS":122,"./views/catchs/List":123,"./views/users/Browser":124,"./views/users/Details":125,"./views/users/List":126,"./views/users/Search":127,"react-sentry":36,"react/addons":undefined,"touchstonejs":43}],80:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19575,7 +19586,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../filters/ImageUrl":91,"../touchstone":114,"./ItemAvatar":84,"react":undefined}],88:[function(require,module,exports){
+},{"../filters/ImageUrl":91,"../touchstone":115,"./ItemAvatar":84,"react":undefined}],88:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -20254,12 +20265,113 @@ module.exports = exports['default'];
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _events = require('events');
+
+var _events2 = _interopRequireDefault(_events);
+
+var _libHttpService = require('../lib/HttpService');
+
+var _libHttpService2 = _interopRequireDefault(_libHttpService);
+
+var _URIjs = require('URIjs');
+
+var _URIjs2 = _interopRequireDefault(_URIjs);
+
+var queryUrl = 'user';
+
+var storage = [];
+
+function _getFilter(query) {
+  return {
+    or: [{
+      firstName: {
+        'contains': query
+      }
+    }, {
+      lastName: {
+        'contains': query
+      }
+    }, {
+      fullName: {
+        'contains': query
+      }
+    }]
+  };
+}
+
+var SearchStore = (function () {
+  function SearchStore() {
+    _classCallCheck(this, SearchStore);
+
+    this.requestSize = 20;
+    this.emitter = new _events2['default']();
+    this.query = '';
+  }
+
+  _createClass(SearchStore, [{
+    key: 'getData',
+    value: function getData() {
+      return storage;
+    }
+  }, {
+    key: 'setQuery',
+    value: function setQuery(query) {
+      var _this = this;
+
+      this.query = query;
+
+      var url = new _URIjs2['default'](queryUrl);
+      url.setSearch({ where: JSON.stringify(_getFilter(this.query)), limit: this.requestSize, skip: 0 });
+
+      var ops = {
+        endpoint: url
+      };
+
+      (0, _libHttpService2['default'])(ops, function (err, res) {
+        if (err) return false;
+
+        storage = res;
+
+        if (res.length < _this.requestSize) {
+          _this.emitter.emit('noMoreItems');
+        }
+
+        _this.emitter.emit('update');
+      });
+    }
+  }, {
+    key: 'cleanUp',
+    value: function cleanUp() {
+      this.query = '';
+      storage = [];
+    }
+  }]);
+
+  return SearchStore;
+})();
+
+exports['default'] = SearchStore;
+module.exports = exports['default'];
+
+},{"../lib/HttpService":94,"URIjs":3,"events":11}],102:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
 var Container = require('react-container');
 
 exports['default'] = Container;
 module.exports = exports['default'];
 
-},{"react-container":33}],102:[function(require,module,exports){
+},{"react-container":33}],103:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20283,7 +20395,7 @@ var ErrorView = React.createClass({
 exports['default'] = ErrorView;
 module.exports = exports['default'];
 
-},{"react":undefined,"react-container":33}],103:[function(require,module,exports){
+},{"react":undefined,"react-container":33}],104:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20306,7 +20418,7 @@ var Icon = React.createClass({
 exports["default"] = Icon;
 module.exports = exports["default"];
 
-},{"react":undefined}],104:[function(require,module,exports){
+},{"react":undefined}],105:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -20394,7 +20506,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],105:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],106:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -20458,7 +20570,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],106:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],107:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20503,7 +20615,7 @@ var Link = React.createClass({
 exports['default'] = Link;
 module.exports = exports['default'];
 
-},{"./Transitions":110,"blacklist":6,"react":undefined,"react-tappable":37}],107:[function(require,module,exports){
+},{"./Transitions":111,"blacklist":6,"react":undefined,"react-tappable":37}],108:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20747,7 +20859,7 @@ function createController () {
 exports['default'] = NavigationBar;
 module.exports = exports['default'];
 
-},{"classnames":13,"react-tappable":37,"react/addons":undefined}],108:[function(require,module,exports){
+},{"classnames":13,"react-tappable":37,"react/addons":undefined}],109:[function(require,module,exports){
 'use strict';
 
 var classnames = require('classnames');
@@ -20785,7 +20897,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"classnames":13,"react":undefined,"react-tappable":37}],109:[function(require,module,exports){
+},{"classnames":13,"react":undefined,"react-tappable":37}],110:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20857,7 +20969,7 @@ var Label = React.createClass({
 });
 exports.Label = Label;
 
-},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],110:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],111:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20883,7 +20995,7 @@ var Transitions = {
 exports['default'] = Transitions;
 module.exports = exports['default'];
 
-},{"react":undefined}],111:[function(require,module,exports){
+},{"react":undefined}],112:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20906,7 +21018,7 @@ var View = React.createClass({
 exports["default"] = View;
 module.exports = exports["default"];
 
-},{"react":undefined}],112:[function(require,module,exports){
+},{"react":undefined}],113:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21087,7 +21199,7 @@ var ViewManager = React.createClass({
 exports['default'] = ViewManager;
 module.exports = exports['default'];
 
-},{"./ErrorView":102,"blacklist":6,"classnames":13,"react/addons":undefined}],113:[function(require,module,exports){
+},{"./ErrorView":103,"blacklist":6,"classnames":13,"react/addons":undefined}],114:[function(require,module,exports){
 'use strict';
 
 var animation = require('tween.js');
@@ -21147,7 +21259,7 @@ Mixins.ScrollContainerToTop = {
 	}
 };
 
-},{"react":undefined,"tween.js":78}],114:[function(require,module,exports){
+},{"react":undefined,"tween.js":78}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21201,7 +21313,7 @@ function createApp() {
 	};
 }
 
-},{"./Container":101,"./Icon":103,"./LabelInput":104,"./LabelTextarea":105,"./Link":106,"./NavigationBar":107,"./Switch":108,"./Tabs":109,"./Transitions":110,"./View":111,"./ViewManager":112,"./animation":113,"react":undefined}],115:[function(require,module,exports){
+},{"./Container":102,"./Icon":104,"./LabelInput":105,"./LabelTextarea":106,"./Link":107,"./NavigationBar":108,"./Switch":109,"./Tabs":110,"./Transitions":111,"./View":112,"./ViewManager":113,"./animation":114,"react":undefined}],116:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21302,7 +21414,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../filters/ImageUrl":91,"../stores/AuthStore":98,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],116:[function(require,module,exports){
+},{"../filters/ImageUrl":91,"../stores/AuthStore":98,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],117:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21472,7 +21584,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../filters/ImageUrl":91,"../../lib/AssetService":92,"../../stores/AuthStore":98,"../../touchstone":114,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],117:[function(require,module,exports){
+},{"../../filters/ImageUrl":91,"../../lib/AssetService":92,"../../stores/AuthStore":98,"../../touchstone":115,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],118:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21765,7 +21877,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../lib/AssetService":92,"../../lib/FormValidations":93,"../../stores/AuthStore":98,"../../touchstone":114,"react":undefined,"react-container":33,"react-sentry":36}],118:[function(require,module,exports){
+},{"../../lib/AssetService":92,"../../lib/FormValidations":93,"../../stores/AuthStore":98,"../../touchstone":115,"react":undefined,"react-container":33,"react-sentry":36}],119:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -21883,7 +21995,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../stores/AuthStore":98,"../../touchstone":114,"../../touchstone/animation":113,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],119:[function(require,module,exports){
+},{"../../stores/AuthStore":98,"../../touchstone":115,"../../touchstone/animation":114,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],120:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22123,7 +22235,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/CoverImage":83,"../../components/ItemAvatar":84,"../../filters/Distance":90,"../../filters/ImageUrl":91,"../../stores/CatchsStore":99,"../../touchstone":114,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],120:[function(require,module,exports){
+},{"../../components/CoverImage":83,"../../components/ItemAvatar":84,"../../filters/Distance":90,"../../filters/ImageUrl":91,"../../stores/CatchsStore":99,"../../touchstone":115,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],121:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -22350,7 +22462,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../lib/AssetService":92,"../../lib/Toaster":95,"../../stores/AuthStore":98,"../../stores/CatchsStore":99,"../../stores/FriendsStore":100,"../../touchstone":114,"../../touchstone/animation":113,"async":5,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],121:[function(require,module,exports){
+},{"../../lib/AssetService":92,"../../lib/Toaster":95,"../../stores/AuthStore":98,"../../stores/CatchsStore":99,"../../stores/FriendsStore":100,"../../touchstone":115,"../../touchstone/animation":114,"async":5,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],122:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22545,7 +22657,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../touchstone":114,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],122:[function(require,module,exports){
+},{"../../touchstone":115,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],123:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -22662,7 +22774,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../components/CatchsList":81,"../../components/PullToRefreshContainer":85,"../../stores/CatchsStore":99,"../../touchstone":114,"../../touchstone/animation":113,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],123:[function(require,module,exports){
+},{"../../components/CatchsList":81,"../../components/PullToRefreshContainer":85,"../../stores/CatchsStore":99,"../../touchstone":115,"../../touchstone/animation":114,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],124:[function(require,module,exports){
 'use strict';
 
 var _require = require('touchstonejs');
@@ -22801,7 +22913,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../components/CheckBox":82,"../../stores/AuthStore":98,"../../stores/FriendsStore":100,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],124:[function(require,module,exports){
+},{"../../components/CheckBox":82,"../../stores/AuthStore":98,"../../stores/FriendsStore":100,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],125:[function(require,module,exports){
 'use strict';
 
 var Container = require('react-container');
@@ -22887,7 +22999,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../filters/ImageUrl":91,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],125:[function(require,module,exports){
+},{"../../filters/ImageUrl":91,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],126:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -22971,4 +23083,103 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../components/UsersList":88,"../../stores/AuthStore":98,"../../stores/FriendsStore":100,"../../touchstone/animation":113,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}]},{},[79]);
+},{"../../components/UsersList":88,"../../stores/AuthStore":98,"../../stores/FriendsStore":100,"../../touchstone/animation":114,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],127:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _touchstonejs = require('touchstonejs');
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactSentry = require('react-sentry');
+
+var _reactSentry2 = _interopRequireDefault(_reactSentry);
+
+var _events = require('events');
+
+var _events2 = _interopRequireDefault(_events);
+
+var _storesSearchStore = require('../../stores/SearchStore');
+
+var _storesSearchStore2 = _interopRequireDefault(_storesSearchStore);
+
+var _componentsUsersList = require('../../components/UsersList');
+
+var _componentsUsersList2 = _interopRequireDefault(_componentsUsersList);
+
+var emitter = new _events2['default'].EventEmitter();
+var scrollable = _touchstonejs.Container.initScrollable();
+var searchStore = new _storesSearchStore2['default']();
+
+exports['default'] = _react2['default'].createClass({
+
+  displayName: 'Search',
+
+  mixins: [(0, _reactSentry2['default'])(), _touchstonejs.animation.Mixins.ScrollContainerToTop],
+
+  statics: {
+    navigationBar: 'main',
+    getNavigation: function getNavigation() {
+      return {
+        leftIcon: 'ion-android-menu',
+        leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
+        title: 'Rechercher'
+      };
+    }
+  },
+
+  componentDidMount: function componentDidMount() {
+    var _this = this;
+
+    var body = document.getElementsByTagName('body')[0];
+
+    // navbar actions
+    this.watch(emitter, 'navigationBarLeftAction', function () {
+      body.classList.toggle('android-menu-is-open');
+    });
+
+    this.watch(searchStore.emitter, 'update', function () {
+      _this.setState({ results: searchStore.getData() });
+    });
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      query: '',
+      results: []
+    };
+  },
+
+  filter: function filter(value) {
+    this.setState({ query: value });
+    searchStore.setQuery(value);
+  },
+
+  onCancel: function onCancel() {
+    this.setState({ query: '' });
+  },
+
+  render: function render() {
+    return _react2['default'].createElement(
+      _touchstonejs.Container,
+      { direction: 'column' },
+      _react2['default'].createElement(_touchstonejs.UI.SearchField, { onChange: this.filter, onCancel: this.onCancel, onClear: this.onCancel, value: this.state.query, type: 'text', placeholder: 'Rechercher' }),
+      _react2['default'].createElement(
+        _touchstonejs.Container,
+        { fill: true, scrollable: scrollable, ref: 'scrollContainer' },
+        _react2['default'].createElement(_componentsUsersList2['default'], { users: this.state.results })
+      )
+    );
+  }
+
+});
+module.exports = exports['default'];
+
+},{"../../components/UsersList":88,"../../stores/SearchStore":101,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}]},{},[79]);

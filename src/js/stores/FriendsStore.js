@@ -8,7 +8,7 @@ var storage = Storate.get('FriendsStore', 'object') || {};
 
 class FriendsStore {
 
-	constructor() 
+	constructor()
 	{
 		this.requestSize = 9999;
 		this.emitter = new EventEmitter();
@@ -28,7 +28,7 @@ class FriendsStore {
 	getMoreFriends(userId)
 	{
 		var url = new URI('user/' + userId + '/friends');
-		url.setSearch({skip :  0, limit : this.requestSize});
+		url.setSearch({skip : 0, limit : this.requestSize});
 
 		var opt = {
 			endpoint : url
