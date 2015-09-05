@@ -32,7 +32,7 @@ export default React.createClass({
 				<Container fill scrollable={scrollable} ref="scrollContainer" onScroll={this.handleScroll}>
 					<Hammer onPan={this.onPan} options={hammerConfig}>
 					{this.props.children}
-					
+
 					</Hammer>
 				</Container>
 			</Container>
@@ -63,6 +63,9 @@ export default React.createClass({
 	},
 
 	onPan(event) {
+
+		if(!this.props.onRefresh) return false;
+		
 		var scrollPosition = this.refs.scrollContainer.getDOMNode().scrollTop,
 			pullToRefreshElement = this.refs.pullToRefresh.getDOMNode(),
 			amount = 0;

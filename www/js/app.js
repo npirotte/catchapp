@@ -19404,6 +19404,9 @@ exports['default'] = React.createClass({
 	},
 
 	onPan: function onPan(event) {
+
+		if (!this.props.onRefresh) return false;
+
 		var scrollPosition = this.refs.scrollContainer.getDOMNode().scrollTop,
 		    pullToRefreshElement = this.refs.pullToRefresh.getDOMNode(),
 		    amount = 0;
@@ -19616,9 +19619,9 @@ module.exports = React.createClass({
 'use strict';
 
 module.exports = {
-	serverUrl: 'http://192.168.1.7:1337/'
+	//serverUrl : 'http://192.168.1.7:1337/'
 	//serverUrl : 'http://192.168.1.50:1337/'
-	//serverUrl : 'http://catch-catchapp.rhcloud.com/'
+	serverUrl: 'http://catch-catchapp.rhcloud.com/'
 };
 
 },{}],90:[function(require,module,exports){
@@ -20268,7 +20271,7 @@ module.exports = exports['default'];
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-  value: true
+		value: true
 });
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -20295,77 +20298,93 @@ var lastRequestTimeStamp;
 var storage = [];
 
 function _getFilter(query) {
-  return {
-    or: [{
-      firstName: {
-        'contains': query
-      }
-    }, {
-      lastName: {
-        'contains': query
-      }
-    }, {
-      fullName: {
-        'contains': query
-      }
-    }]
-  };
+		return {
+				or: [{
+						firstName: {
+								'contains': query
+						}
+				}, {
+						lastName: {
+								'contains': query
+						}
+				}, {
+						fullName: {
+								'contains': query
+						}
+				}]
+		};
 }
 
 var SearchStore = (function () {
-  function SearchStore() {
-    _classCallCheck(this, SearchStore);
+		function SearchStore() {
+				_classCallCheck(this, SearchStore);
 
-    this.requestSize = 20;
-    this.emitter = new _events2['default']();
-    this.query = '';
-  }
+				this.requestSize = 20;
+				this.emitter = new _events2['default']();
+				this.query = '';
+		}
 
-  _createClass(SearchStore, [{
-    key: 'getData',
-    value: function getData() {
-      return storage;
-    }
-  }, {
-    key: 'setQuery',
-    value: function setQuery(query) {
-      var _this = this;
+		_createClass(SearchStore, [{
+				key: 'getData',
+				value: function getData() {
+						return storage;
+				}
+		}, {
+				key: 'setQuery',
+				value: function setQuery(query) {
 
-      this.query = query;
+						this.query = query;
 
-      var url = new _URIjs2['default'](queryUrl);
-      url.setSearch({ where: JSON.stringify(_getFilter(this.query)), limit: this.requestSize, skip: 0 });
+						var url = new _URIjs2['default'](queryUrl);
+						url.setSearch({ where: JSON.stringify(_getFilter(this.query)), limit: this.requestSize, skip: 0 });
 
-      var ops = {
-        endpoint: url
-      };
+						var date = new Date();
+						var requestTimeStamp = date.getTime();
+						lastRequestTimeStamp = date.getTime();
 
-      var date = new Date();
-      var requestTimeStamp = date.getTime();
-      lastRequestTimeStamp = date.getTime();
+						storage = [];
 
-      (0, _libHttpService2['default'])(ops, function (err, res) {
-        if (requestTimeStamp !== lastRequestTimeStamp) return;
-        if (err) return false;
+						this._query(url, requestTimeStamp);
+				}
+		}, {
+				key: 'getMore',
+				value: function getMore() {
 
-        storage = res;
+						var url = new _URIjs2['default'](queryUrl);
+						url.setSearch({ where: JSON.stringify(_getFilter(this.query)), limit: this.requestSize, skip: storage.length });
+						this._query(url);
+				}
+		}, {
+				key: 'cleanUp',
+				value: function cleanUp() {
+						this.query = '';
+						storage = [];
+				}
+		}, {
+				key: '_query',
+				value: function _query(url, requestTimeStamp) {
+						var _this = this;
 
-        if (res.length < _this.requestSize) {
-          _this.emitter.emit('noMoreItems');
-        }
+						var ops = {
+								endpoint: url
+						};
 
-        _this.emitter.emit('update');
-      });
-    }
-  }, {
-    key: 'cleanUp',
-    value: function cleanUp() {
-      this.query = '';
-      storage = [];
-    }
-  }]);
+						(0, _libHttpService2['default'])(ops, function (err, res) {
+								if (requestTimeStamp && requestTimeStamp !== lastRequestTimeStamp) return;
+								if (err) return false;
 
-  return SearchStore;
+								storage = storage.concat(res);
+
+								if (res.length < _this.requestSize) {
+										_this.emitter.emit('noMoreItems');
+								}
+
+								_this.emitter.emit('update');
+						});
+				}
+		}]);
+
+		return SearchStore;
 })();
 
 exports['default'] = SearchStore;
@@ -23125,6 +23144,8 @@ var _componentsUsersList = require('../../components/UsersList');
 
 var _componentsUsersList2 = _interopRequireDefault(_componentsUsersList);
 
+var PullToRefreshContainer = require('../../components/PullToRefreshContainer');
+
 var emitter = new _events2['default'].EventEmitter();
 var scrollable = _touchstonejs.Container.initScrollable();
 var searchStore = new _storesSearchStore2['default']();
@@ -23148,8 +23169,6 @@ exports['default'] = _react2['default'].createClass({
 
   componentDidMount: function componentDidMount() {
     var _this = this;
-
-    console.log(this.props);
 
     var body = document.getElementsByTagName('body')[0];
 
@@ -23180,13 +23199,17 @@ exports['default'] = _react2['default'].createClass({
     this.setState({ query: '' });
   },
 
+  loadMore: function loadMore() {
+    searchStore.getMore();
+  },
+
   render: function render() {
     return _react2['default'].createElement(
       _touchstonejs.Container,
       { direction: 'column' },
       _react2['default'].createElement(
-        _touchstonejs.Container,
-        { fill: true, scrollable: scrollable, ref: 'scrollContainer' },
+        PullToRefreshContainer,
+        { onRefresh: this.onRefresh, onInfinite: this.loadMore, loading: this.state.loading, ref: 'pullToRefresh' },
         _react2['default'].createElement(_componentsUsersList2['default'], { users: this.state.results, previousView: 'main:search', previousViewProps: { goBackState: this.state } })
       ),
       _react2['default'].createElement(_touchstonejs.UI.SearchField, { onChange: this.filter, onCancel: this.onCancel, onClear: this.onCancel, value: this.state.query, type: 'text', placeholder: 'Rechercher' })
@@ -23196,4 +23219,4 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/UsersList":88,"../../stores/SearchStore":101,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}]},{},[79]);
+},{"../../components/PullToRefreshContainer":85,"../../components/UsersList":88,"../../stores/SearchStore":101,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}]},{},[79]);

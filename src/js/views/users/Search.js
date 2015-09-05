@@ -6,6 +6,7 @@ import events from 'events';
 import SearchStore from '../../stores/SearchStore';
 
 import UsersList from '../../components/UsersList';
+var PullToRefreshContainer = require('../../components/PullToRefreshContainer');
 
 const emitter = new events.EventEmitter();
 const scrollable = Container.initScrollable();
@@ -29,8 +30,6 @@ export default React.createClass({
   },
 
   componentDidMount : function() {
-
-    console.log(this.props);
 
     var body = document.getElementsByTagName('body')[0];
 
@@ -61,12 +60,16 @@ export default React.createClass({
     this.setState({query : ''});
   },
 
+  loadMore : function() {
+    searchStore.getMore();
+  },
+
   render : function() {
       return (
         <Container direction="column">
-          <Container fill scrollable={scrollable} ref="scrollContainer">
+          <PullToRefreshContainer onRefresh={this.onRefresh}  onInfinite={this.loadMore} loading={this.state.loading} ref="pullToRefresh" >
             <UsersList users={this.state.results} previousView={'main:search'} previousViewProps={{ goBackState : this.state}} />
-          </Container>
+          </PullToRefreshContainer>
           <UI.SearchField onChange={this.filter} onCancel={this.onCancel} onClear={this.onCancel} value={this.state.query} type="text" placeholder="Rechercher" />
         </Container>
       )

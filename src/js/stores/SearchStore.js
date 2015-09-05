@@ -49,19 +49,39 @@ export default class SearchStore {
     var url = new URI(queryUrl);
     url.setSearch({where : JSON.stringify(_getFilter(this.query)), limit : this.requestSize, skip : 0});
 
-    var ops = {
-			endpoint : url
-		}
-
     var date = new Date();
     var requestTimeStamp = date.getTime();
     lastRequestTimeStamp = date.getTime();
 
-    HttpService(ops, (err, res) => {
-      if(requestTimeStamp !== lastRequestTimeStamp) return;
+		storage = [];
+
+		this._query(url, requestTimeStamp);
+
+  }
+
+	getMore() {
+
+			var url = new URI(queryUrl);
+			url.setSearch({where : JSON.stringify(_getFilter(this.query)), limit : this.requestSize, skip : storage.length});
+			this._query(url);
+	}
+
+  cleanUp() {
+    this.query = '';
+    storage = [];
+  }
+
+	_query(url, requestTimeStamp) {
+
+		var ops = {
+			endpoint : url
+		}
+
+		HttpService(ops, (err, res) => {
+      if(requestTimeStamp && requestTimeStamp !== lastRequestTimeStamp) return;
       if(err) return false;
 
-      storage = res;
+      storage = storage.concat(res);
 
       if (res.length < this.requestSize) {
         this.emitter.emit('noMoreItems');
@@ -70,10 +90,5 @@ export default class SearchStore {
       this.emitter.emit('update');
 
     });
-  }
-
-  cleanUp() {
-    this.query = '';
-    storage = [];
-  }
+	}
 }
