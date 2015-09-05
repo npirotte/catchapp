@@ -19593,11 +19593,16 @@ var React = require('react');
 var UserItem = require('./UserItem');
 
 module.exports = React.createClass({
+	propTypes: {
+		users: React.PropTypes.array,
+		previousViewProps: React.PropTypes.object,
+		previousView: React.PropTypes.string
+	},
 	displayName: 'UsersList',
 	render: function render() {
-		var items = this.props.users.map(function (userItem, i) {
-			return React.createElement(UserItem, { key: 'catch_' + i, userItem: userItem });
-		});
+		var items = this.props.users.map((function (userItem) {
+			return React.createElement(UserItem, { key: userItem.id, userItem: userItem, previousView: this.props.previousView, previousViewProps: this.props.previousViewProps });
+		}).bind(this));
 
 		return React.createElement(
 			'div',
@@ -23144,6 +23149,8 @@ exports['default'] = _react2['default'].createClass({
   componentDidMount: function componentDidMount() {
     var _this = this;
 
+    console.log(this.props);
+
     var body = document.getElementsByTagName('body')[0];
 
     // navbar actions
@@ -23157,6 +23164,7 @@ exports['default'] = _react2['default'].createClass({
   },
 
   getInitialState: function getInitialState() {
+    if (this.props.goBackState) return this.props.goBackState;
     return {
       query: '',
       results: []
@@ -23179,7 +23187,7 @@ exports['default'] = _react2['default'].createClass({
       _react2['default'].createElement(
         _touchstonejs.Container,
         { fill: true, scrollable: scrollable, ref: 'scrollContainer' },
-        _react2['default'].createElement(_componentsUsersList2['default'], { users: this.state.results })
+        _react2['default'].createElement(_componentsUsersList2['default'], { users: this.state.results, previousView: 'main:search', previousViewProps: { goBackState: this.state } })
       ),
       _react2['default'].createElement(_touchstonejs.UI.SearchField, { onChange: this.filter, onCancel: this.onCancel, onClear: this.onCancel, value: this.state.query, type: 'text', placeholder: 'Rechercher' })
     );

@@ -30,6 +30,8 @@ export default React.createClass({
 
   componentDidMount : function() {
 
+    console.log(this.props);
+
     var body = document.getElementsByTagName('body')[0];
 
     // navbar actions
@@ -43,6 +45,7 @@ export default React.createClass({
   },
 
   getInitialState : function() {
+    if (this.props.goBackState) return this.props.goBackState;
     return {
       query : '',
       results : []
@@ -62,7 +65,7 @@ export default React.createClass({
       return (
         <Container direction="column">
           <Container fill scrollable={scrollable} ref="scrollContainer">
-            <UsersList users={this.state.results} />
+            <UsersList users={this.state.results} previousView={'main:search'} previousViewProps={{ goBackState : this.state}} />
           </Container>
           <UI.SearchField onChange={this.filter} onCancel={this.onCancel} onClear={this.onCancel} value={this.state.query} type="text" placeholder="Rechercher" />
         </Container>

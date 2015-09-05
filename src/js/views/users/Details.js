@@ -32,7 +32,7 @@ module.exports = React.createClass({
 		getNavigation : getNavigation
 	},
 
-	render() {
+	render : function() {
 		var userImageUrl = ImageUrl(this.props.userItem.asset),
 			imageStyle = { width : '100%' };
 
@@ -44,23 +44,23 @@ module.exports = React.createClass({
 			)
 	},
 
-	componentDidMount() {
+	componentDidMount : function() {
 
 		var previousView = this.props.previousView || 'main:users-list',
 				previousViewProps = this.props.previousViewProps || {};
 
 		this.watch(emitter, 'navigationBarLeftAction', event => {
 			this.transitionTo(previousView, {
-				transition: 'reveal-from-right',
-				viewProps: previousViewProps
+				transition : 'reveal-from-right',
+				viewProps : previousViewProps
 			});
 		});
 
 		// android backbutton handler
 		this.watch(document, 'backbutton', event => {
 			this.transitionTo(previousView, {
-				transition: 'reveal-from-right',
-				viewProps: previousViewProps
+				transition : 'reveal-from-right',
+				viewProps : previousViewProps
 			});
 		});
 
@@ -70,7 +70,7 @@ module.exports = React.createClass({
 				previousViewProps : this.props,
 				previousView : 'main:users-details'
 			}
-			this.transitionTo('main:catchs-form', { viewProps : props, });
+			this.transitionTo('main:catchs-form', { viewProps : props });
 		});
 	}
 

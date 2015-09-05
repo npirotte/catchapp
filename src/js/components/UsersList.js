@@ -2,13 +2,18 @@ var React = require('react');
 var UserItem = require('./UserItem');
 
 module.exports = React.createClass({
-	displayName: 'UsersList',
-	render: function()
+	propTypes : {
+		users : React.PropTypes.array,
+		previousViewProps : React.PropTypes.object,
+		previousView : React.PropTypes.string
+	},
+	displayName : 'UsersList',
+	render : function()
 	{
-		var items = this.props.users.map(function(userItem, i)
+		var items = this.props.users.map(function(userItem)
 		{
-			return <UserItem key={'catch_' + i} userItem={userItem} />
-		});
+			return <UserItem key={userItem.id} userItem={userItem} previousView={this.props.previousView} previousViewProps={this.props.previousViewProps} />
+		}.bind(this));
 
 		return (
 			<div>
