@@ -64,12 +64,22 @@
 
 .NavigationBar {
 	.box-sizing(content-box); // allows us to set a fixed height whilst growing when padding is applied
-	.retina-1px-border-bottom( rgba(255, 255, 255, 0.3) );
-	background-color: @headerbar-bg;
+	//.retina-1px-border-bottom( rgba(255, 255, 255, 0.3) );
+	background-color: @headerbar-bg-color;
+	background-image: url( @headerbar-bg-url );
+	background-repeat: no-repeat;
+	background-size: 200%;
+	background-position: center top;
 	line-height: @headerbar-height;
 	height: @headerbar-height;
 	position: relative;
 	z-index: @view-transition-stack-top + 1;
+	width: 100%;
+	color: white;
+
+	a, span{
+		color: white;
+	}
 
 	// make room for the iOS statusbar
 	.device--iPhone & {
