@@ -1,7 +1,7 @@
 var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
-var { animation, Transitions } = require('../../touchstone');
+var { animation, Mixins, UI } = require('touchstonejs');
 
 var ImageUrl = require('../../filters/ImageUrl');
 
@@ -25,7 +25,7 @@ module.exports = React.createClass({
 
 	displayName : 'ViewUserDetails',
 
-	mixins: [Sentry(), Transitions],
+	mixins: [Sentry(), Mixins.Transitions],
 
 	statics: {
 		navigationBar: 'main',

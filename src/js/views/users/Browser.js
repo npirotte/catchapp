@@ -1,4 +1,4 @@
-var {Transitions, animation} = require('../../touchstone');
+var {Mixins, animation, UI} = require('touchstonejs');
 var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
@@ -19,7 +19,7 @@ module.exports = React.createClass({
 
 	displayName : 'ViewUsersList',
 
-	mixins: [Sentry(), animation.Mixins.ScrollContainerToTop, Transitions],
+	mixins: [Sentry(), animation.Mixins.ScrollContainerToTop, Mixins.Transitions],
 
 	statics: {
 		navigationBar: 'main',
@@ -37,9 +37,8 @@ module.exports = React.createClass({
 	getInitialState ()
 	{
 		this.userId = AuthStore.user().id;
-		
+
 		var friends = _friendStore.getFriends(this.userId);
-		console.log(_friendStore.getFriends);
 
 		return {
 			friends : friends,
@@ -92,9 +91,13 @@ module.exports = React.createClass({
 		console.log(this.state.selectedFriends);
 	},
 
-	filter (event)
+	onCancel : function() {
+		this.setState({query : ""});
+	},
+
+	filter (value)
 	{
-		var query = event.target.value;
+		var query = value;
 		this.setState({query : query});
 	},
 
@@ -102,17 +105,17 @@ module.exports = React.createClass({
 		return (
 			<Container direction="column">
 				<div className="search-header">
-					<input onChange={this.filter} type="text" placeholder="Rechercher" />
+					<UI.SearchField onChange={this.filter} onCancel={this.onCancel} onClear={this.onCancel} value={this.state.query} type="text" placeholder="Rechercher" />
 				</div>
 				<Container fill scrollable={scrollable} onScroll={this.handleScroll} ref="scrollContainer">
 					{this.state.friends.map(function(friend, index) {
 
 						var isFiltred = friend.fullName.toLowerCase().search(this.state.query.toLowerCase()) >= 0;
-						
+
 						var checked = this.state.selectedFriends.indexOf(friend.id) >= 0;
 
 						var allreadySelected = this.props.selectedFriends.indexOf(friend.id) >= 0;
-						
+
 						if(allreadySelected || (this.state.query && !isFiltred)) return;
 
 						return <CheckBox key={friend.id} className="ListItem" onChange={this.onChange} value={friend.id} defaultChecked={checked} >{friend.fullName}</CheckBox>
@@ -121,5 +124,5 @@ module.exports = React.createClass({
 				</Container>
 			</Container>
 			)
-	} 
+	}
 });

@@ -33,7 +33,7 @@ module.exports = React.createClass({
 								<LabelInput ref="password" name="password" type="password" placeholder="Mot de passe" label="Mot de passe" required={true} />
 							</div>
 							<Tappable onTap={this.handleFormSubmission} type="submit" className="button button--raised button-primary">Connexion</Tappable>
-						</form>		
+						</form>
 						<br /><br />
 						<div className="AuthRegisterLink">
 							<span className="text-light">Pas encore un compte ? </span>

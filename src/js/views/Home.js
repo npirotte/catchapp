@@ -2,7 +2,7 @@ var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
 
-var { Link } = require('../touchstone');
+var { Link } = require('touchstonejs');
 
 var imageUrl = require('../filters/ImageUrl');
 

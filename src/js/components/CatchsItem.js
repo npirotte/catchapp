@@ -1,6 +1,6 @@
 var React = require('react');
 var moment = require('moment');
-var { Link } = require('../touchstone');
+var { Link } = require('touchstonejs');
 
 var ItemAvatar = require('./ItemAvatar');
 
@@ -20,7 +20,7 @@ module.exports = React.createClass({
 		if (this.props.myPosition && !this.distance && this.props.catchItem.geo) {
 			this.distance = Distance(this.props.myPosition.coords.latitude, this.props.myPosition.coords.longitude, this.props.catchItem.geo[0], this.props.catchItem.geo[1]);
 		};
-		
+
 		return (
 			<Link to="main:catchs-details" viewProps={this.props} transition="show-from-right" className="ListItem Person" component="div">
 				<ItemAvatar src={imageUrl} name={this.props.catchItem.sender.fullName} />

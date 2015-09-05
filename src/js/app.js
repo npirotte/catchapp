@@ -1,20 +1,30 @@
 var React = require('react/addons');
 var Sentry = require('react-sentry');
 var {
-	createApp,
-	Container,
+	//createApp,
+	//Container,
 	NavigationBar,
 	Tabs,
-	ViewManager,
-	View
+	//ViewManager,
+	//View
 } = require('./touchstone');
+
+var {
+	createApp,
+  View,
+  ViewManager,
+	Container,
+	UI
+} = require('touchstonejs');
+
+var {Tabs} = UI;
 
 var AuthStore = require('./stores/AuthStore');
 
 var device = require('./lib/device')
 
 var App = React.createClass({
-	mixins: [createApp(), Sentry()],
+	mixins : [createApp(), Sentry()],
 
 	/*childContextTypes: {
 		dataStore: React.PropTypes.object
@@ -26,13 +36,13 @@ var App = React.createClass({
 		};
 	},*/
 
-	getInitialState () {
+	getInitialState : function () {
 		return {
-			defaultView: AuthStore.amRegistered() ? 'main' : 'login'
+			defaultView : AuthStore.amRegistered() ? 'main' : 'login'
 		}
 	},
 
-	componentDidMount () {
+	componentDidMount : function () {
 		// Delay the splash screen fade to allow for initial render to complete
 		setTimeout(hideSplashScreen, 400);
 
@@ -43,7 +53,7 @@ var App = React.createClass({
 
 	},
 
-	render () {
+	render : function () {
 		var appWrapperClassName = 'app-wrapper device--' + device.platform;
 
 		return (
@@ -63,14 +73,15 @@ var App = React.createClass({
 
 var MainViewController = React.createClass({
 
-	handleChange (event)
+	handleChange : function (view)
 	{
+		console.log(view);
 		var body = document.getElementsByTagName('body')[0];
 
 		body.classList.remove('android-menu-is-open');
 
 		if (event.value !== 'logoff') {
-			this.refs.viewManager.transitionTo(event.value, {});
+			this.refs.viewManager.transitionTo(view, {});
 		}
 		else
 		{
@@ -78,34 +89,36 @@ var MainViewController = React.createClass({
 		}
 	},
 
-	render () {
+	render : function () {
 
 		const defaultView = 'home';
 
 		return (
 			<Container>
-				<Tabs.Navigator onChange={this.handleChange}>
-					<Tabs.Tab value="home">
+				<div className="Tabs-Navigator-wrapper">
+				<Tabs.Navigator>
+					<Tabs.Tab value="home" onClick={this.handleChange.bind(this, 'home')}>
 						<span className="Tabs-Icon Tabs-Icon--event" />
 						<Tabs.Label>Acceuil</Tabs.Label>
 					</Tabs.Tab>
-					<Tabs.Tab value="catchs-list">
+					<Tabs.Tab value="catchs-list" onTap={this.handleChange.bind(this, 'catchs-list')}>
 						<span className="Tabs-Icon Tabs-Icon--schedule" />
 						<Tabs.Label>Goops</Tabs.Label>
 					</Tabs.Tab>
-					<Tabs.Tab value="users-list">
+					<Tabs.Tab value="users-list" onClick={this.handleChange.bind(this, 'users-list')}>
 						<span className="Tabs-Icon Tabs-Icon--people" />
 						<Tabs.Label>Utilisateurs</Tabs.Label>
 					</Tabs.Tab>
-					<Tabs.Tab value="auth-edit">
+					<Tabs.Tab value="auth-edit" onClick={this.handleChange.bind(this, 'auth-edit')}>
 						<span className="Tabs-Icon Tabs-Icon--people" />
 						<Tabs.Label>Editer profil</Tabs.Label>
 					</Tabs.Tab>
-					<Tabs.Tab value="logoff">
+					<Tabs.Tab value="logoff" onClick={this.handleChange.bind(this, 'logoff')}>
 						<span className="Tabs-Icon Tabs-Icon--logoff" />
 						<Tabs.Label>Déconnexion</Tabs.Label>
 					</Tabs.Tab>
 				</Tabs.Navigator>
+				</div>
 				<NavigationBar name="main" />
 				<ViewManager name="main" ref="viewManager" defaultView={defaultView}>
 					<View name="home" component={require('./views/Home')} />

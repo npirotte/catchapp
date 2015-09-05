@@ -16095,6 +16095,1981 @@ Component.Mixin = Mixin;
 Component.touchStyles = TOUCH_STYLES;
 module.exports = Component;
 },{"react":undefined}],38:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+var React = require('react');
+var Container = require('react-container');
+
+var ErrorView = React.createClass({
+	displayName: 'ErrorView',
+
+	propTypes: {
+		children: React.PropTypes.node
+	},
+
+	render: function render() {
+		return React.createElement(
+			Container,
+			{ fill: true, className: "View ErrorView" },
+			this.props.children
+		);
+	}
+});
+
+exports['default'] = ErrorView;
+module.exports = exports['default'];
+},{"react":undefined,"react-container":33}],39:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var React = require('react');
+var Tappable = require('react-tappable');
+var Transitions = require('../mixins/Transitions');
+
+var Link = React.createClass({
+	displayName: 'Link',
+
+	mixins: [Transitions],
+	propTypes: {
+		children: React.PropTypes.any,
+		options: React.PropTypes.object,
+		transition: React.PropTypes.string,
+		to: React.PropTypes.string,
+		viewProps: React.PropTypes.any
+	},
+
+	doTransition: function doTransition() {
+		var options = _extends({ viewProps: this.props.viewProps, transition: this.props.transition }, this.props.options);
+		console.info('Link to "' + this.props.to + '" using transition "' + this.props.transition + '"' + ' with props ', this.props.viewProps);
+		this.transitionTo(this.props.to, options);
+	},
+
+	render: function render() {
+		var tappableProps = blacklist(this.props, 'children', 'options', 'transition', 'viewProps');
+
+		return React.createElement(
+			Tappable,
+			_extends({ onTap: this.doTransition }, tappableProps),
+			this.props.children
+		);
+	}
+});
+
+exports['default'] = Link;
+module.exports = exports['default'];
+},{"../mixins/Transitions":44,"blacklist":6,"react":undefined,"react-tappable":37}],40:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+var React = require('react');
+
+var View = React.createClass({
+	displayName: 'View',
+
+	propTypes: {
+		component: React.PropTypes.func.isRequired,
+		name: React.PropTypes.string.isRequired
+	},
+	render: function render() {
+		throw new Error('TouchstoneJS <View> should not be rendered directly.');
+	}
+});
+
+exports['default'] = View;
+module.exports = exports['default'];
+},{"react":undefined}],41:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classNames = require('classnames');
+var ErrorView = require('./ErrorView');
+var React = require('react/addons');
+var Transition = React.addons.CSSTransitionGroup;
+
+function createViewsFromChildren(children) {
+	var views = {};
+	React.Children.forEach(children, function (view) {
+		views[view.props.name] = view;
+	});
+	return views;
+}
+
+var ViewContainer = React.createClass({
+	displayName: 'ViewContainer',
+
+	statics: {
+		shouldFillVerticalSpace: true
+	},
+	propTypes: {
+		children: React.PropTypes.node
+	},
+	render: function render() {
+		var props = blacklist(this.props, 'children');
+		return React.createElement(
+			'div',
+			props,
+			this.props.children
+		);
+	}
+});
+
+var ViewManager = React.createClass({
+	displayName: 'ViewManager',
+
+	statics: {
+		shouldFillVerticalSpace: true
+	},
+	contextTypes: {
+		app: React.PropTypes.object.isRequired
+	},
+	propTypes: {
+		name: React.PropTypes.string,
+		children: React.PropTypes.node,
+		className: React.PropTypes.string,
+		defaultView: React.PropTypes.string,
+		onViewChange: React.PropTypes.func
+	},
+	getDefaultProps: function getDefaultProps() {
+		return {
+			name: '__default'
+		};
+	},
+	getInitialState: function getInitialState() {
+		return {
+			views: createViewsFromChildren(this.props.children),
+			currentView: this.props.defaultView,
+			options: {}
+		};
+	},
+	componentDidMount: function componentDidMount() {
+		this.context.app.viewManagers[this.props.name] = this;
+	},
+	componentWillUnmount: function componentWillUnmount() {
+		delete this.context.app.viewManagers[this.props.name];
+	},
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		this.setState({
+			views: createViewsFromChildren(this.props.children)
+		});
+		if (nextProps.name !== this.props.name) {
+			this.context.app.viewManagers[nextProps.name] = this;
+			delete this.context.app.viewManagers[this.props.name];
+		}
+		if (nextProps.currentView && nextProps.currentView !== this.state.currentView) {
+			this.transitionTo(nextProps.currentView, { viewProps: nextProps.viewProps });
+		}
+	},
+	transitionTo: function transitionTo(viewKey, options) {
+		var _this = this;
+
+		if (typeof options === 'string') {
+			options = { transition: options };
+		}
+		if (!options) options = {};
+		this.activeTransitionOptions = options;
+		this.context.app.viewManagerInTransition = this;
+		this.props.onViewChange && this.props.onViewChange(viewKey);
+		this.setState({
+			currentView: viewKey,
+			options: options
+		}, function () {
+			delete _this.activeTransitionOptions;
+			delete _this.context.app.viewManagerInTransition;
+		});
+	},
+	renderViewContainer: function renderViewContainer() {
+		var viewKey = this.state.currentView;
+		if (!viewKey) {
+			return React.createElement(
+				ErrorView,
+				null,
+				React.createElement(
+					'span',
+					{ className: "ErrorView__heading" },
+					'ViewManager: ',
+					this.props.name
+				),
+				React.createElement(
+					'span',
+					{ className: "ErrorView__text" },
+					'Error: There is no current View.'
+				)
+			);
+		}
+		var view = this.state.views[viewKey];
+		if (!view || !view.props.component) {
+			return React.createElement(
+				ErrorView,
+				null,
+				React.createElement(
+					'span',
+					{ className: "ErrorView__heading" },
+					'ViewManager: "',
+					this.props.name,
+					'"'
+				),
+				React.createElement(
+					'span',
+					{ className: "ErrorView__text" },
+					'The View "',
+					viewKey,
+					'" is invalid.'
+				)
+			);
+		}
+		var options = this.state.options || {};
+		var viewClassName = classNames('View View--' + viewKey, view.props.className);
+		var ViewComponent = view.props.component;
+		var viewProps = blacklist(view.props, 'component', 'className');
+		_extends(viewProps, options.viewProps);
+		var viewElement = React.createElement(ViewComponent, viewProps);
+
+		if (this.__lastRenderedView !== viewKey) {
+			// console.log('initialising view ' + viewKey + ' with options', options);
+			if (viewElement.type.navigationBar && viewElement.type.getNavigation) {
+				var app = this.context.app;
+				var transition = options.transition;
+				if (app.viewManagerInTransition) {
+					transition = app.viewManagerInTransition.activeTransitionOptions.transition;
+				}
+				setTimeout(function () {
+					app.navigationBars[viewElement.type.navigationBar].updateWithTransition(viewElement.type.getNavigation(viewProps, app), transition);
+				}, 0);
+			}
+			this.__lastRenderedView = viewKey;
+		}
+
+		return React.createElement(
+			ViewContainer,
+			{ className: viewClassName, key: viewKey },
+			viewElement
+		);
+	},
+	render: function render() {
+		var className = classNames('ViewManager', this.props.className);
+		var viewContainer = this.renderViewContainer(this.state.currentView, { viewProps: this.state.currentViewProps });
+
+		var transitionName = 'view-transition-instant';
+		if (this.state.options.transition) {
+			// console.log('applying view transition: ' + this.state.options.transition + ' to view ' + this.state.currentView);
+			transitionName = 'view-transition-' + this.state.options.transition;
+		}
+		return React.createElement(
+			Transition,
+			{ transitionName: transitionName, transitionEnter: true, transitionLeave: true, className: className, component: "div" },
+			viewContainer
+		);
+	}
+});
+
+exports['default'] = ViewManager;
+module.exports = exports['default'];
+},{"./ErrorView":38,"blacklist":6,"classnames":13,"react/addons":undefined}],42:[function(require,module,exports){
+'use strict';
+
+var animation = require('tween.js');
+var React = require('react');
+
+function update() {
+	animation.update();
+	if (animation.getAll().length) {
+		window.requestAnimationFrame(update);
+	}
+}
+
+function scrollToTop(el, options) {
+	options = options || {};
+	var from = el.scrollTop;
+	var duration = Math.min(Math.max(200, from / 2), 350);
+	if (from > 200) duration = 300;
+	el.style.webkitOverflowScrolling = 'auto';
+	el.style.overflow = 'hidden';
+	var tween = new animation.Tween({ pos: from }).to({ pos: 0 }, duration).easing(animation.Easing.Quadratic.Out).onUpdate(function () {
+		el.scrollTop = this.pos;
+		if (options.onUpdate) {
+			options.onUpdate();
+		}
+	}).onComplete(function () {
+		el.style.webkitOverflowScrolling = 'touch';
+		el.style.overflow = 'scroll';
+		if (options.onComplete) options.onComplete();
+	}).start();
+	update();
+	return tween;
+}
+
+exports.scrollToTop = scrollToTop;
+
+var Mixins = exports.Mixins = {};
+
+Mixins.ScrollContainerToTop = {
+	componentDidMount: function componentDidMount() {
+		window.addEventListener('statusTap', this.scrollContainerToTop);
+	},
+	componentWillUnmount: function componentWillUnmount() {
+		window.removeEventListener('statusTap', this.scrollContainerToTop);
+		if (this._scrollContainerAnimation) {
+			this._scrollContainerAnimation.stop();
+		}
+	},
+	scrollContainerToTop: function scrollContainerToTop() {
+		var _this = this;
+
+		if (!this.isMounted() || !this.refs.scrollContainer) return;
+		this._scrollContainerAnimation = scrollToTop(React.findDOMNode(this.refs.scrollContainer), {
+			onComplete: function onComplete() {
+				delete _this._scrollContainerAnimation;
+			}
+		});
+	}
+};
+},{"react":undefined,"tween.js":78}],43:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+exports.createApp = createApp;
+var React = require('react');
+
+var animation = require('./core/animation');
+exports.animation = animation;
+var Link = require('./core/Link');
+exports.Link = Link;
+var View = require('./core/View');
+exports.View = View;
+var ViewManager = require('./core/ViewManager');
+
+exports.ViewManager = ViewManager;
+var Container = require('react-container');
+exports.Container = Container;
+var Mixins = require('./mixins');
+exports.Mixins = Mixins;
+var UI = require('./ui');
+
+exports.UI = UI;
+
+function createApp() {
+	var app = {
+		navigationBars: {},
+		viewManagers: {},
+		views: {},
+		transitionTo: function transitionTo(view, opts) {
+			var vm = '__default';
+			view = view.split(':');
+			if (view.length > 1) {
+				vm = view.shift();
+			}
+			view = view[0];
+			app.viewManagers[vm].transitionTo(view, opts);
+		}
+	};
+	return {
+		childContextTypes: {
+			app: React.PropTypes.object
+		},
+		getChildContext: function getChildContext() {
+			return {
+				app: app
+			};
+		}
+	};
+}
+},{"./core/Link":39,"./core/View":40,"./core/ViewManager":41,"./core/animation":42,"./mixins":45,"./ui":77,"react":undefined,"react-container":33}],44:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+var React = require('react');
+
+var Transitions = {
+	contextTypes: {
+		app: React.PropTypes.object
+	},
+	transitionTo: function transitionTo(view, opts) {
+		this.context.app.transitionTo(view, opts);
+	}
+};
+
+exports['default'] = Transitions;
+module.exports = exports['default'];
+},{"react":undefined}],45:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var Transitions = require('./Transitions');
+exports.Transitions = Transitions;
+},{"./Transitions":44}],46:[function(require,module,exports){
+'use strict';
+
+var React = require('react/addons');
+var classnames = require('classnames');
+var Transition = React.addons.CSSTransitionGroup;
+
+module.exports = React.createClass({
+	displayName: 'Alertbar',
+	propTypes: {
+		animated: React.PropTypes.bool,
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string,
+		pulse: React.PropTypes.bool,
+		type: React.PropTypes.oneOf(['default', 'primary', 'success', 'warning', 'danger']),
+		visible: React.PropTypes.bool
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			type: 'default'
+		};
+	},
+
+	render: function render() {
+		var className = classnames('Alertbar', 'Alertbar--' + this.props.type, {
+			'Alertbar--animated': this.props.animated,
+			'Alertbar--pulse': this.props.pulse
+		}, this.props.className);
+
+		var pulseWrap = this.props.pulse ? React.createElement(
+			'div',
+			{ className: "Alertbar__inner" },
+			this.props.children
+		) : this.props.children;
+		var animatedBar = this.props.visible ? React.createElement(
+			'div',
+			{ className: className },
+			pulseWrap
+		) : null;
+
+		var component = this.props.animated ? React.createElement(
+			Transition,
+			{ transitionName: "Alertbar", component: "div" },
+			animatedBar
+		) : React.createElement(
+			'div',
+			{ className: className },
+			pulseWrap
+		);
+
+		return component;
+	}
+});
+},{"classnames":13,"react/addons":undefined}],47:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var React = require('react/addons');
+var Tappable = require('react-tappable');
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+
+module.exports = React.createClass({
+	displayName: 'Button',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string,
+		type: React.PropTypes.oneOf(['default', 'info', 'primary', 'success', 'warning', 'danger'])
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			type: 'default'
+		};
+	},
+
+	render: function render() {
+		var className = classnames('Button', 'Button--' + this.props.type, this.props.className);
+		var props = blacklist(this.props, 'type');
+
+		return React.createElement(Tappable, _extends({}, props, { className: className, component: "button" }));
+	}
+});
+},{"blacklist":6,"classnames":13,"react-tappable":37,"react/addons":undefined}],48:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'ButtonGroup',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('ButtonGroup', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],49:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'FieldControl',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('FieldControl', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],50:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'FieldLabel',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('FieldLabel', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],51:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'Group',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string,
+		hasTopGutter: React.PropTypes.bool
+	},
+	render: function render() {
+		var className = classnames('Group', {
+			'Group--has-gutter-top': this.props.hasTopGutter
+		}, this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],52:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'GroupBody',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('Group__body', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],53:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'GroupFooter',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('Group__footer', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],54:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'GroupHeader',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('Group__header', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],55:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'GroupInner',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('Group__inner', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],56:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var Item = require('./Item');
+var ItemContent = require('./ItemContent');
+var ItemInner = require('./ItemInner');
+var React = require('react/addons');
+
+var blacklist = require('blacklist');
+
+module.exports = React.createClass({
+	displayName: 'Input',
+
+	propTypes: {
+		className: React.PropTypes.string,
+		children: React.PropTypes.node,
+		disabled: React.PropTypes.bool
+	},
+
+	render: function render() {
+		var inputProps = blacklist(this.props, 'children', 'className');
+
+		return React.createElement(
+			Item,
+			{ className: this.props.className, selectable: this.props.disabled, component: "label" },
+			React.createElement(
+				ItemInner,
+				null,
+				React.createElement(
+					ItemContent,
+					{ component: "label" },
+					React.createElement('input', _extends({ className: "field", type: "text" }, inputProps))
+				),
+				this.props.children
+			)
+		);
+	}
+});
+},{"./Item":57,"./ItemContent":58,"./ItemInner":59,"blacklist":6,"react/addons":undefined}],57:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _blacklist = require('blacklist');
+
+var _blacklist2 = _interopRequireDefault(_blacklist);
+
+var _reactAddons = require('react/addons');
+
+var _reactAddons2 = _interopRequireDefault(_reactAddons);
+
+var _classnames = require('classnames');
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+module.exports = _reactAddons2['default'].createClass({
+	displayName: 'Item',
+
+	propTypes: {
+		children: _reactAddons2['default'].PropTypes.node.isRequired,
+		className: _reactAddons2['default'].PropTypes.string,
+		showDisclosureArrow: _reactAddons2['default'].PropTypes.bool
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			component: 'div'
+		};
+	},
+
+	render: function render() {
+		var componentClass = (0, _classnames2['default'])('Item', {
+			'Item--has-disclosure-arrow': this.props.showDisclosureArrow
+		}, this.props.className);
+
+		var props = (0, _blacklist2['default'])(this.props, 'children', 'className', 'showDisclosureArrow');
+		props.className = componentClass;
+
+		return _reactAddons2['default'].createElement(this.props.component, props, this.props.children);
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],58:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'ItemContent',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('Item__content', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],59:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var React = require('react/addons');
+
+var classnames = require('classnames');
+
+module.exports = React.createClass({
+	displayName: 'ItemInner',
+
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+
+	render: function render() {
+		var className = classnames('Item__inner', this.props.className);
+
+		return React.createElement('div', _extends({ className: className }, this.props));
+	}
+});
+},{"classnames":13,"react/addons":undefined}],60:[function(require,module,exports){
+'use strict';
+
+var React = require('react/addons');
+var classnames = require('classnames');
+
+module.exports = React.createClass({
+	displayName: 'ItemMedia',
+	propTypes: {
+		avatar: React.PropTypes.string,
+		avatarInitials: React.PropTypes.string,
+		className: React.PropTypes.string,
+		icon: React.PropTypes.string,
+		thumbnail: React.PropTypes.string
+	},
+
+	render: function render() {
+		var className = classnames({
+			'Item__media': true,
+			'Item__media--icon': this.props.icon,
+			'Item__media--avatar': this.props.avatar || this.props.avatarInitials,
+			'Item__media--thumbnail': this.props.thumbnail
+		}, this.props.className);
+
+		// media types
+		var icon = this.props.icon ? React.createElement('div', { className: 'Item__media__icon ' + this.props.icon }) : null;
+		var avatar = this.props.avatar || this.props.avatarInitials ? React.createElement(
+			'div',
+			{ className: "Item__media__avatar" },
+			this.props.avatar ? React.createElement('img', { src: this.props.avatar }) : this.props.avatarInitials
+		) : null;
+		var thumbnail = this.props.thumbnail ? React.createElement(
+			'div',
+			{ className: "Item__media__thumbnail" },
+			React.createElement('img', { src: this.props.thumbnail })
+		) : null;
+
+		return React.createElement(
+			'div',
+			{ className: className },
+			icon,
+			avatar,
+			thumbnail
+		);
+	}
+});
+},{"classnames":13,"react/addons":undefined}],61:[function(require,module,exports){
+'use strict';
+
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'ItemNote',
+	propTypes: {
+		className: React.PropTypes.string,
+		icon: React.PropTypes.string,
+		label: React.PropTypes.string,
+		type: React.PropTypes.string
+	},
+	getDefaultProps: function getDefaultProps() {
+		return {
+			type: 'default'
+		};
+	},
+	render: function render() {
+		var className = classnames('Item__note', 'Item__note--' + this.props.type, this.props.className);
+
+		// elements
+		var label = this.props.label ? React.createElement(
+			'div',
+			{ className: "Item__note__label" },
+			this.props.label
+		) : null;
+		var icon = this.props.icon ? React.createElement('div', { className: 'Item__note__icon ' + this.props.icon }) : null;
+
+		return React.createElement(
+			'div',
+			{ className: className },
+			label,
+			icon
+		);
+	}
+});
+},{"classnames":13,"react/addons":undefined}],62:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'ItemSubTitle',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('Item__subtitle', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],63:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'ItemTitle',
+	propTypes: {
+		children: React.PropTypes.node.isRequired,
+		className: React.PropTypes.string
+	},
+	render: function render() {
+		var className = classnames('Item__title', this.props.className);
+		var props = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],64:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _blacklist = require('blacklist');
+
+var _blacklist2 = _interopRequireDefault(_blacklist);
+
+var _FieldControl = require('./FieldControl');
+
+var _FieldControl2 = _interopRequireDefault(_FieldControl);
+
+var _FieldLabel = require('./FieldLabel');
+
+var _FieldLabel2 = _interopRequireDefault(_FieldLabel);
+
+var _Item = require('./Item');
+
+var _Item2 = _interopRequireDefault(_Item);
+
+var _ItemInner = require('./ItemInner');
+
+var _ItemInner2 = _interopRequireDefault(_ItemInner);
+
+var _reactAddons = require('react/addons');
+
+var _reactAddons2 = _interopRequireDefault(_reactAddons);
+
+var _reactTappable = require('react-tappable');
+
+// Many input types DO NOT support setSelectionRange.
+// Email will show an error on most desktop browsers but works on
+// mobile safari + WKWebView, which is really what we care about
+
+var _reactTappable2 = _interopRequireDefault(_reactTappable);
+
+var SELECTABLE_INPUT_TYPES = {
+	'email': true,
+	'password': true,
+	'search': true,
+	'tel': true,
+	'text': true,
+	'url': true
+};
+
+module.exports = _reactAddons2['default'].createClass({
+	displayName: 'LabelInput',
+
+	propTypes: {
+		alignTop: _reactAddons2['default'].PropTypes.bool,
+		children: _reactAddons2['default'].PropTypes.node,
+		className: _reactAddons2['default'].PropTypes.string,
+		disabled: _reactAddons2['default'].PropTypes.bool,
+		label: _reactAddons2['default'].PropTypes.string,
+		readOnly: _reactAddons2['default'].PropTypes.bool,
+		value: _reactAddons2['default'].PropTypes.string
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			readOnly: false
+		};
+	},
+
+	moveCursorToEnd: function moveCursorToEnd() {
+		var target = this.refs.focusTarget.getDOMNode();
+		var endOfString = target.value.length;
+
+		console.count('focus ' + target.type);
+
+		if (SELECTABLE_INPUT_TYPES.hasOwnProperty(target.type)) {
+			target.setSelectionRange(endOfString, endOfString);
+		}
+	},
+
+	handleFocus: function handleFocus() {
+		this.moveCursorToEnd();
+
+		if (this.props.onFocus) {
+			this.props.onFocus();
+		}
+	},
+
+	render: function render() {
+		var indentifiedByUserInput = this.props.id || this.props.htmlFor;
+
+		var inputProps = (0, _blacklist2['default'])(this.props, 'alignTop', 'children', 'first', 'readOnly');
+		var renderInput = this.props.readOnly ? _reactAddons2['default'].createElement(
+			'div',
+			{ className: "field u-selectable" },
+			this.props.value
+		) : _reactAddons2['default'].createElement('input', _extends({ ref: "focusTarget", className: "field", type: "text" }, inputProps));
+
+		return _reactAddons2['default'].createElement(
+			_Item2['default'],
+			{ alignTop: this.props.alignTop, selectable: this.props.disabled, className: this.props.className, component: "label" },
+			_reactAddons2['default'].createElement(
+				_ItemInner2['default'],
+				null,
+				_reactAddons2['default'].createElement(
+					_reactTappable2['default'],
+					{ onTap: this.handleFocus, className: "FieldLabel" },
+					this.props.label
+				),
+				_reactAddons2['default'].createElement(
+					_FieldControl2['default'],
+					null,
+					renderInput,
+					this.props.children
+				)
+			)
+		);
+	}
+});
+},{"./FieldControl":49,"./FieldLabel":50,"./Item":57,"./ItemInner":59,"blacklist":6,"react-tappable":37,"react/addons":undefined}],65:[function(require,module,exports){
+'use strict';
+
+var FieldControl = require('./FieldControl');
+var FieldLabel = require('./FieldLabel');
+var Item = require('./Item');
+var ItemInner = require('./ItemInner');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'LabelSelect',
+	propTypes: {
+		alignTop: React.PropTypes.bool,
+		className: React.PropTypes.string,
+		disabled: React.PropTypes.bool,
+		first: React.PropTypes.bool,
+		label: React.PropTypes.string,
+		options: React.PropTypes.array,
+		value: React.PropTypes.string
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			className: ''
+		};
+	},
+
+	getInitialState: function getInitialState() {
+		return {
+			value: this.props.value
+		};
+	},
+
+	updateInputValue: function updateInputValue(event) {
+		this.setState({
+			value: event.target.value
+		});
+	},
+
+	render: function render() {
+		// Map Options
+		var options = this.props.options.map(function (op) {
+			return React.createElement(
+				'option',
+				{ key: 'option-' + op.value, value: op.value },
+				op.label
+			);
+		});
+
+		return React.createElement(
+			Item,
+			{ alignTop: this.props.alignTop, selectable: this.props.disabled, className: this.props.className, component: "label" },
+			React.createElement(
+				ItemInner,
+				null,
+				React.createElement(
+					FieldLabel,
+					null,
+					this.props.label
+				),
+				React.createElement(
+					FieldControl,
+					null,
+					React.createElement(
+						'select',
+						{ value: this.state.value, onChange: this.updateInputValue, className: "select-field" },
+						options
+					),
+					React.createElement(
+						'div',
+						{ className: "select-field-indicator" },
+						React.createElement('div', { className: "select-field-indicator-arrow" })
+					)
+				)
+			)
+		);
+	}
+});
+},{"./FieldControl":49,"./FieldLabel":50,"./Item":57,"./ItemInner":59,"react/addons":undefined}],66:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+
+module.exports = React.createClass({
+	displayName: 'LabelTextarea',
+
+	propTypes: {
+		children: React.PropTypes.node,
+		className: React.PropTypes.string,
+		disabled: React.PropTypes.bool,
+		first: React.PropTypes.bool,
+		label: React.PropTypes.string,
+		readOnly: React.PropTypes.bool,
+		value: React.PropTypes.string
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			rows: 3
+		};
+	},
+
+	render: function render() {
+		var className = classnames(this.props.className, 'list-item', 'field-item', 'align-top', {
+			'is-first': this.props.first,
+			'u-selectable': this.props.disabled
+		});
+
+		var props = blacklist(this.props, 'children', 'className', 'disabled', 'first', 'label', 'readOnly');
+
+		var renderInput = this.props.readOnly ? React.createElement(
+			'div',
+			{ className: "field u-selectable" },
+			this.props.value
+		) : React.createElement('textarea', _extends({}, props, { className: "field" }));
+
+		return React.createElement(
+			'div',
+			{ className: className },
+			React.createElement(
+				'label',
+				{ className: "item-inner" },
+				React.createElement(
+					'div',
+					{ className: "field-label" },
+					this.props.label
+				),
+				React.createElement(
+					'div',
+					{ className: "field-control" },
+					renderInput,
+					this.props.children
+				)
+			)
+		);
+	}
+});
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],67:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var React = require('react');
+
+var blacklist = require('blacklist');
+var classNames = require('classnames');
+
+module.exports = React.createClass({
+	displayName: 'ListHeader',
+
+	propTypes: {
+		className: React.PropTypes.string,
+		sticky: React.PropTypes.bool
+	},
+
+	render: function render() {
+		var className = classNames('list-header', {
+			'sticky': this.props.sticky
+		}, this.props.className);
+
+		var props = blacklist(this.props, 'sticky');
+
+		return React.createElement('div', _extends({ className: className }, props));
+	}
+});
+},{"blacklist":6,"classnames":13,"react":undefined}],68:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var classNames = require('classnames');
+var React = require('react/addons');
+var Tappable = require('react-tappable');
+var Transition = React.addons.CSSTransitionGroup;
+
+var DIRECTIONS = {
+	'reveal-from-right': -1,
+	'show-from-left': -1,
+	'show-from-right': 1,
+	'reveal-from-left': 1
+};
+
+var defaultControllerState = {
+	direction: 0,
+	fade: false,
+	leftArrow: false,
+	leftButtonDisabled: false,
+	leftIcon: '',
+	leftLabel: '',
+	leftAction: null,
+	rightArrow: false,
+	rightButtonDisabled: false,
+	rightIcon: '',
+	rightLabel: '',
+	rightAction: null,
+	title: ''
+};
+
+function newState(from) {
+	var ns = _extends({}, defaultControllerState);
+	if (from) _extends(ns, from);
+	delete ns.name; // may leak from props
+	return ns;
+}
+
+var NavigationBar = React.createClass({
+	displayName: 'NavigationBar',
+
+	contextTypes: {
+		app: React.PropTypes.object
+	},
+
+	propTypes: {
+		name: React.PropTypes.string
+	},
+
+	getInitialState: function getInitialState() {
+		return newState(this.props);
+	},
+
+	componentDidMount: function componentDidMount() {
+		if (this.props.name) {
+			this.context.app.navigationBars[this.props.name] = this;
+		}
+	},
+
+	componentWillUnmount: function componentWillUnmount() {
+		if (this.props.name) {
+			delete this.context.app.navigationBars[this.props.name];
+		}
+	},
+
+	componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+		this.setState(newState(nextProps));
+		if (nextProps.name !== this.props.name) {
+			if (nextProps.name) {
+				this.context.app.navigationBars[nextProps.name] = this;
+			}
+			if (this.props.name) {
+				delete this.context.app.navigationBars[this.props.name];
+			}
+		}
+	},
+
+	update: function update(state) {
+		// FIXME: what is happening here
+		state = newState(state);
+		this.setState(newState(state));
+	},
+
+	updateWithTransition: function updateWithTransition(state, transition) {
+		state = newState(state);
+		state.direction = DIRECTIONS[transition] || 0;
+
+		if (transition === 'fade' || transition === 'fade-contract' || transition === 'fade-expand') {
+			state.fade = true;
+		}
+
+		this.setState(state);
+	},
+
+	renderLeftButton: function renderLeftButton() {
+		var className = classNames('NavigationBarLeftButton', {
+			'has-arrow': this.state.leftArrow
+		});
+
+		return React.createElement(
+			Tappable,
+			{ onTap: this.state.leftAction, className: className, disabled: this.state.leftButtonDisabled, component: "button" },
+			this.renderLeftArrow(),
+			this.renderLeftLabel()
+		);
+	},
+
+	renderLeftArrow: function renderLeftArrow() {
+		var transitionName = 'NavigationBarTransition-Instant';
+		if (this.state.fade || this.state.direction) {
+			transitionName = 'NavigationBarTransition-Fade';
+		}
+
+		var arrow = this.state.leftArrow ? React.createElement('span', { className: "NavigationBarLeftArrow" }) : null;
+
+		return React.createElement(
+			Transition,
+			{ transitionName: transitionName },
+			arrow
+		);
+	},
+
+	renderLeftLabel: function renderLeftLabel() {
+		var transitionName = 'NavigationBarTransition-Instant';
+		if (this.state.fade) {
+			transitionName = 'NavigationBarTransition-Fade';
+		} else if (this.state.direction > 0) {
+			transitionName = 'NavigationBarTransition-Forwards';
+		} else if (this.state.direction < 0) {
+			transitionName = 'NavigationBarTransition-Backwards';
+		}
+
+		return React.createElement(
+			Transition,
+			{ transitionName: transitionName },
+			React.createElement(
+				'span',
+				{ key: Date.now(), className: "NavigationBarLeftLabel" },
+				this.state.leftLabel
+			)
+		);
+	},
+
+	renderTitle: function renderTitle() {
+		var title = this.state.title ? React.createElement(
+			'span',
+			{ key: Date.now(), className: "NavigationBarTitle" },
+			this.state.title
+		) : null;
+		var transitionName = 'NavigationBarTransition-Instant';
+		if (this.state.fade) {
+			transitionName = 'NavigationBarTransition-Fade';
+		} else if (this.state.direction > 0) {
+			transitionName = 'NavigationBarTransition-Forwards';
+		} else if (this.state.direction < 0) {
+			transitionName = 'NavigationBarTransition-Backwards';
+		}
+
+		return React.createElement(
+			Transition,
+			{ transitionName: transitionName },
+			title
+		);
+	},
+
+	renderRightButton: function renderRightButton() {
+		var transitionName = 'NavigationBarTransition-Instant';
+		if (this.state.fade || this.state.direction) {
+			transitionName = 'NavigationBarTransition-Fade';
+		}
+		var button = this.state.rightIcon || this.state.rightLabel ? React.createElement(
+			Tappable,
+			{ key: Date.now(), onTap: this.state.rightAction, className: "NavigationBarRightButton", disabled: this.state.rightButtonDisabled, component: "button" },
+			this.renderRightLabel(),
+			this.renderRightIcon()
+		) : null;
+		return React.createElement(
+			Transition,
+			{ transitionName: transitionName },
+			button
+		);
+	},
+
+	renderRightIcon: function renderRightIcon() {
+		if (!this.state.rightIcon) return null;
+
+		var className = classNames('NavigationBarRightIcon', this.state.rightIcon);
+
+		return React.createElement('span', { className: className });
+	},
+
+	renderRightLabel: function renderRightLabel() {
+		return this.state.rightLabel ? React.createElement(
+			'span',
+			{ key: Date.now(), className: "NavigationBarRightLabel" },
+			this.state.rightLabel
+		) : null;
+	},
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			{ className: "NavigationBar" },
+			this.renderLeftButton(),
+			this.renderTitle(),
+			this.renderRightButton()
+		);
+	}
+});
+
+exports['default'] = NavigationBar;
+module.exports = exports['default'];
+
+},{"classnames":13,"react-tappable":37,"react/addons":undefined}],69:[function(require,module,exports){
+'use strict';
+
+var React = require('react/addons');
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+
+var classnames = require('classnames');
+
+module.exports = React.createClass({
+	displayName: 'Popup',
+
+	propTypes: {
+		children: React.PropTypes.node,
+		className: React.PropTypes.string,
+		visible: React.PropTypes.bool
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			transition: 'none'
+		};
+	},
+
+	renderBackdrop: function renderBackdrop() {
+		if (!this.props.visible) return null;
+		return React.createElement('div', { className: "Popup-backdrop" });
+	},
+
+	renderDialog: function renderDialog() {
+		if (!this.props.visible) return null;
+
+		// Set classnames
+		var dialogClassName = classnames('Popup-dialog', this.props.className);
+
+		return React.createElement(
+			'div',
+			{ className: dialogClassName },
+			this.props.children
+		);
+	},
+
+	render: function render() {
+		return React.createElement(
+			'div',
+			{ className: "Popup" },
+			React.createElement(
+				ReactCSSTransitionGroup,
+				{ transitionName: "Popup-dialog", component: "div" },
+				this.renderDialog()
+			),
+			React.createElement(
+				ReactCSSTransitionGroup,
+				{ transitionName: "Popup-background", component: "div" },
+				this.renderBackdrop()
+			)
+		);
+	}
+});
+},{"classnames":13,"react/addons":undefined}],70:[function(require,module,exports){
+'use strict';
+
+var React = require('react/addons');
+var classNames = require('classnames');
+
+module.exports = React.createClass({
+	displayName: 'PopupIcon',
+	propTypes: {
+		name: React.PropTypes.string,
+		type: React.PropTypes.oneOf(['default', 'muted', 'primary', 'success', 'warning', 'danger']),
+		spinning: React.PropTypes.bool
+	},
+
+	render: function render() {
+		var className = classNames('PopupIcon', {
+			'is-spinning': this.props.spinning
+		}, this.props.name, this.props.type);
+
+		return React.createElement('div', { className: className });
+	}
+});
+},{"classnames":13,"react/addons":undefined}],71:[function(require,module,exports){
+'use strict';
+
+var classnames = require('classnames');
+var Item = require('./Item');
+var ItemInner = require('./ItemInner');
+var ItemNote = require('./ItemNote');
+var ItemTitle = require('./ItemTitle');
+var React = require('react');
+var Tappable = require('react-tappable');
+
+module.exports = React.createClass({
+	displayName: 'RadioList',
+
+	propTypes: {
+		options: React.PropTypes.array.isRequired,
+		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+		icon: React.PropTypes.string,
+		onChange: React.PropTypes.func
+	},
+
+	onChange: function onChange(value) {
+		this.props.onChange(value);
+	},
+
+	render: function render() {
+		var self = this;
+		var options = this.props.options.map(function (op, i) {
+			var iconClassname = classnames('item-icon primary', op.icon);
+			var checkMark = op.value === self.props.value ? React.createElement(ItemNote, { type: "primary", icon: "ion-checkmark" }) : null;
+			var icon = op.icon ? React.createElement(
+				'div',
+				{ className: "item-media" },
+				React.createElement('span', { className: iconClassname })
+			) : null;
+
+			function onChange() {
+				self.onChange(op.value);
+			}
+
+			return React.createElement(
+				Tappable,
+				{ key: 'option-' + i, onTap: onChange },
+				React.createElement(
+					Item,
+					{ key: 'option-' + i, onTap: onChange },
+					icon,
+					React.createElement(
+						ItemInner,
+						null,
+						React.createElement(
+							ItemTitle,
+							null,
+							op.label
+						),
+						checkMark
+					)
+				)
+			);
+		});
+
+		return React.createElement(
+			'div',
+			null,
+			options
+		);
+	}
+});
+},{"./Item":57,"./ItemInner":59,"./ItemNote":61,"./ItemTitle":63,"classnames":13,"react":undefined,"react-tappable":37}],72:[function(require,module,exports){
+'use strict';
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+var React = require('react/addons');
+var Tappable = require('react-tappable');
+
+module.exports = React.createClass({
+	displayName: 'SearchField',
+	propTypes: {
+		className: React.PropTypes.string,
+		onChange: React.PropTypes.func,
+		onClear: React.PropTypes.func,
+		placeholder: React.PropTypes.string,
+		type: React.PropTypes.oneOf(['default', 'dark']),
+		value: React.PropTypes.string
+	},
+
+	getInitialState: function getInitialState() {
+		return {
+			isFocused: false
+		};
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			type: 'default',
+			value: ''
+		};
+	},
+
+	handleClear: function handleClear() {
+		this.refs.input.getDOMNode().focus();
+		this.props.onClear();
+	},
+
+	handleCancel: function handleCancel() {
+		this.refs.input.getDOMNode().blur();
+		this.props.onCancel();
+	},
+
+	handleChange: function handleChange(e) {
+		this.props.onChange(e.target.value);
+	},
+
+	handleBlur: function handleBlur(e) {
+		this.setState({
+			isFocused: false
+		});
+	},
+
+	handleFocus: function handleFocus(e) {
+		this.setState({
+			isFocused: true
+		});
+	},
+
+	handleSubmit: function handleSubmit(e) {
+		e.preventDefault();
+
+		var input = this.refs.input.getDOMNode();
+
+		input.blur();
+		this.props.onSubmit(input.value);
+	},
+
+	renderClear: function renderClear() {
+		if (!this.props.value.length) return;
+		return React.createElement(Tappable, { className: "SearchField__icon SearchField__icon--clear", onTap: this.handleClear });
+	},
+
+	renderCancel: function renderCancel() {
+		var className = classnames('SearchField__cancel', {
+			'is-visible': this.state.isFocused || this.props.value
+		});
+		return React.createElement(
+			Tappable,
+			{ className: className, onTap: this.handleCancel },
+			'Cancel'
+		);
+	},
+
+	render: function render() {
+		var className = classnames('SearchField', 'SearchField--' + this.props.type, {
+			'is-focused': this.state.isFocused,
+			'has-value': this.props.value
+		}, this.props.className);
+		var props = blacklist(this.props, 'className', 'placeholder', 'type');
+
+		return React.createElement(
+			'form',
+			{ onSubmit: this.handleSubmit, action: "javascript:;", className: className },
+			React.createElement(
+				'label',
+				{ className: "SearchField__field" },
+				React.createElement(
+					'div',
+					{ className: "SearchField__placeholder" },
+					React.createElement('span', { className: "SearchField__icon SearchField__icon--search" }),
+					!this.props.value.length ? this.props.placeholder : null
+				),
+				React.createElement('input', { type: "search", ref: "input", value: this.props.value, onChange: this.handleChange, onFocus: this.handleFocus, onBlur: this.handleBlur, className: "SearchField__input" }),
+				this.renderClear()
+			),
+			this.renderCancel()
+		);
+	}
+});
+},{"blacklist":6,"classnames":13,"react-tappable":37,"react/addons":undefined}],73:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+var classnames = require('classnames');
+var Tappable = require('react-tappable');
+
+module.exports = React.createClass({
+	displayName: 'SegmentedControl',
+
+	propTypes: {
+		className: React.PropTypes.string,
+		equalWidthSegments: React.PropTypes.bool,
+		isInline: React.PropTypes.bool,
+		hasGutter: React.PropTypes.bool,
+		onChange: React.PropTypes.func.isRequired,
+		options: React.PropTypes.array.isRequired,
+		type: React.PropTypes.string,
+		value: React.PropTypes.string
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			type: 'primary'
+		};
+	},
+
+	onChange: function onChange(value) {
+		this.props.onChange(value);
+	},
+
+	render: function render() {
+		var componentClassName = classnames('SegmentedControl', 'SegmentedControl--' + this.props.type, {
+			'SegmentedControl--inline': this.props.isInline,
+			'SegmentedControl--has-gutter': this.props.hasGutter,
+			'SegmentedControl--equal-widths': this.props.equalWidthSegments
+		}, this.props.className);
+		var self = this;
+
+		var options = this.props.options.map(function (op) {
+			function onChange() {
+				self.onChange(op.value);
+			}
+
+			var itemClassName = classnames('SegmentedControl__item', {
+				'is-selected': op.value === self.props.value
+			});
+
+			return React.createElement(
+				Tappable,
+				{ key: 'option-' + op.value, onTap: onChange, className: itemClassName },
+				op.label
+			);
+		});
+
+		return React.createElement(
+			'div',
+			{ className: componentClassName },
+			options
+		);
+	}
+});
+},{"classnames":13,"react":undefined,"react-tappable":37}],74:[function(require,module,exports){
+'use strict';
+
+var classnames = require('classnames');
+var React = require('react');
+var Tappable = require('react-tappable');
+
+module.exports = React.createClass({
+	displayName: 'Switch',
+
+	propTypes: {
+		disabled: React.PropTypes.bool,
+		on: React.PropTypes.bool,
+		onTap: React.PropTypes.func,
+		type: React.PropTypes.string
+	},
+
+	getDefaultProps: function getDefaultProps() {
+		return {
+			type: 'default'
+		};
+	},
+
+	render: function render() {
+		var className = classnames('Switch', 'Switch--' + this.props.type, {
+			'is-disabled': this.props.disabled,
+			'is-on': this.props.on
+		});
+
+		return React.createElement(
+			Tappable,
+			{ onTap: this.props.onTap, className: className, component: "label" },
+			React.createElement(
+				'div',
+				{ className: "Switch__track" },
+				React.createElement('div', { className: "Switch__handle" })
+			)
+		);
+	}
+});
+},{"classnames":13,"react":undefined,"react-tappable":37}],75:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var React = require('react');
+var Tappable = require('react-tappable');
+
+var blacklist = require('blacklist');
+var classnames = require('classnames');
+
+var Navigator = React.createClass({
+	displayName: 'Navigator',
+
+	propTypes: {
+		className: React.PropTypes.string
+	},
+
+	render: function render() {
+		var className = classnames('Tabs-Navigator', this.props.className);
+		var otherProps = blacklist(this.props, 'className');
+
+		return React.createElement('div', _extends({ className: className }, otherProps));
+	}
+});
+
+exports.Navigator = Navigator;
+var Tab = React.createClass({
+	displayName: 'Tab',
+
+	propTypes: {
+		selected: React.PropTypes.bool
+	},
+
+	render: function render() {
+		var className = classnames('Tabs-Tab', { 'is-selected': this.props.selected });
+		var otherProps = blacklist(this.props, 'selected');
+
+		return React.createElement(Tappable, _extends({ className: className }, otherProps));
+	}
+});
+
+exports.Tab = Tab;
+var Label = React.createClass({
+	displayName: 'Label',
+
+	render: function render() {
+		return React.createElement('div', _extends({ className: "Tabs-Label" }, this.props));
+	}
+});
+exports.Label = Label;
+},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],76:[function(require,module,exports){
+'use strict';
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var React = require('react/addons');
+
+var Item = require('./Item');
+var ItemContent = require('./ItemContent');
+var ItemInner = require('./ItemInner');
+
+var blacklist = require('blacklist');
+
+module.exports = React.createClass({
+	displayName: 'Input',
+	propTypes: {
+		className: React.PropTypes.string,
+		children: React.PropTypes.node,
+		disabled: React.PropTypes.bool
+	},
+
+	render: function render() {
+		var inputProps = blacklist(this.props, 'children', 'className');
+
+		return React.createElement(
+			Item,
+			{ selectable: this.props.disabled, className: this.props.className, component: "label" },
+			React.createElement(
+				ItemInner,
+				null,
+				React.createElement(
+					ItemContent,
+					{ component: "label" },
+					React.createElement('textarea', _extends({ className: "field", rows: 3 }, inputProps))
+				),
+				this.props.children
+			)
+		);
+	}
+});
+},{"./Item":57,"./ItemContent":58,"./ItemInner":59,"blacklist":6,"react/addons":undefined}],77:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+var Alertbar = require('./Alertbar');
+exports.Alertbar = Alertbar;
+var Button = require('./Button');
+exports.Button = Button;
+var ButtonGroup = require('./ButtonGroup');
+exports.ButtonGroup = ButtonGroup;
+var FieldControl = require('./FieldControl');
+exports.FieldControl = FieldControl;
+var FieldLabel = require('./FieldLabel');
+exports.FieldLabel = FieldLabel;
+var Group = require('./Group');
+exports.Group = Group;
+var GroupBody = require('./GroupBody');
+exports.GroupBody = GroupBody;
+var GroupFooter = require('./GroupFooter');
+exports.GroupFooter = GroupFooter;
+var GroupHeader = require('./GroupHeader');
+exports.GroupHeader = GroupHeader;
+var GroupInner = require('./GroupInner');
+exports.GroupInner = GroupInner;
+var Item = require('./Item');
+exports.Item = Item;
+var ItemContent = require('./ItemContent');
+exports.ItemContent = ItemContent;
+var ItemInner = require('./ItemInner');
+exports.ItemInner = ItemInner;
+var ItemMedia = require('./ItemMedia');
+exports.ItemMedia = ItemMedia;
+var ItemNote = require('./ItemNote');
+exports.ItemNote = ItemNote;
+var ItemSubTitle = require('./ItemSubTitle');
+exports.ItemSubTitle = ItemSubTitle;
+var ItemTitle = require('./ItemTitle');
+exports.ItemTitle = ItemTitle;
+var LabelInput = require('./LabelInput');
+exports.LabelInput = LabelInput;
+var LabelSelect = require('./LabelSelect');
+exports.LabelSelect = LabelSelect;
+var LabelTextarea = require('./LabelTextarea');
+exports.LabelTextarea = LabelTextarea;
+var ListHeader = require('./ListHeader');
+exports.ListHeader = ListHeader;
+var NavigationBar = require('./NavigationBar');
+exports.NavigationBar = NavigationBar;
+var Popup = require('./Popup');
+exports.Popup = Popup;
+var PopupIcon = require('./PopupIcon');
+exports.PopupIcon = PopupIcon;
+var RadioList = require('./RadioList');
+exports.RadioList = RadioList;
+var SearchField = require('./SearchField');
+exports.SearchField = SearchField;
+var SegmentedControl = require('./SegmentedControl');
+exports.SegmentedControl = SegmentedControl;
+var Switch = require('./Switch');
+exports.Switch = Switch;
+var Tabs = require('./Tabs');
+exports.Tabs = Tabs;
+var Textarea = require('./Textarea');
+
+// depends on above
+exports.Textarea = Textarea;
+var Input = require('./Input');
+exports.Input = Input;
+},{"./Alertbar":46,"./Button":47,"./ButtonGroup":48,"./FieldControl":49,"./FieldLabel":50,"./Group":51,"./GroupBody":52,"./GroupFooter":53,"./GroupHeader":54,"./GroupInner":55,"./Input":56,"./Item":57,"./ItemContent":58,"./ItemInner":59,"./ItemMedia":60,"./ItemNote":61,"./ItemSubTitle":62,"./ItemTitle":63,"./LabelInput":64,"./LabelSelect":65,"./LabelTextarea":66,"./ListHeader":67,"./NavigationBar":68,"./Popup":69,"./PopupIcon":70,"./RadioList":71,"./SearchField":72,"./SegmentedControl":73,"./Switch":74,"./Tabs":75,"./Textarea":76}],78:[function(require,module,exports){
 /**
  * Tween.js - Licensed under the MIT license
  * https://github.com/sole/tween.js
@@ -16852,20 +18827,31 @@ TWEEN.Interpolation = {
 };
 
 module.exports=TWEEN;
-},{}],39:[function(require,module,exports){
+},{}],79:[function(require,module,exports){
 'use strict';
 
 var React = require('react/addons');
 var Sentry = require('react-sentry');
 
-var _require = require('./touchstone');
+var _require =
+//ViewManager,
+//View
+require('./touchstone');
 
-var createApp = _require.createApp;
-var Container = _require.Container;
-var NavigationBar = _require.NavigationBar;
+var
+//createApp,
+//Container,
+NavigationBar = _require.NavigationBar;
 var Tabs = _require.Tabs;
-var ViewManager = _require.ViewManager;
-var View = _require.View;
+
+var _require2 = require('touchstonejs');
+
+var createApp = _require2.createApp;
+var View = _require2.View;
+var ViewManager = _require2.ViewManager;
+var Container = _require2.Container;
+var UI = _require2.UI;
+var Tabs = UI.Tabs;
 
 var AuthStore = require('./stores/AuthStore');
 
@@ -16926,13 +18912,14 @@ var App = React.createClass({
 var MainViewController = React.createClass({
 	displayName: 'MainViewController',
 
-	handleChange: function handleChange(event) {
+	handleChange: function handleChange(view) {
+		console.log(view);
 		var body = document.getElementsByTagName('body')[0];
 
 		body.classList.remove('android-menu-is-open');
 
 		if (event.value !== 'logoff') {
-			this.refs.viewManager.transitionTo(event.value, {});
+			this.refs.viewManager.transitionTo(view, {});
 		} else {
 			AuthStore.logoff();
 		}
@@ -16946,56 +18933,60 @@ var MainViewController = React.createClass({
 			Container,
 			null,
 			React.createElement(
-				Tabs.Navigator,
-				{ onChange: this.handleChange },
+				'div',
+				{ className: 'Tabs-Navigator-wrapper' },
 				React.createElement(
-					Tabs.Tab,
-					{ value: 'home' },
-					React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--event' }),
+					Tabs.Navigator,
+					null,
 					React.createElement(
-						Tabs.Label,
-						null,
-						'Acceuil'
-					)
-				),
-				React.createElement(
-					Tabs.Tab,
-					{ value: 'catchs-list' },
-					React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--schedule' }),
+						Tabs.Tab,
+						{ value: 'home', onClick: this.handleChange.bind(this, 'home') },
+						React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--event' }),
+						React.createElement(
+							Tabs.Label,
+							null,
+							'Acceuil'
+						)
+					),
 					React.createElement(
-						Tabs.Label,
-						null,
-						'Goops'
-					)
-				),
-				React.createElement(
-					Tabs.Tab,
-					{ value: 'users-list' },
-					React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--people' }),
+						Tabs.Tab,
+						{ value: 'catchs-list', onTap: this.handleChange.bind(this, 'catchs-list') },
+						React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--schedule' }),
+						React.createElement(
+							Tabs.Label,
+							null,
+							'Goops'
+						)
+					),
 					React.createElement(
-						Tabs.Label,
-						null,
-						'Utilisateurs'
-					)
-				),
-				React.createElement(
-					Tabs.Tab,
-					{ value: 'auth-edit' },
-					React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--people' }),
+						Tabs.Tab,
+						{ value: 'users-list', onClick: this.handleChange.bind(this, 'users-list') },
+						React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--people' }),
+						React.createElement(
+							Tabs.Label,
+							null,
+							'Utilisateurs'
+						)
+					),
 					React.createElement(
-						Tabs.Label,
-						null,
-						'Editer profil'
-					)
-				),
-				React.createElement(
-					Tabs.Tab,
-					{ value: 'logoff' },
-					React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--logoff' }),
+						Tabs.Tab,
+						{ value: 'auth-edit', onClick: this.handleChange.bind(this, 'auth-edit') },
+						React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--people' }),
+						React.createElement(
+							Tabs.Label,
+							null,
+							'Editer profil'
+						)
+					),
 					React.createElement(
-						Tabs.Label,
-						null,
-						'Déconnexion'
+						Tabs.Tab,
+						{ value: 'logoff', onClick: this.handleChange.bind(this, 'logoff') },
+						React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--logoff' }),
+						React.createElement(
+							Tabs.Label,
+							null,
+							'Déconnexion'
+						)
 					)
 				)
 			),
@@ -17100,13 +19091,13 @@ if (window.cordova) {
 		startApp();
 	}
 
-},{"./lib/device":56,"./stores/AuthStore":58,"./touchstone":74,"./views/Home":75,"./views/auth/Edit":76,"./views/auth/Register":77,"./views/auth/login":78,"./views/catchs/Details":79,"./views/catchs/Form":80,"./views/catchs/GPS":81,"./views/catchs/List":82,"./views/users/Browser":83,"./views/users/Details":84,"./views/users/List":85,"react-sentry":36,"react/addons":undefined}],40:[function(require,module,exports){
+},{"./lib/device":96,"./stores/AuthStore":98,"./touchstone":114,"./views/Home":115,"./views/auth/Edit":116,"./views/auth/Register":117,"./views/auth/login":118,"./views/catchs/Details":119,"./views/catchs/Form":120,"./views/catchs/GPS":121,"./views/catchs/List":122,"./views/users/Browser":123,"./views/users/Details":124,"./views/users/List":125,"react-sentry":36,"react/addons":undefined,"touchstonejs":43}],80:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 var moment = require('moment');
 
-var _require = require('../touchstone');
+var _require = require('touchstonejs');
 
 var Link = _require.Link;
 
@@ -17154,7 +19145,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../filters/Distance":50,"../filters/ImageUrl":51,"../touchstone":74,"./ItemAvatar":44,"moment":32,"react":undefined}],41:[function(require,module,exports){
+},{"../filters/Distance":90,"../filters/ImageUrl":91,"./ItemAvatar":84,"moment":32,"react":undefined,"touchstonejs":43}],81:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -17195,7 +19186,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"./CatchsItem":40,"react":undefined}],42:[function(require,module,exports){
+},{"./CatchsItem":80,"react":undefined}],82:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -17252,7 +19243,7 @@ var CheckBox = React.createClass({
 exports['default'] = CheckBox;
 module.exports = exports['default'];
 
-},{"blacklist":6,"react":undefined,"react-tappable":37}],43:[function(require,module,exports){
+},{"blacklist":6,"react":undefined,"react-tappable":37}],83:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -17284,7 +19275,7 @@ var CoverImage = React.createClass({
 exports['default'] = CoverImage;
 module.exports = exports['default'];
 
-},{"react":undefined}],44:[function(require,module,exports){
+},{"react":undefined}],84:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -17328,7 +19319,7 @@ module.exports = React.createClass({
 
 });
 
-},{"react":undefined}],45:[function(require,module,exports){
+},{"react":undefined}],85:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -17452,7 +19443,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"./Spinner":46,"react":undefined,"react-container":33,"react-hammerjs":35}],46:[function(require,module,exports){
+},{"./Spinner":86,"react":undefined,"react-container":33,"react-hammerjs":35}],86:[function(require,module,exports){
 /**
  * react-svg-loaders
  * https://github.com/yonatanmn/react-svg-loaders
@@ -17547,7 +19538,7 @@ var SvgSpinners = React.createClass({
 
 module.exports = SvgSpinners;
 
-},{"react":undefined}],47:[function(require,module,exports){
+},{"react":undefined}],87:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -17584,7 +19575,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../filters/ImageUrl":51,"../touchstone":74,"./ItemAvatar":44,"react":undefined}],48:[function(require,module,exports){
+},{"../filters/ImageUrl":91,"../touchstone":114,"./ItemAvatar":84,"react":undefined}],88:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -17605,7 +19596,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"./UserItem":47,"react":undefined}],49:[function(require,module,exports){
+},{"./UserItem":87,"react":undefined}],89:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -17614,7 +19605,7 @@ module.exports = {
 	//serverUrl : 'http://catch-catchapp.rhcloud.com/'
 };
 
-},{}],50:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -17639,7 +19630,7 @@ function distance(lat1, lon1, lat2, lon2) {
 
 module.exports = exports['default'];
 
-},{}],51:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -17667,7 +19658,7 @@ exports['default'] = function (data, imageSize) {
 
 module.exports = exports['default'];
 
-},{"../config":49}],52:[function(require,module,exports){
+},{"../config":89}],92:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -17725,7 +19716,7 @@ exports['default'] = function (fileURL, cb) {
 
 module.exports = exports['default'];
 
-},{"../config":49,"../lib/localStorage":57}],53:[function(require,module,exports){
+},{"../config":89,"../lib/localStorage":97}],93:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17739,7 +19730,7 @@ function emailValidation(input) {
 	return input.match(emailReg);
 }
 
-},{}],54:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 'use strict';
 
 var async = require('async');
@@ -17825,7 +19816,7 @@ var engine = function engine(opts, callback) {
 
 module.exports = engine;
 
-},{"../config":49,"../lib/localStorage":57,"../stores/AuthStore":58,"async":5,"defaults":14,"httpify":17}],55:[function(require,module,exports){
+},{"../config":89,"../lib/localStorage":97,"../stores/AuthStore":98,"async":5,"defaults":14,"httpify":17}],95:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -17846,7 +19837,7 @@ exports["default"] = function (opts) {
 
 module.exports = exports["default"];
 
-},{}],56:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 'use strict';
 
 var map = {
@@ -17867,7 +19858,7 @@ module.exports = {
 	platform: deviceType
 };
 
-},{}],57:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -17904,7 +19895,7 @@ module.exports = {
 	}
 };
 
-},{}],58:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
@@ -18065,7 +20056,7 @@ var store = new AuthStore();
 
 module.exports = store;
 
-},{"../config":49,"../lib/HttpService":54,"../lib/localStorage":57,"events":11}],59:[function(require,module,exports){
+},{"../config":89,"../lib/HttpService":94,"../lib/localStorage":97,"events":11}],99:[function(require,module,exports){
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
@@ -18163,7 +20154,7 @@ var store = new CatchsStore();
 
 module.exports = store;
 
-},{"../lib/HttpService":54,"../lib/localStorage":57,"URIjs":3,"events":11}],60:[function(require,module,exports){
+},{"../lib/HttpService":94,"../lib/localStorage":97,"URIjs":3,"events":11}],100:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18257,7 +20248,7 @@ var FriendsStore = (function () {
 exports['default'] = FriendsStore;
 module.exports = exports['default'];
 
-},{"../lib/HttpService":54,"../lib/localStorage":57,"URIjs":3,"events":11}],61:[function(require,module,exports){
+},{"../lib/HttpService":94,"../lib/localStorage":97,"URIjs":3,"events":11}],101:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18268,7 +20259,7 @@ var Container = require('react-container');
 exports['default'] = Container;
 module.exports = exports['default'];
 
-},{"react-container":33}],62:[function(require,module,exports){
+},{"react-container":33}],102:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18292,7 +20283,7 @@ var ErrorView = React.createClass({
 exports['default'] = ErrorView;
 module.exports = exports['default'];
 
-},{"react":undefined,"react-container":33}],63:[function(require,module,exports){
+},{"react":undefined,"react-container":33}],103:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18315,7 +20306,7 @@ var Icon = React.createClass({
 exports["default"] = Icon;
 module.exports = exports["default"];
 
-},{"react":undefined}],64:[function(require,module,exports){
+},{"react":undefined}],104:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -18403,7 +20394,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],65:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],105:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -18467,7 +20458,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],66:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],106:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18512,7 +20503,7 @@ var Link = React.createClass({
 exports['default'] = Link;
 module.exports = exports['default'];
 
-},{"./Transitions":70,"blacklist":6,"react":undefined,"react-tappable":37}],67:[function(require,module,exports){
+},{"./Transitions":110,"blacklist":6,"react":undefined,"react-tappable":37}],107:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18756,7 +20747,7 @@ function createController () {
 exports['default'] = NavigationBar;
 module.exports = exports['default'];
 
-},{"classnames":13,"react-tappable":37,"react/addons":undefined}],68:[function(require,module,exports){
+},{"classnames":13,"react-tappable":37,"react/addons":undefined}],108:[function(require,module,exports){
 'use strict';
 
 var classnames = require('classnames');
@@ -18794,7 +20785,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"classnames":13,"react":undefined,"react-tappable":37}],69:[function(require,module,exports){
+},{"classnames":13,"react":undefined,"react-tappable":37}],109:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18866,7 +20857,7 @@ var Label = React.createClass({
 });
 exports.Label = Label;
 
-},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],70:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],110:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -18892,7 +20883,7 @@ var Transitions = {
 exports['default'] = Transitions;
 module.exports = exports['default'];
 
-},{"react":undefined}],71:[function(require,module,exports){
+},{"react":undefined}],111:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -18915,7 +20906,7 @@ var View = React.createClass({
 exports["default"] = View;
 module.exports = exports["default"];
 
-},{"react":undefined}],72:[function(require,module,exports){
+},{"react":undefined}],112:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19096,7 +21087,7 @@ var ViewManager = React.createClass({
 exports['default'] = ViewManager;
 module.exports = exports['default'];
 
-},{"./ErrorView":62,"blacklist":6,"classnames":13,"react/addons":undefined}],73:[function(require,module,exports){
+},{"./ErrorView":102,"blacklist":6,"classnames":13,"react/addons":undefined}],113:[function(require,module,exports){
 'use strict';
 
 var animation = require('tween.js');
@@ -19156,7 +21147,7 @@ Mixins.ScrollContainerToTop = {
 	}
 };
 
-},{"react":undefined,"tween.js":38}],74:[function(require,module,exports){
+},{"react":undefined,"tween.js":78}],114:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19210,7 +21201,7 @@ function createApp() {
 	};
 }
 
-},{"./Container":61,"./Icon":63,"./LabelInput":64,"./LabelTextarea":65,"./Link":66,"./NavigationBar":67,"./Switch":68,"./Tabs":69,"./Transitions":70,"./View":71,"./ViewManager":72,"./animation":73,"react":undefined}],75:[function(require,module,exports){
+},{"./Container":101,"./Icon":103,"./LabelInput":104,"./LabelTextarea":105,"./Link":106,"./NavigationBar":107,"./Switch":108,"./Tabs":109,"./Transitions":110,"./View":111,"./ViewManager":112,"./animation":113,"react":undefined}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19220,7 +21211,7 @@ var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
 
-var _require = require('../touchstone');
+var _require = require('touchstonejs');
 
 var Link = _require.Link;
 
@@ -19311,7 +21302,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../filters/ImageUrl":51,"../stores/AuthStore":58,"../touchstone":74,"events":11,"react":undefined,"react-container":33,"react-sentry":36}],76:[function(require,module,exports){
+},{"../filters/ImageUrl":91,"../stores/AuthStore":98,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],116:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19481,7 +21472,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../filters/ImageUrl":51,"../../lib/AssetService":52,"../../stores/AuthStore":58,"../../touchstone":74,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],77:[function(require,module,exports){
+},{"../../filters/ImageUrl":91,"../../lib/AssetService":92,"../../stores/AuthStore":98,"../../touchstone":114,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],117:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19538,17 +21529,25 @@ exports['default'] = React.createClass({
 			Container,
 			{ direction: 'column' },
 			React.createElement(
+				'div',
+				{ className: 'NavigationBar has-left-icon' },
+				React.createElement(
+					'span',
+					{ onClick: this.returnBack, viewProps: {}, transition: 'reveal-from-right', component: 'a' },
+					React.createElement('span', { className: 'NavigationBarLeftIcon ion-arrow-left-c' }),
+					React.createElement(
+						'span',
+						{ className: 'NavigationBarTitle' },
+						' Retour '
+					)
+				)
+			),
+			React.createElement(
 				Container,
 				{ fill: true, scrollable: scrollable, ref: 'scrollContainer' },
 				React.createElement(
 					'div',
 					{ className: 'headerPage padding' },
-					React.createElement(
-						Link,
-						{ to: 'app:login', className: 'text-light', viewProps: {}, transition: 'reveal-from-right', component: 'a' },
-						'Retour'
-					),
-					React.createElement('br', null),
 					React.createElement(
 						'h1',
 						null,
@@ -19596,21 +21595,51 @@ exports['default'] = React.createClass({
 		var src = this.state.picture || './img/no-image.png',
 		    style = { width: '100%' };
 
-		return React.createElement(
-			'div',
-			{ className: 'text-center' },
-			React.createElement('img', { src: src, style: style }),
-			React.createElement(
-				'button',
-				{ className: 'button button-primary-light button--raised ', onClick: this.pickPhoto },
-				'Prendre une photo'
-			),
-			React.createElement(
-				'button',
-				{ className: 'button button-primary button--raised ', onClick: this.register },
-				'Créer un compte'
-			)
-		);
+		if (!this.state.picture) {
+			return React.createElement(
+				'div',
+				{ className: 'text-center' },
+				React.createElement('img', { src: src, style: style }),
+				React.createElement(
+					'button',
+					{ className: 'button button-primary button--raised', onClick: this.pickPhoto },
+					'Prendre une photo'
+				),
+				React.createElement('br', null),
+				React.createElement('br', null),
+				React.createElement(
+					'div',
+					{ className: 'text-center' },
+					React.createElement(
+						Link,
+						{ onClick: this.register },
+						'Créer mon compte'
+					)
+				)
+			);
+		} else {
+			return React.createElement(
+				'div',
+				{ className: 'text-center' },
+				React.createElement('img', { src: src, style: style }),
+				React.createElement(
+					'button',
+					{ className: 'button button-primary button--raised', onClick: this.register },
+					'Créer mon compte'
+				),
+				React.createElement('br', null),
+				React.createElement('br', null),
+				React.createElement(
+					'div',
+					{ className: 'text-center' },
+					React.createElement(
+						Link,
+						{ onClick: this.pickPhoto },
+						'modifier la photo'
+					)
+				)
+			);
+		}
 	},
 
 	renderErrors: function renderErrors() {
@@ -19628,6 +21657,18 @@ exports['default'] = React.createClass({
 				);
 			})
 		);
+	},
+
+	returnBack: function returnBack() {
+		if (this.state.viewState == 'image-picker') {
+			this.state.viewState = 'form';
+			this.setState(this.state);
+		} else {
+			this.transitionTo('app:login', {
+				transition: 'reveal-from-right',
+				viewProps: {}
+			});
+		}
 	},
 
 	pickPhoto: function pickPhoto() {
@@ -19724,7 +21765,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../lib/AssetService":52,"../../lib/FormValidations":53,"../../stores/AuthStore":58,"../../touchstone":74,"react":undefined,"react-container":33,"react-sentry":36}],78:[function(require,module,exports){
+},{"../../lib/AssetService":92,"../../lib/FormValidations":93,"../../stores/AuthStore":98,"../../touchstone":114,"react":undefined,"react-container":33,"react-sentry":36}],118:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -19842,7 +21883,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../stores/AuthStore":58,"../../touchstone":74,"../../touchstone/animation":73,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],79:[function(require,module,exports){
+},{"../../stores/AuthStore":98,"../../touchstone":114,"../../touchstone/animation":113,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],119:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20082,7 +22123,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/CoverImage":43,"../../components/ItemAvatar":44,"../../filters/Distance":50,"../../filters/ImageUrl":51,"../../stores/CatchsStore":59,"../../touchstone":74,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],80:[function(require,module,exports){
+},{"../../components/CoverImage":83,"../../components/ItemAvatar":84,"../../filters/Distance":90,"../../filters/ImageUrl":91,"../../stores/CatchsStore":99,"../../touchstone":114,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],120:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -20309,7 +22350,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../lib/AssetService":52,"../../lib/Toaster":55,"../../stores/AuthStore":58,"../../stores/CatchsStore":59,"../../stores/FriendsStore":60,"../../touchstone":74,"../../touchstone/animation":73,"async":5,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],81:[function(require,module,exports){
+},{"../../lib/AssetService":92,"../../lib/Toaster":95,"../../stores/AuthStore":98,"../../stores/CatchsStore":99,"../../stores/FriendsStore":100,"../../touchstone":114,"../../touchstone/animation":113,"async":5,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],121:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20504,7 +22545,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../touchstone":74,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],82:[function(require,module,exports){
+},{"../../touchstone":114,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],122:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -20621,13 +22662,14 @@ module.exports = React.createClass({
 
 });
 
-},{"../../components/CatchsList":41,"../../components/PullToRefreshContainer":45,"../../stores/CatchsStore":59,"../../touchstone":74,"../../touchstone/animation":73,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],83:[function(require,module,exports){
+},{"../../components/CatchsList":81,"../../components/PullToRefreshContainer":85,"../../stores/CatchsStore":99,"../../touchstone":114,"../../touchstone/animation":113,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],123:[function(require,module,exports){
 'use strict';
 
-var _require = require('../../touchstone');
+var _require = require('touchstonejs');
 
-var Transitions = _require.Transitions;
+var Mixins = _require.Mixins;
 var animation = _require.animation;
+var UI = _require.UI;
 
 var Container = require('react-container');
 var Sentry = require('react-sentry');
@@ -20649,7 +22691,7 @@ module.exports = React.createClass({
 
 	displayName: 'ViewUsersList',
 
-	mixins: [Sentry(), animation.Mixins.ScrollContainerToTop, Transitions],
+	mixins: [Sentry(), animation.Mixins.ScrollContainerToTop, Mixins.Transitions],
 
 	statics: {
 		navigationBar: 'main',
@@ -20668,7 +22710,6 @@ module.exports = React.createClass({
 		this.userId = AuthStore.user().id;
 
 		var friends = _friendStore.getFriends(this.userId);
-		console.log(_friendStore.getFriends);
 
 		return {
 			friends: friends,
@@ -20718,8 +22759,12 @@ module.exports = React.createClass({
 		console.log(this.state.selectedFriends);
 	},
 
-	filter: function filter(event) {
-		var query = event.target.value;
+	onCancel: function onCancel() {
+		this.setState({ query: "" });
+	},
+
+	filter: function filter(value) {
+		var query = value;
 		this.setState({ query: query });
 	},
 
@@ -20730,7 +22775,7 @@ module.exports = React.createClass({
 			React.createElement(
 				'div',
 				{ className: 'search-header' },
-				React.createElement('input', { onChange: this.filter, type: 'text', placeholder: 'Rechercher' })
+				React.createElement(UI.SearchField, { onChange: this.filter, onCancel: this.onCancel, onClear: this.onCancel, value: this.state.query, type: 'text', placeholder: 'Rechercher' })
 			),
 			React.createElement(
 				Container,
@@ -20756,17 +22801,18 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../components/CheckBox":42,"../../stores/AuthStore":58,"../../stores/FriendsStore":60,"../../touchstone":74,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],84:[function(require,module,exports){
+},{"../../components/CheckBox":82,"../../stores/AuthStore":98,"../../stores/FriendsStore":100,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],124:[function(require,module,exports){
 'use strict';
 
 var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
 
-var _require = require('../../touchstone');
+var _require = require('touchstonejs');
 
 var animation = _require.animation;
-var Transitions = _require.Transitions;
+var Mixins = _require.Mixins;
+var UI = _require.UI;
 
 var ImageUrl = require('../../filters/ImageUrl');
 
@@ -20789,7 +22835,7 @@ module.exports = React.createClass({
 
 	displayName: 'ViewUserDetails',
 
-	mixins: [Sentry(), Transitions],
+	mixins: [Sentry(), Mixins.Transitions],
 
 	statics: {
 		navigationBar: 'main',
@@ -20841,7 +22887,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../filters/ImageUrl":51,"../../touchstone":74,"events":11,"react":undefined,"react-container":33,"react-sentry":36}],85:[function(require,module,exports){
+},{"../../filters/ImageUrl":91,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],125:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -20925,4 +22971,4 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../components/UsersList":48,"../../stores/AuthStore":58,"../../stores/FriendsStore":60,"../../touchstone/animation":73,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}]},{},[39]);
+},{"../../components/UsersList":88,"../../stores/AuthStore":98,"../../stores/FriendsStore":100,"../../touchstone/animation":113,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}]},{},[79]);
