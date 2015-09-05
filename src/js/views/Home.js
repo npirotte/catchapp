@@ -4,7 +4,7 @@ var React = require('react');
 
 var { Link } = require('../touchstone');
 
-var ImageUrl = require('../filters/ImageUrl');
+var imageUrl = require('../filters/ImageUrl');
 
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
@@ -17,26 +17,26 @@ export default React.createClass({
 
 	mixins : [Sentry()],
 
-	statics: {
-		navigationBar: 'main',
-		getNavigation () {
+	statics : {
+		navigationBar : 'main',
+		getNavigation : function () {
 			return {
-				leftIcon: 'ion-android-menu',
-				leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
-				title: 'Goopy'
+				leftIcon : 'ion-android-menu',
+				leftAction : emitter.emit.bind(emitter, 'navigationBarLeftAction'),
+				title : 'Goopy'
 			};
 		}
 	},
 
-	getInitialState()
+	getInitialState : function ()
 	{
 		return {
 			profile : AuthStore.user(),
 			isOnline : window.navigator.onLine
-		}
+		};
 	},
 
-	componentDidMount()
+	componentDidMount : function ()
 	{
 		var body = document.getElementsByTagName('body')[0];
 
@@ -50,9 +50,9 @@ export default React.createClass({
 		});
 	},
 
-	render() 
+	render : function ()
 	{
-		var src = ImageUrl(this.state.profile.asset, 200),
+		var src = imageUrl(this.state.profile.asset, 200),
 			onlineClassName = 'online-statut online-statut--' + (this.state.isOnline ? 'online' : 'offline');
 
 		return (
@@ -72,6 +72,6 @@ export default React.createClass({
 					</div>
 				</Container>
 			</Container>
-			)
+		);
 	}
-})
+});

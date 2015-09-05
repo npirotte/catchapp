@@ -5744,7 +5744,7 @@ input::-webkit-input-placeholder {
   align-items: flex-start;
 }
 .field-label {
-  color: #212121;
+  color: #616161;
   width: 35%;
 }
 .field-control {
@@ -7223,7 +7223,7 @@ hr.dotted {
   display: none;
 }
 .device--Android .NavigationBarTitle {
-  padding-left: 15px;
+  padding-left: 30px;
   text-align: left;
 }
 .device--Android .NavigationBar.has-left-arrow .NavigationBarTitle,
@@ -7362,7 +7362,7 @@ hr.dotted {
   color: inherit;
   display: block;
   overflow: hidden;
-  padding: 15px 0;
+  padding: 30px 0;
   text-align: left;
 }
 .device--Android .Tabs-Icon,
@@ -7440,6 +7440,29 @@ hr.dotted {
 }
 .text-right {
   text-align: right;
+}
+.text-light {
+  color: #90a4ae;
+}
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: normal;
+}
+h1 {
+  font-size: 32px;
+}
+h2 {
+  font-size: 24px;
+}
+h3 {
+  font-size: 20px;
+}
+h4,
+h5 {
+  font-size: 16px;
 }
 /*
  * buttons
@@ -8279,7 +8302,7 @@ hr.dotted {
   display: none;
 }
 .NavigationBarTitle {
-  padding-left: 15px;
+  padding-left: 30px;
   text-align: left;
 }
 .NavigationBar.has-left-arrow .NavigationBarTitle,
@@ -8418,7 +8441,7 @@ hr.dotted {
   color: inherit;
   display: block;
   overflow: hidden;
-  padding: 15px 0;
+  padding: 30px 0;
   text-align: left;
 }
 .Tabs-Icon,
@@ -8561,6 +8584,33 @@ hr.dotted {
   color: rgba(255, 255, 255, 0.5);
 }
 .Headerbar-form-clear.Tappable-active {
+  color: white;
+}
+.headerPage {
+  position: relative;
+  padding-top: 40px;
+  padding-bottom: 50px;
+  text-align: left;
+  font-size: 20px;
+}
+.headerPage:before {
+  content: "";
+  background: url('../img/triangle-pattern.png') no-repeat center center;
+  background-size: 200%;
+  -webkit-transform: skewY(-3deg);
+  position: absolute;
+  top: -20px;
+  right: 0;
+  bottom: 20px;
+  left: 0;
+  z-index: -1;
+}
+.headerPage,
+.headerPage h1,
+.headerPage h2,
+.headerPage h3,
+.headerPage h4,
+.headerPage a {
   color: white;
 }
 /*
@@ -8823,6 +8873,9 @@ hr.dotted {
   display: block;
   margin: 8px;
 }
+.item-inner {
+  padding: 8px 0;
+}
 .pull-to-refresh {
   overflow: hidden;
   text-align: center;
@@ -8855,7 +8908,7 @@ hr.dotted {
   stroke: black;
 }
 .button {
-  border-radius: 30px;
+  border-radius: 5px;
   background: 0 0;
   border: none;
   color: #000;
@@ -8883,10 +8936,10 @@ hr.dotted {
 }
 .button.Tappable-active,
 .button:active {
-  background-color: rgba(158, 158, 158, 0.4);
+  background-color: #90a4ae;
 }
 .button--raised {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 }
 .button.button-primary {
   background: #00e676;
@@ -8933,7 +8986,7 @@ input[type=search],
 textarea.materialize-textarea {
   background-color: transparent;
   border: none;
-  border-bottom: 1px solid #212121;
+  border-bottom: 1px solid #616161;
   color: #212121;
   border-radius: 0;
   outline: none;
@@ -8985,7 +9038,7 @@ input[type=tel]:focus::-webkit-input-placeholder,
 input[type=number]:focus::-webkit-input-placeholder,
 input[type=search]:focus::-webkit-input-placeholder,
 textarea.materialize-textarea:focus::-webkit-input-placeholder {
-  color: #212121;
+  color: #90a4ae;
 }
 input[type=text]:focus + .field-label,
 input[type=password]:focus + .field-label,
@@ -8999,11 +9052,13 @@ input[type=number]:focus + .field-label,
 input[type=search]:focus + .field-label,
 textarea.materialize-textarea:focus + .field-label {
   font-size: 0.8rem;
-  -webkit-transform: translateY(-200%);
-  -moz-transform: translateY(-200%);
-  -ms-transform: translateY(-200%);
-  -o-transform: translateY(-200%);
-  transform: translateY(-200%);
+  height: auto;
+  line-height: 0.8rem;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  -o-transform: translateY(-100%);
+  transform: translateY(-100%);
 }
 input[type=text]:focus,
 input[type=password]:focus,
@@ -9088,7 +9143,7 @@ textarea.materialize-textarea:-webkit-autofill:active {
 .active input[type=number],
 .active input[type=search],
 .active textarea.materialize-textarea {
-  border-bottom-color: #212121;
+  border-bottom-color: #616161;
 }
 .active input[type=text] + .field-label,
 .active input[type=password] + .field-label,
@@ -9102,23 +9157,13 @@ textarea.materialize-textarea:-webkit-autofill:active {
 .active input[type=search] + .field-label,
 .active textarea.materialize-textarea + .field-label {
   font-size: 0.8rem;
-  -webkit-transform: translateY(-200%);
-  -moz-transform: translateY(-200%);
-  -ms-transform: translateY(-200%);
-  -o-transform: translateY(-200%);
-  transform: translateY(-200%);
+  line-height: 0.8rem;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  -o-transform: translateY(-100%);
+  transform: translateY(-100%);
 }
-.active input[type=text]:valid,
-.active input[type=password]:valid,
-.active input[type=email]:valid,
-.active input[type=url]:valid,
-.active input[type=time]:valid,
-.active input[type=date]:valid,
-.active input[type=datetime-local]:valid,
-.active input[type=tel]:valid,
-.active input[type=number]:valid,
-.active input[type=search]:valid,
-.active textarea.materialize-textarea:valid,
 .active input[type=text]:focus,
 .active input[type=password]:focus,
 .active input[type=email]:focus,
@@ -9137,22 +9182,25 @@ textarea.materialize-textarea:-webkit-autofill:active {
 }
 .field-control {
   width: 100%;
+  padding: 0;
 }
-.field-label {
-  color: #212121;
+.field-label,
+.View .field-label {
+  color: #616161;
   position: absolute;
-  top: 1.1em;
+  top: 0px;
   left: 0;
+  width: 100%;
   z-index: 3;
   font-size: 16px;
+  line-height: 3rem;
   cursor: text;
+  text-align: left;
   -webkit-transition: 0.2s ease-out;
   -moz-transition: 0.2s ease-out;
   -o-transition: 0.2s ease-out;
   -ms-transition: 0.2s ease-out;
   transition: 0.2s ease-out;
-  width: 100%;
-  text-align: left;
 }
 /*==============================
 =            errors            =
@@ -9168,7 +9216,7 @@ textarea.materialize-textarea:-webkit-autofill:active {
 }
 /*-----  End of errors  ------*/
 .cover-image {
-  background-color: #212121;
+  background-color: #616161;
   position: relative;
 }
 .cover-image:before {
@@ -10082,4 +10130,17 @@ textarea.materialize-textarea:-webkit-autofill:active {
 }
 img.preload {
   display: none;
+}
+.padding {
+  padding-left: 30px;
+  padding-right: 30px;
+  width: 100%;
+  overflow: visible;
+  display: block;
+}
+.pull-left {
+  flaot: left;
+}
+.pull-rigth {
+  flaot: right;
 }

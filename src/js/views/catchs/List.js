@@ -55,7 +55,7 @@ module.exports = React.createClass({
 		CatchsStore.emitter.once('noMoreItems', event => {
 			this.setState({noMoreItems : true})
 		});
-		
+
 		// navbar actions
 		this.watch(emitter, 'navigationBarLeftAction', function () {
 			body.classList.toggle('android-menu-is-open');
@@ -92,7 +92,7 @@ module.exports = React.createClass({
 	loadMore (event)
 	{
 		this.setState({loading : true});
-		CatchsStore.getMoreCatchs();
+		CatchsStore.getMoreCatchs(this.state.catchs.length);
 	},
 
 	loader ()
