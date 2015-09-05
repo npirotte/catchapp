@@ -61,10 +61,10 @@ export default React.createClass({
   render : function() {
       return (
         <Container direction="column">
-          <UI.SearchField onChange={this.filter} onCancel={this.onCancel} onClear={this.onCancel} value={this.state.query} type="text" placeholder="Rechercher" />
           <Container fill scrollable={scrollable} ref="scrollContainer">
             <UsersList users={this.state.results} />
           </Container>
+          <UI.SearchField onChange={this.filter} onCancel={this.onCancel} onClear={this.onCancel} value={this.state.query} type="text" placeholder="Rechercher" />
         </Container>
       )
   }

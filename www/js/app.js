@@ -20286,6 +20286,7 @@ var _URIjs2 = _interopRequireDefault(_URIjs);
 
 var queryUrl = 'user';
 
+var lastRequestTimeStamp;
 var storage = [];
 
 function _getFilter(query) {
@@ -20334,7 +20335,12 @@ var SearchStore = (function () {
         endpoint: url
       };
 
+      var date = new Date();
+      var requestTimeStamp = date.getTime();
+      lastRequestTimeStamp = date.getTime();
+
       (0, _libHttpService2['default'])(ops, function (err, res) {
+        if (requestTimeStamp !== lastRequestTimeStamp) return;
         if (err) return false;
 
         storage = res;
@@ -23170,12 +23176,12 @@ exports['default'] = _react2['default'].createClass({
     return _react2['default'].createElement(
       _touchstonejs.Container,
       { direction: 'column' },
-      _react2['default'].createElement(_touchstonejs.UI.SearchField, { onChange: this.filter, onCancel: this.onCancel, onClear: this.onCancel, value: this.state.query, type: 'text', placeholder: 'Rechercher' }),
       _react2['default'].createElement(
         _touchstonejs.Container,
         { fill: true, scrollable: scrollable, ref: 'scrollContainer' },
         _react2['default'].createElement(_componentsUsersList2['default'], { users: this.state.results })
-      )
+      ),
+      _react2['default'].createElement(_touchstonejs.UI.SearchField, { onChange: this.filter, onCancel: this.onCancel, onClear: this.onCancel, value: this.state.query, type: 'text', placeholder: 'Rechercher' })
     );
   }
 

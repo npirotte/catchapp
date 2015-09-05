@@ -4,6 +4,7 @@ import URI from 'URIjs';
 
 const queryUrl = 'user';
 
+var lastRequestTimeStamp;
 var storage = [];
 
 function _getFilter(query)
@@ -52,7 +53,12 @@ export default class SearchStore {
 			endpoint : url
 		}
 
+    var date = new Date();
+    var requestTimeStamp = date.getTime();
+    lastRequestTimeStamp = date.getTime();
+
     HttpService(ops, (err, res) => {
+      if(requestTimeStamp !== lastRequestTimeStamp) return;
       if(err) return false;
 
       storage = res;
