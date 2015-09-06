@@ -18980,6 +18980,16 @@ var MainViewController = React.createClass({
 					),
 					React.createElement(
 						Tabs.Tab,
+						{ value: 'pending-friendships', onClick: this.handleChange.bind(this, 'pending-friendships') },
+						React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--people' }),
+						React.createElement(
+							Tabs.Label,
+							null,
+							'Demander d amitié'
+						)
+					),
+					React.createElement(
+						Tabs.Tab,
 						{ value: 'auth-edit', onClick: this.handleChange.bind(this, 'auth-edit') },
 						React.createElement('span', { className: 'Tabs-Icon Tabs-Icon--people' }),
 						React.createElement(
@@ -19013,6 +19023,7 @@ var MainViewController = React.createClass({
 				React.createElement(View, { name: 'users-list', component: require('./views/users/List') }),
 				React.createElement(View, { name: 'users-details', component: require('./views/users/Details') }),
 				React.createElement(View, { name: 'users-browser', component: require('./views/users/Browser') }),
+				React.createElement(View, { name: 'pending-friendships', component: require('./views/users/PendingFriendships') }),
 				React.createElement(View, { name: 'search', component: require('./views/users/Search') })
 			)
 		);
@@ -19102,7 +19113,7 @@ if (window.cordova) {
 		startApp();
 	}
 
-},{"./lib/device":96,"./stores/AuthStore":98,"./touchstone":115,"./views/Home":116,"./views/auth/Edit":117,"./views/auth/Register":118,"./views/auth/login":119,"./views/catchs/Details":120,"./views/catchs/Form":121,"./views/catchs/GPS":122,"./views/catchs/List":123,"./views/users/Browser":124,"./views/users/Details":125,"./views/users/List":126,"./views/users/Search":127,"react-sentry":36,"react/addons":undefined,"touchstonejs":43}],80:[function(require,module,exports){
+},{"./lib/device":97,"./stores/AuthStore":100,"./touchstone":118,"./views/Home":119,"./views/auth/Edit":120,"./views/auth/Register":121,"./views/auth/login":122,"./views/catchs/Details":123,"./views/catchs/Form":124,"./views/catchs/GPS":125,"./views/catchs/List":126,"./views/users/Browser":127,"./views/users/Details":128,"./views/users/List":129,"./views/users/PendingFriendships":130,"./views/users/Search":131,"react-sentry":36,"react/addons":undefined,"touchstonejs":43}],80:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19156,7 +19167,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../filters/Distance":90,"../filters/ImageUrl":91,"./ItemAvatar":84,"moment":32,"react":undefined,"touchstonejs":43}],81:[function(require,module,exports){
+},{"../filters/Distance":91,"../filters/ImageUrl":92,"./ItemAvatar":85,"moment":32,"react":undefined,"touchstonejs":43}],81:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19289,6 +19300,59 @@ module.exports = exports['default'];
 },{"react":undefined}],84:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactTappable = require('react-tappable');
+
+var _reactTappable2 = _interopRequireDefault(_reactTappable);
+
+var _storesFriendsStoreJs = require('../stores/FriendsStore.js');
+
+var _storesFriendsStoreJs2 = _interopRequireDefault(_storesFriendsStoreJs);
+
+var friendsStore = new _storesFriendsStoreJs2['default']();
+
+var TEXT = {
+  'new': 'Devenir amis',
+  pending: 'Demande en attente',
+  approved: 'Ne plus être amis'
+};
+
+exports['default'] = _react2['default'].createClass({
+
+  displayName: 'FriendshipButton',
+
+  render: function render() {
+
+    if (!this.props.user.friendship) return _react2['default'].createElement('span', null);
+
+    var text = this.props.user.friendship.statut ? TEXT[this.props.user.friendship.statut] : TEXT['new'];
+    return _react2['default'].createElement(
+      _reactTappable2['default'],
+      { className: 'button button-primary', onTap: this.handleClick },
+      text
+    );
+  },
+
+  handleClick: function handleClick(event) {
+    event.preventDefault();
+    friendsStore.createFriendship(this.props.user);
+  }
+
+});
+module.exports = exports['default'];
+
+},{"../stores/FriendsStore.js":102,"react":undefined,"react-tappable":37}],85:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 
 var AVATAR_CLASSNAME = 'ListItem__avatar';
@@ -19330,7 +19394,7 @@ module.exports = React.createClass({
 
 });
 
-},{"react":undefined}],85:[function(require,module,exports){
+},{"react":undefined}],86:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19457,7 +19521,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"./Spinner":86,"react":undefined,"react-container":33,"react-hammerjs":35}],86:[function(require,module,exports){
+},{"./Spinner":87,"react":undefined,"react-container":33,"react-hammerjs":35}],87:[function(require,module,exports){
 /**
  * react-svg-loaders
  * https://github.com/yonatanmn/react-svg-loaders
@@ -19552,7 +19616,7 @@ var SvgSpinners = React.createClass({
 
 module.exports = SvgSpinners;
 
-},{"react":undefined}],87:[function(require,module,exports){
+},{"react":undefined}],88:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19570,18 +19634,19 @@ module.exports = React.createClass({
 
 	render: function render() {
 		var imageUrl = this.props.userItem.asset ? ImageUrl(this.props.userItem.asset, 180) : null;
+		var fullName = this.props.userItem.fullName || this.props.userItem.firstName + ' ' + this.props.userItem.lastName;
 
 		return React.createElement(
 			Link,
 			{ to: 'main:users-details', viewProps: this.props, transition: 'show-from-right', className: 'ListItem Person', component: 'div' },
-			React.createElement(ItemAvatar, { src: imageUrl, name: this.props.userItem.fullName }),
+			React.createElement(ItemAvatar, { src: imageUrl, name: fullName }),
 			React.createElement(
 				'div',
 				{ className: 'ListItem__content' },
 				React.createElement(
 					'div',
 					{ className: 'ListItem__heading' },
-					this.props.userItem.fullName
+					fullName
 				)
 			),
 			React.createElement('div', { className: 'ListItem__chevron' })
@@ -19589,7 +19654,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../filters/ImageUrl":91,"../touchstone":115,"./ItemAvatar":84,"react":undefined}],88:[function(require,module,exports){
+},{"../filters/ImageUrl":92,"../touchstone":118,"./ItemAvatar":85,"react":undefined}],89:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19615,7 +19680,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"./UserItem":87,"react":undefined}],89:[function(require,module,exports){
+},{"./UserItem":88,"react":undefined}],90:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -19624,7 +19689,7 @@ module.exports = {
 	serverUrl: 'http://catch-catchapp.rhcloud.com/'
 };
 
-},{}],90:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19649,7 +19714,7 @@ function distance(lat1, lon1, lat2, lon2) {
 
 module.exports = exports['default'];
 
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19677,7 +19742,7 @@ exports['default'] = function (data, imageSize) {
 
 module.exports = exports['default'];
 
-},{"../config":89}],92:[function(require,module,exports){
+},{"../config":90}],93:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19735,7 +19800,7 @@ exports['default'] = function (fileURL, cb) {
 
 module.exports = exports['default'];
 
-},{"../config":89,"../lib/localStorage":97}],93:[function(require,module,exports){
+},{"../config":90,"../lib/localStorage":99}],94:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19749,7 +19814,7 @@ function emailValidation(input) {
 	return input.match(emailReg);
 }
 
-},{}],94:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 'use strict';
 
 var async = require('async');
@@ -19803,7 +19868,7 @@ var engine = function engine(opts, callback) {
 
       if (debug) console.log(http_request, jsonObj);
 
-      if (http_request.status !== 200) {
+      if (http_request.status !== 200 && http_request.status !== 201) {
 
         if (jsonObj.status === 401 && jsonObj.inner.name === 'TokenExpiredError') {
           async.nextTick(function () {
@@ -19835,7 +19900,7 @@ var engine = function engine(opts, callback) {
 
 module.exports = engine;
 
-},{"../config":89,"../lib/localStorage":97,"../stores/AuthStore":98,"async":5,"defaults":14,"httpify":17}],95:[function(require,module,exports){
+},{"../config":90,"../lib/localStorage":99,"../stores/AuthStore":100,"async":5,"defaults":14,"httpify":17}],96:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19856,7 +19921,7 @@ exports["default"] = function (opts) {
 
 module.exports = exports["default"];
 
-},{}],96:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 'use strict';
 
 var map = {
@@ -19877,7 +19942,21 @@ module.exports = {
 	platform: deviceType
 };
 
-},{}],97:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _events = require('events');
+
+var dispatcher = new _events.EventEmitter();
+
+exports['default'] = dispatcher;
+module.exports = exports['default'];
+
+},{"events":11}],99:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -19914,7 +19993,7 @@ module.exports = {
 	}
 };
 
-},{}],98:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
@@ -20075,7 +20154,7 @@ var store = new AuthStore();
 
 module.exports = store;
 
-},{"../config":89,"../lib/HttpService":94,"../lib/localStorage":97,"events":11}],99:[function(require,module,exports){
+},{"../config":90,"../lib/HttpService":95,"../lib/localStorage":99,"events":11}],101:[function(require,module,exports){
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
@@ -20173,7 +20252,7 @@ var store = new CatchsStore();
 
 module.exports = store;
 
-},{"../lib/HttpService":94,"../lib/localStorage":97,"URIjs":3,"events":11}],100:[function(require,module,exports){
+},{"../lib/HttpService":95,"../lib/localStorage":99,"URIjs":3,"events":11}],102:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20182,12 +20261,21 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _AuthStoreJs = require('./AuthStore.js');
+
+var _AuthStoreJs2 = _interopRequireDefault(_AuthStoreJs);
+
+var _libDispatcher = require('../lib/dispatcher');
+
+var _libDispatcher2 = _interopRequireDefault(_libDispatcher);
 
 var EventEmitter = require('events').EventEmitter;
 var HttpService = require('../lib/HttpService');
 var Storate = require('../lib/localStorage');
-
 var URI = require('URIjs');
 
 var storage = Storate.get('FriendsStore', 'object') || {};
@@ -20201,9 +20289,32 @@ var FriendsStore = (function () {
 	}
 
 	_createClass(FriendsStore, [{
+		key: 'createFriendship',
+		value: function createFriendship(user) {
+			var _AuthStore$user = _AuthStoreJs2['default'].user();
+
+			var id = _AuthStore$user.id;
+
+			var friendship = {
+				participants: [id, user.id]
+			};
+
+			var opts = {
+				endpoint: 'friendships',
+				method: 'POST',
+				data: friendship
+			};
+
+			HttpService(opts, function (err, res) {
+				console.log(err, res);
+				if (!err) {
+					_libDispatcher2['default'].emit('FriendsStore.friendshipUpdated.user:' + user.id, res);
+				}
+			});
+		}
+	}, {
 		key: 'getFriends',
 		value: function getFriends(userId) {
-			console.log(userId, storage);
 			if (!storage[userId]) storage[userId] = [];
 			if (storage[userId].length === 0) {
 				this.getMoreFriends(userId);
@@ -20221,8 +20332,6 @@ var FriendsStore = (function () {
 			var opt = {
 				endpoint: url
 			};
-
-			console.log(this);
 
 			HttpService(opt, function (err, res) {
 				if (err) return false;
@@ -20267,7 +20376,61 @@ var FriendsStore = (function () {
 exports['default'] = FriendsStore;
 module.exports = exports['default'];
 
-},{"../lib/HttpService":94,"../lib/localStorage":97,"URIjs":3,"events":11}],101:[function(require,module,exports){
+},{"../lib/HttpService":95,"../lib/dispatcher":98,"../lib/localStorage":99,"./AuthStore.js":100,"URIjs":3,"events":11}],103:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _libDispatcher = require('../lib/dispatcher');
+
+var _libDispatcher2 = _interopRequireDefault(_libDispatcher);
+
+var _libHttpService = require('../lib/HttpService');
+
+var _libHttpService2 = _interopRequireDefault(_libHttpService);
+
+var storage = [];
+
+var PendingFriendshipsStore = (function () {
+  function PendingFriendshipsStore() {
+    _classCallCheck(this, PendingFriendshipsStore);
+  }
+
+  _createClass(PendingFriendshipsStore, [{
+    key: 'refresh',
+    value: function refresh() {
+      var opts = {
+        endpoint: 'friendships/pending'
+      };
+      (0, _libHttpService2['default'])(opts, function (err, res) {
+        if (!err) {
+          storage = res;
+          _libDispatcher2['default'].emit('PendingFriendshipsStore.update');
+        }
+      });
+    }
+  }, {
+    key: 'getData',
+    value: function getData() {
+      return storage;
+    }
+  }]);
+
+  return PendingFriendshipsStore;
+})();
+
+exports['default'] = PendingFriendshipsStore;
+module.exports = exports['default'];
+
+},{"../lib/HttpService":95,"../lib/dispatcher":98}],104:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20390,7 +20553,7 @@ var SearchStore = (function () {
 exports['default'] = SearchStore;
 module.exports = exports['default'];
 
-},{"../lib/HttpService":94,"URIjs":3,"events":11}],102:[function(require,module,exports){
+},{"../lib/HttpService":95,"URIjs":3,"events":11}],105:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20401,7 +20564,7 @@ var Container = require('react-container');
 exports['default'] = Container;
 module.exports = exports['default'];
 
-},{"react-container":33}],103:[function(require,module,exports){
+},{"react-container":33}],106:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20425,7 +20588,7 @@ var ErrorView = React.createClass({
 exports['default'] = ErrorView;
 module.exports = exports['default'];
 
-},{"react":undefined,"react-container":33}],104:[function(require,module,exports){
+},{"react":undefined,"react-container":33}],107:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20448,7 +20611,7 @@ var Icon = React.createClass({
 exports["default"] = Icon;
 module.exports = exports["default"];
 
-},{"react":undefined}],105:[function(require,module,exports){
+},{"react":undefined}],108:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -20536,7 +20699,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],106:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],109:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -20600,7 +20763,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],107:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],110:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20645,7 +20808,7 @@ var Link = React.createClass({
 exports['default'] = Link;
 module.exports = exports['default'];
 
-},{"./Transitions":111,"blacklist":6,"react":undefined,"react-tappable":37}],108:[function(require,module,exports){
+},{"./Transitions":114,"blacklist":6,"react":undefined,"react-tappable":37}],111:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20889,7 +21052,7 @@ function createController () {
 exports['default'] = NavigationBar;
 module.exports = exports['default'];
 
-},{"classnames":13,"react-tappable":37,"react/addons":undefined}],109:[function(require,module,exports){
+},{"classnames":13,"react-tappable":37,"react/addons":undefined}],112:[function(require,module,exports){
 'use strict';
 
 var classnames = require('classnames');
@@ -20927,7 +21090,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"classnames":13,"react":undefined,"react-tappable":37}],110:[function(require,module,exports){
+},{"classnames":13,"react":undefined,"react-tappable":37}],113:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20999,7 +21162,7 @@ var Label = React.createClass({
 });
 exports.Label = Label;
 
-},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],111:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],114:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21025,7 +21188,7 @@ var Transitions = {
 exports['default'] = Transitions;
 module.exports = exports['default'];
 
-},{"react":undefined}],112:[function(require,module,exports){
+},{"react":undefined}],115:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21048,7 +21211,7 @@ var View = React.createClass({
 exports["default"] = View;
 module.exports = exports["default"];
 
-},{"react":undefined}],113:[function(require,module,exports){
+},{"react":undefined}],116:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21229,7 +21392,7 @@ var ViewManager = React.createClass({
 exports['default'] = ViewManager;
 module.exports = exports['default'];
 
-},{"./ErrorView":103,"blacklist":6,"classnames":13,"react/addons":undefined}],114:[function(require,module,exports){
+},{"./ErrorView":106,"blacklist":6,"classnames":13,"react/addons":undefined}],117:[function(require,module,exports){
 'use strict';
 
 var animation = require('tween.js');
@@ -21289,7 +21452,7 @@ Mixins.ScrollContainerToTop = {
 	}
 };
 
-},{"react":undefined,"tween.js":78}],115:[function(require,module,exports){
+},{"react":undefined,"tween.js":78}],118:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21343,7 +21506,7 @@ function createApp() {
 	};
 }
 
-},{"./Container":102,"./Icon":104,"./LabelInput":105,"./LabelTextarea":106,"./Link":107,"./NavigationBar":108,"./Switch":109,"./Tabs":110,"./Transitions":111,"./View":112,"./ViewManager":113,"./animation":114,"react":undefined}],116:[function(require,module,exports){
+},{"./Container":105,"./Icon":107,"./LabelInput":108,"./LabelTextarea":109,"./Link":110,"./NavigationBar":111,"./Switch":112,"./Tabs":113,"./Transitions":114,"./View":115,"./ViewManager":116,"./animation":117,"react":undefined}],119:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21444,7 +21607,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../filters/ImageUrl":91,"../stores/AuthStore":98,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],117:[function(require,module,exports){
+},{"../filters/ImageUrl":92,"../stores/AuthStore":100,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],120:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21614,7 +21777,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../filters/ImageUrl":91,"../../lib/AssetService":92,"../../stores/AuthStore":98,"../../touchstone":115,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],118:[function(require,module,exports){
+},{"../../filters/ImageUrl":92,"../../lib/AssetService":93,"../../stores/AuthStore":100,"../../touchstone":118,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],121:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21907,7 +22070,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../lib/AssetService":92,"../../lib/FormValidations":93,"../../stores/AuthStore":98,"../../touchstone":115,"react":undefined,"react-container":33,"react-sentry":36}],119:[function(require,module,exports){
+},{"../../lib/AssetService":93,"../../lib/FormValidations":94,"../../stores/AuthStore":100,"../../touchstone":118,"react":undefined,"react-container":33,"react-sentry":36}],122:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -22025,7 +22188,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../stores/AuthStore":98,"../../touchstone":115,"../../touchstone/animation":114,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],120:[function(require,module,exports){
+},{"../../stores/AuthStore":100,"../../touchstone":118,"../../touchstone/animation":117,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],123:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22265,7 +22428,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/CoverImage":83,"../../components/ItemAvatar":84,"../../filters/Distance":90,"../../filters/ImageUrl":91,"../../stores/CatchsStore":99,"../../touchstone":115,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],121:[function(require,module,exports){
+},{"../../components/CoverImage":83,"../../components/ItemAvatar":85,"../../filters/Distance":91,"../../filters/ImageUrl":92,"../../stores/CatchsStore":101,"../../touchstone":118,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],124:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -22492,7 +22655,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../lib/AssetService":92,"../../lib/Toaster":95,"../../stores/AuthStore":98,"../../stores/CatchsStore":99,"../../stores/FriendsStore":100,"../../touchstone":115,"../../touchstone/animation":114,"async":5,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],122:[function(require,module,exports){
+},{"../../lib/AssetService":93,"../../lib/Toaster":96,"../../stores/AuthStore":100,"../../stores/CatchsStore":101,"../../stores/FriendsStore":102,"../../touchstone":118,"../../touchstone/animation":117,"async":5,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],125:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22687,7 +22850,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../touchstone":115,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],123:[function(require,module,exports){
+},{"../../touchstone":118,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],126:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -22804,7 +22967,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../components/CatchsList":81,"../../components/PullToRefreshContainer":85,"../../stores/CatchsStore":99,"../../touchstone":115,"../../touchstone/animation":114,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],124:[function(require,module,exports){
+},{"../../components/CatchsList":81,"../../components/PullToRefreshContainer":86,"../../stores/CatchsStore":101,"../../touchstone":118,"../../touchstone/animation":117,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],127:[function(require,module,exports){
 'use strict';
 
 var _require = require('touchstonejs');
@@ -22943,8 +23106,18 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../components/CheckBox":82,"../../stores/AuthStore":98,"../../stores/FriendsStore":100,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],125:[function(require,module,exports){
+},{"../../components/CheckBox":82,"../../stores/AuthStore":100,"../../stores/FriendsStore":102,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],128:[function(require,module,exports){
 'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _componentsFriendshipButtonJs = require('../../components/FriendshipButton.js');
+
+var _componentsFriendshipButtonJs2 = _interopRequireDefault(_componentsFriendshipButtonJs);
+
+var _libDispatcher = require('../../lib/dispatcher');
+
+var _libDispatcher2 = _interopRequireDefault(_libDispatcher);
 
 var Container = require('react-container');
 var Sentry = require('react-sentry');
@@ -22984,16 +23157,10 @@ module.exports = React.createClass({
 		getNavigation: getNavigation
 	},
 
-	render: function render() {
-		var userImageUrl = ImageUrl(this.props.userItem.asset),
-		    imageStyle = { width: '100%' };
-
-		return React.createElement(
-			Container,
-			null,
-			React.createElement('img', { src: userImageUrl, style: imageStyle }),
-			this.props.userItem.fullName
-		);
+	getInitialState: function getInitialState() {
+		return {
+			user: this.props.userItem
+		};
 	},
 
 	componentDidMount: function componentDidMount() {
@@ -23009,12 +23176,9 @@ module.exports = React.createClass({
 			});
 		});
 
-		// android backbutton handler
-		this.watch(document, 'backbutton', function (event) {
-			_this.transitionTo(previousView, {
-				transition: 'reveal-from-right',
-				viewProps: previousViewProps
-			});
+		this.watch(_libDispatcher2['default'], 'FriendsStore.friendshipUpdated.user:' + this.props.userItem.id, function (friendship) {
+			_this.state.user.friendship = friendship;
+			_this.setState(_this.state);
 		});
 
 		emitter.once('createNewCatch', function (event) {
@@ -23025,11 +23189,24 @@ module.exports = React.createClass({
 			};
 			_this.transitionTo('main:catchs-form', { viewProps: props });
 		});
+	},
+
+	render: function render() {
+		var userImageUrl = ImageUrl(this.props.userItem.asset),
+		    imageStyle = { width: '100%' };
+
+		return React.createElement(
+			Container,
+			null,
+			React.createElement('img', { src: userImageUrl, style: imageStyle }),
+			this.props.userItem.fullName,
+			React.createElement(_componentsFriendshipButtonJs2['default'], { user: this.state.user })
+		);
 	}
 
 });
 
-},{"../../filters/ImageUrl":91,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],126:[function(require,module,exports){
+},{"../../components/FriendshipButton.js":84,"../../filters/ImageUrl":92,"../../lib/dispatcher":98,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],129:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -23113,7 +23290,99 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../components/UsersList":88,"../../stores/AuthStore":98,"../../stores/FriendsStore":100,"../../touchstone/animation":114,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],127:[function(require,module,exports){
+},{"../../components/UsersList":89,"../../stores/AuthStore":100,"../../stores/FriendsStore":102,"../../touchstone/animation":117,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],130:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactSentry = require('react-sentry');
+
+var _reactSentry2 = _interopRequireDefault(_reactSentry);
+
+var _events = require('events');
+
+var _touchstonejs = require('touchstonejs');
+
+var _libDispatcher = require('../../lib/dispatcher');
+
+var _libDispatcher2 = _interopRequireDefault(_libDispatcher);
+
+var _storesPendingFriendshipsStoreJs = require('../../stores/PendingFriendshipsStore.js');
+
+var _storesPendingFriendshipsStoreJs2 = _interopRequireDefault(_storesPendingFriendshipsStoreJs);
+
+var _componentsUsersList = require('../../components/UsersList');
+
+var _componentsUsersList2 = _interopRequireDefault(_componentsUsersList);
+
+var emitter = new _events.EventEmitter();
+var scrollable = _touchstonejs.Container.initScrollable();
+var pendingFriendshipsStore = new _storesPendingFriendshipsStoreJs2['default']();
+
+exports['default'] = _react2['default'].createClass({
+
+  displayName: 'pendingFriendships',
+
+  mixins: [(0, _reactSentry2['default'])(), _touchstonejs.animation.Mixins.ScrollContainerToTop],
+
+  statics: {
+    navigationBar: 'main',
+    getNavigation: function getNavigation() {
+      return {
+        leftIcon: 'ion-android-menu',
+        leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
+        title: 'Demandes d\'amitié'
+      };
+    }
+  },
+
+  getInitialState: function getInitialState() {
+    return {
+      pendingFriendships: []
+    };
+  },
+
+  componentDidMount: function componentDidMount() {
+    var _this = this;
+
+    var body = document.getElementsByTagName('body')[0];
+
+    // navbar actions
+    this.watch(emitter, 'navigationBarLeftAction', function () {
+      body.classList.toggle('android-menu-is-open');
+    });
+
+    this.watch(_libDispatcher2['default'], 'PendingFriendshipsStore.update', function () {
+      _this.setState({ pendingFriendships: pendingFriendshipsStore.getData() });
+    });
+
+    pendingFriendshipsStore.refresh();
+  },
+
+  render: function render() {
+    return _react2['default'].createElement(
+      _touchstonejs.Container,
+      { direction: 'column' },
+      _react2['default'].createElement(
+        _touchstonejs.Container,
+        { fill: true, scrollable: scrollable, onScroll: this.handleScroll, ref: 'scrollContainer' },
+        _react2['default'].createElement(_componentsUsersList2['default'], { users: this.state.pendingFriendships, previousView: 'main:pending-friendships', previousViewProps: { goBackState: this.state } })
+      )
+    );
+  }
+
+});
+module.exports = exports['default'];
+
+},{"../../components/UsersList":89,"../../lib/dispatcher":98,"../../stores/PendingFriendshipsStore.js":103,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}],131:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23219,4 +23488,4 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/PullToRefreshContainer":85,"../../components/UsersList":88,"../../stores/SearchStore":101,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}]},{},[79]);
+},{"../../components/PullToRefreshContainer":86,"../../components/UsersList":89,"../../stores/SearchStore":104,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}]},{},[79]);

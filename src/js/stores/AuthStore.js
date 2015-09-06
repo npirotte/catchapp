@@ -61,7 +61,7 @@ function AuthStore()
 
 	this.refreshToken  = function(cb)
 	{
-		
+
 		var opt = {
 			data : { refreshToken : storage.refreshToken },
 			endpoint : 'auth/refreshtoken',
@@ -81,7 +81,7 @@ function AuthStore()
 			storage.refreshToken = response.refreshToken;
 
 			storage.token = response.token;
-			
+
 			_saveStorage();
 
 			if (cb) {

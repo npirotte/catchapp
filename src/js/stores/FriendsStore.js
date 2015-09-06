@@ -1,8 +1,10 @@
-var EventEmitter = require('events').EventEmitter
-var HttpService = require('../lib/HttpService')
-var Storate = require('../lib/localStorage')
-
+var EventEmitter = require('events').EventEmitter;
+var HttpService = require('../lib/HttpService');
+var Storate = require('../lib/localStorage');
 var URI = require('URIjs');
+
+import AuthStore from './AuthStore.js';
+import dispatcher from '../lib/dispatcher';
 
 var storage = Storate.get('FriendsStore', 'object') || {};
 
@@ -14,10 +16,29 @@ class FriendsStore {
 		this.emitter = new EventEmitter();
 	}
 
+	createFriendship(user)
+	{
+		var { id } = AuthStore.user();
+		var friendship = {
+			participants : [id, user.id]
+		};
+
+		var opts = {
+			endpoint : 'friendships',
+			method : 'POST',
+			data : friendship
+		}
+
+		HttpService(opts, (err, res) => {
+			console.log(err, res)
+			if(!err) {
+				dispatcher.emit('FriendsStore.friendshipUpdated.user:' + user.id, res);
+			}
+		});
+	}
 
 	getFriends(userId)
 	{
-		console.log(userId, storage);
 		if (!storage[userId]) storage[userId] = [];
 		if (storage[userId].length === 0) {
 			this.getMoreFriends(userId);
@@ -33,8 +54,6 @@ class FriendsStore {
 		var opt = {
 			endpoint : url
 		}
-
-		console.log(this);
 
 		HttpService(opt, (err, res) => {
 			if (err) return false;

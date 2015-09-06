@@ -36,7 +36,7 @@ var engine = function(opts, callback)
 	var { endpoint, data, method } = opts;
 
 	var { token } = Storate.get('AuthStore', 'object');
- 	
+
  	var http_request = new XMLHttpRequest();
 
  	http_request.onreadystatechange  = function(){
@@ -47,7 +47,7 @@ var engine = function(opts, callback)
 
         if(debug) console.log(http_request, jsonObj);
 
-        if (http_request.status !== 200) {
+        if (http_request.status !== 200 && http_request.status !== 201) {
 
         	if (jsonObj.status === 401 && jsonObj.inner.name === 'TokenExpiredError' ) {
         		async.nextTick(function()
@@ -67,7 +67,7 @@ var engine = function(opts, callback)
         };
 
         callback(null, jsonObj);
-   
+
       }
    }
 

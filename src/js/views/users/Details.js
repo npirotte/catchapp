@@ -3,7 +3,11 @@ var Sentry = require('react-sentry');
 var React = require('react');
 var { animation, Mixins, UI } = require('touchstonejs');
 
+import FriendshipButton from '../../components/FriendshipButton.js';
+
 var ImageUrl = require('../../filters/ImageUrl');
+
+import dispatcher from '../../lib/dispatcher';
 
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
@@ -13,10 +17,10 @@ const scrollable = Container.initScrollable();
 function getNavigation(props)
 {
 	return {
-		leftArrow: true,
-		title: props.userItem.fullName,
-		leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
-		rightIcon: 'ion-plus',
+		leftArrow : true,
+		title : props.userItem.fullName,
+		leftAction : emitter.emit.bind(emitter, 'navigationBarLeftAction'),
+		rightIcon : 'ion-plus',
 		rightAction : emitter.emit.bind(emitter, 'createNewCatch'),
 	}
 }
@@ -25,23 +29,17 @@ module.exports = React.createClass({
 
 	displayName : 'ViewUserDetails',
 
-	mixins: [Sentry(), Mixins.Transitions],
+	mixins : [Sentry(), Mixins.Transitions],
 
-	statics: {
-		navigationBar: 'main',
+	statics : {
+		navigationBar : 'main',
 		getNavigation : getNavigation
 	},
 
-	render : function() {
-		var userImageUrl = ImageUrl(this.props.userItem.asset),
-			imageStyle = { width : '100%' };
-
-		return (
-			<Container>
-				<img src={userImageUrl} style={imageStyle} />
-				{this.props.userItem.fullName}
-			</Container>
-			)
+	getInitialState : function() {
+		return {
+			user : this.props.userItem
+		}
 	},
 
 	componentDidMount : function() {
@@ -56,12 +54,9 @@ module.exports = React.createClass({
 			});
 		});
 
-		// android backbutton handler
-		this.watch(document, 'backbutton', event => {
-			this.transitionTo(previousView, {
-				transition : 'reveal-from-right',
-				viewProps : previousViewProps
-			});
+		this.watch(dispatcher, 'FriendsStore.friendshipUpdated.user:' + this.props.userItem.id, friendship => {
+			this.state.user.friendship = friendship;
+			this.setState(this.state);
 		});
 
 		emitter.once('createNewCatch', event => {
@@ -72,6 +67,20 @@ module.exports = React.createClass({
 			}
 			this.transitionTo('main:catchs-form', { viewProps : props });
 		});
+
+	},
+
+	render : function() {
+		var userImageUrl = ImageUrl(this.props.userItem.asset),
+			imageStyle = { width : '100%' };
+
+		return (
+			<Container>
+				<img src={userImageUrl} style={imageStyle} />
+				{this.props.userItem.fullName}
+				<FriendshipButton user={this.state.user} />
+			</Container>
+			)
 	}
 
 })

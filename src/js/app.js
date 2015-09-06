@@ -113,6 +113,10 @@ var MainViewController = React.createClass({
 						<span className="Tabs-Icon Tabs-Icon--people" />
 						<Tabs.Label>Utilisateurs</Tabs.Label>
 					</Tabs.Tab>
+					<Tabs.Tab value="pending-friendships" onClick={this.handleChange.bind(this, 'pending-friendships')}>
+						<span className="Tabs-Icon Tabs-Icon--people" />
+						<Tabs.Label>Demander d amitié</Tabs.Label>
+					</Tabs.Tab>
 					<Tabs.Tab value="auth-edit" onClick={this.handleChange.bind(this, 'auth-edit')}>
 						<span className="Tabs-Icon Tabs-Icon--people" />
 						<Tabs.Label>Editer profil</Tabs.Label>
@@ -137,6 +141,7 @@ var MainViewController = React.createClass({
 					<View name="users-list" component={require('./views/users/List')} />
 					<View name="users-details" component={require('./views/users/Details')} />
 					<View name="users-browser" component={require('./views/users/Browser')} />
+					<View name="pending-friendships" component={require('./views/users/PendingFriendships')} />
 
 					<View name="search" component={require('./views/users/Search')} />
 				</ViewManager>
