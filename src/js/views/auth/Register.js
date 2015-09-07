@@ -92,10 +92,12 @@ export default React.createClass({
 		if(!this.state.picture){
 			return (
 				<div className="text-center">
+					<br/>
 					<div className="polygon">
 						<div style={style} className="polygon--pic"> </div>
 						<img className="hidden" src={src} style={style}/>
 					</div>
+					<br/>
 					
 						<button className="button button-primary button--raised" onClick={this.pickPhoto}>
 							Prendre une photo
