@@ -59,7 +59,10 @@ export default React.createClass({
 			<Container direction="column" className="AuthLogin">
 				<Container justify align="center" direction="column">
 					<div>
-						<img src={src} style={{width : '100%'}} />
+						<div className="polygon">
+							<div style={{backgroundImage : 'url(' +src + ')'}} className="polygon--pic"> </div>
+							<img className="hidden" src={src}  />
+						</div>
 						<div className={onlineClassName}>{this.state.isOnline ? 'online' : 'offline'}</div>
 						<div>
 							Bienvenue {this.state.profile.fullName} !
