@@ -87,12 +87,15 @@ export default React.createClass({
 		if (this.state.viewState !== 'image-picker') return false;
 
 		var src = this.state.picture || './img/no-image.png',
-			style = { width : '100%' };
+			style = { backgroundImage : 'url(' + src + ')' };
 
 		if(!this.state.picture){
 			return (
 				<div className="text-center">
-					<img src={src} style={style} />
+					<div className="polygon">
+						<div style={style} className="polygon--pic"> </div>
+						<img className="hidden" src={src} style={style}/>
+					</div>
 					
 						<button className="button button-primary button--raised" onClick={this.pickPhoto}>
 							Prendre une photo
