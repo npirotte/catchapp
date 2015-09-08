@@ -9,6 +9,8 @@ var AuthStore = require('../../stores/AuthStore');
 
 var AssetService = require('../../lib/AssetService');
 
+var LosangeThumbnail = require('../../components/LosangeThumbnail');
+
 const scrollable = Container.initScrollable();
 
 export default React.createClass({
@@ -93,10 +95,7 @@ export default React.createClass({
 			return (
 				<div className="text-center">
 					<br/>
-					<div className="polygon">
-						<div style={style} className="polygon--pic"> </div>
-						<img className="hidden" src={src} style={style}/>
-					</div>
+						<LosangeThumbnail src={src} ></LosangeThumbnail>
 					<br/>
 					
 						<button className="button button-primary button--raised" onClick={this.pickPhoto}>
@@ -114,7 +113,7 @@ export default React.createClass({
 		}else{
 			return (
 				<div className="text-center">
-					<img src={src} style={style} />
+						<LosangeThumbnail src={src} ></LosangeThumbnail>
 				
 						<button className="button button-primary button--raised" onClick={this.register}>
 							Créer mon compte

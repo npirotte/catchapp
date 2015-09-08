@@ -11,6 +11,8 @@ var emitter = new EventEmitter();
 
 var AuthStore = require('../stores/AuthStore');
 
+var LosangeThumbnail = require('../components/LosangeThumbnail');
+
 export default React.createClass({
 
 	displayName : 'ViewHome',
@@ -59,10 +61,8 @@ export default React.createClass({
 			<Container direction="column" className="AuthLogin">
 				<Container justify align="center" direction="column">
 					<div>
-						<div className="polygon">
-							<div style={{backgroundImage : 'url(' +src + ')'}} className="polygon--pic"> </div>
-							<img className="hidden" src={src}  />
-						</div>
+						<LosangeThumbnail src={src}></LosangeThumbnail>
+						
 						<div className={onlineClassName}>{this.state.isOnline ? 'online' : 'offline'}</div>
 						<div>
 							Bienvenue {this.state.profile.fullName} !
