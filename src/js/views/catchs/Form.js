@@ -1,13 +1,11 @@
-var animation = require('../../touchstone/animation');
-var Container = require('react-container');
-var Sentry = require('react-sentry');
-var React = require('react');
-var Tappable = require('react-tappable');
-var async = require('async');
-var {LabelTextarea, Transitions, Link} = require('../../touchstone');
+import React from 'react';
+import Sentry from 'react-sentry';
+import Tappable from 'react-tappable';
+import { animation, UI, Container, Mixins, Link } from 'touchstonejs';
+import async from 'async';
 
-var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
+import { EventEmitter } from 'events';
+const emitter = new EventEmitter();
 
 var AuthStore = require('../../stores/AuthStore');
 var FriendsStore = require('../../stores/FriendsStore'),
@@ -24,7 +22,7 @@ const defaultData = {
 	formData : {
 		recipents : []
 	},
-	picture: null
+	picture : null
 };
 
 var dataStore;
@@ -39,9 +37,9 @@ cleanDataStore();
 function getNavigation(props)
 {
 	return {
-		leftArrow: true,
-		title: 'Nouveau Goop',
-		leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
+		leftArrow : true,
+		title : 'Nouveau Goop',
+		leftAction : emitter.emit.bind(emitter, 'navigationBarLeftAction'),
 	}
 }
 
@@ -49,14 +47,14 @@ module.exports = React.createClass({
 
 	displayName : 'ViewCatchForm',
 
-	statics: {
-		navigationBar: 'main',
+	statics : {
+		navigationBar : 'main',
 		getNavigation : getNavigation
 	},
 
-	mixins: [Sentry(), Transitions, animation.Mixins.ScrollContainerToTop],
+	mixins : [Sentry(), Mixins.Transitions, animation.Mixins.ScrollContainerToTop],
 
-	getInitialState() {
+	getInitialState : function() {
 
 		if (this.props.recipents) {
 			dataStore.formData.recipents = this.props.recipents;
@@ -68,14 +66,14 @@ module.exports = React.createClass({
 		return dataStore;
 	},
 
-	componentDidMount() {
+	componentDidMount : function() {
 		var _this = this;
 
 		if (navigator.camera && !this.state.picture) {
 			navigator.camera.getPicture( function(imageData) {
 				_this.setState({picture : imageData});
 				dataStore = _this.state;
-			}, function() {}, {targetWidth: 1024, targetHeight: 1024});
+			}, function() {}, {targetWidth : 1024, targetHeight : 1024});
 		}
 
 		if (navigator.geolocation && !this.state.formData.geo) {
@@ -95,7 +93,7 @@ module.exports = React.createClass({
 		});
 	},
 
-	render() {
+	render : function() {
 		//console.log(this.state.formData.recipents);
 		// get recipents model
 
@@ -104,12 +102,12 @@ module.exports = React.createClass({
 				<Container fill scrollable={scrollable} onScroll={this.handleScroll} ref="scrollContainer">
 					<form>
 						<img src={this.state.picture} style={{ width : '100%' }} />
-						<LabelTextarea 
-							label="Message" 
-							first={true} 
-							name="message" 
-							ref="message" 
-							value={this.state.formData.message} 
+						<UI.LabelTextarea
+							label="Message"
+							first={true}
+							name="message"
+							ref="message"
+							value={this.state.formData.message}
 							onChange={this.handleFormChange} />
 
 						<div>
@@ -138,10 +136,9 @@ module.exports = React.createClass({
 			)
 	},
 
-	deleteUser(userId, userModel)
+	deleteUser : function(userId, userModel)
 	{
 		if(confirm('Supprimer ' + userModel.fullName + ' de la liste d\'envoi ?')){
-			console.log(userId);
 			this.state.formData.recipents = this.state.formData.recipents.filter((user) => {
 				return user != userId;
 			});
@@ -150,18 +147,18 @@ module.exports = React.createClass({
 		}
 	},
 
-	handleFormChange(event) {
+	handleFormChange : function(event) {
 		// update state
 		this.state.formData[event.target.name] = event.target.value;
 		dataStore = this.state;
-		/*async.nextTick(() => 
+		/*async.nextTick(() =>
 		{
 			this.setState({ formData : this.state.formData });
 		});*/
-		
+
 	},
 
-	handleFormSubmit(event) {
+	handleFormSubmit : function(event) {
 		var data = this.state.formData;
 		var _this = this;
 
@@ -171,11 +168,9 @@ module.exports = React.createClass({
 			{
 				if(err) return false;
 
-				console.log(res);
 				data.asset = res.asset.id;
 
 				CatchsStore.sendCatch(data, function(err, res) {
-					console.log(err, res);
 					if (err) return false;
 
 					cleanDataStore();
@@ -193,7 +188,6 @@ module.exports = React.createClass({
 
 		} else {
 			CatchsStore.sendCatch(data, function(err, res) {
-				console.log(err, res);
 				if (err) return false;
 
 				cleanDataStore();

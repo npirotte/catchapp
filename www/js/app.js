@@ -19113,7 +19113,7 @@ if (window.cordova) {
 		startApp();
 	}
 
-},{"./lib/device":98,"./stores/AuthStore":101,"./touchstone":119,"./views/Home":120,"./views/auth/Edit":121,"./views/auth/Register":122,"./views/auth/login":123,"./views/catchs/Details":124,"./views/catchs/Form":125,"./views/catchs/GPS":126,"./views/catchs/List":127,"./views/users/Browser":128,"./views/users/Details":129,"./views/users/List":130,"./views/users/PendingFriendships":131,"./views/users/Search":132,"react-sentry":36,"react/addons":undefined,"touchstonejs":43}],80:[function(require,module,exports){
+},{"./lib/device":99,"./stores/AuthStore":102,"./touchstone":120,"./views/Home":121,"./views/auth/Edit":122,"./views/auth/Register":123,"./views/auth/login":124,"./views/catchs/Details":125,"./views/catchs/Form":126,"./views/catchs/GPS":127,"./views/catchs/List":128,"./views/users/Browser":129,"./views/users/Details":130,"./views/users/List":131,"./views/users/PendingFriendships":132,"./views/users/Search":133,"react-sentry":36,"react/addons":undefined,"touchstonejs":43}],80:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19350,7 +19350,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../stores/FriendsStore.js":103,"react":undefined,"react-tappable":37}],85:[function(require,module,exports){
+},{"../stores/FriendsStore.js":104,"react":undefined,"react-tappable":37}],85:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19871,7 +19871,7 @@ exports['default'] = function (fileURL, cb) {
 
 module.exports = exports['default'];
 
-},{"../config":91,"../lib/localStorage":100}],95:[function(require,module,exports){
+},{"../config":91,"../lib/localStorage":101}],95:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19971,66 +19971,13 @@ var engine = function engine(opts, callback) {
 
 module.exports = engine;
 
-},{"../config":91,"../lib/localStorage":100,"../stores/AuthStore":101,"async":5,"defaults":14,"httpify":17}],97:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-var defaultOpts = {
-	duration: "short",
-	position: "bottom"
-};
-
-exports["default"] = function (opts) {
-	if (window.plugins && window.plugins.toast) {
-		window.plugins.toast.showShortTop(opts.message);
-	} else {
-		console.log('Tentative de toast :' + opts.message);
-	}
-};
-
-module.exports = exports["default"];
-
-},{}],98:[function(require,module,exports){
-'use strict';
-
-var map = {
-	'Android': /Android/,
-	'iOS': /(iPad|iPhone)/
-};
-
-var userAgent = window.navigator.userAgent;
-var deviceType = 'Browser';
-
-for (var key in map) {
-	if (map[key].test(userAgent)) {
-		deviceType = key;
-	}
-}
-
-module.exports = {
-	platform: deviceType
-};
-
-},{}],99:[function(require,module,exports){
+},{"../config":91,"../lib/localStorage":101,"../stores/AuthStore":102,"async":5,"defaults":14,"httpify":17}],97:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-  value: true
+	value: true
 });
-
-var _events = require('events');
-
-var dispatcher = new _events.EventEmitter();
-
-exports['default'] = dispatcher;
-module.exports = exports['default'];
-
-},{"events":11}],100:[function(require,module,exports){
-'use strict';
-
-module.exports = {
+exports['default'] = {
 	get: function get(key, type) {
 		var output;
 
@@ -20063,8 +20010,106 @@ module.exports = {
 		window.localStorage[key] = data;
 	}
 };
+module.exports = exports['default'];
 
-},{}],101:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var defaultOpts = {
+	duration: "short",
+	position: "bottom"
+};
+
+exports["default"] = function (opts) {
+	if (window.plugins && window.plugins.toast) {
+		window.plugins.toast.showShortTop(opts.message);
+	} else {
+		console.log('Tentative de toast :' + opts.message);
+	}
+};
+
+module.exports = exports["default"];
+
+},{}],99:[function(require,module,exports){
+'use strict';
+
+var map = {
+	'Android': /Android/,
+	'iOS': /(iPad|iPhone)/
+};
+
+var userAgent = window.navigator.userAgent;
+var deviceType = 'Browser';
+
+for (var key in map) {
+	if (map[key].test(userAgent)) {
+		deviceType = key;
+	}
+}
+
+module.exports = {
+	platform: deviceType
+};
+
+},{}],100:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+var _events = require('events');
+
+var dispatcher = new _events.EventEmitter();
+
+exports['default'] = dispatcher;
+module.exports = exports['default'];
+
+},{"events":11}],101:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+exports['default'] = {
+	get: function get(key, type) {
+		var output;
+
+		if (window.localStorage[key]) {
+			try {
+				output = JSON.parse(window.localStorage[key]);
+			} catch (e) {
+				output = window.localStorage[key];
+			}
+		} else {
+			switch (type) {
+				case 'array':
+					output = [];
+					break;
+				case 'object':
+					output = {};
+					break;
+				default:
+					output = null;
+					break;
+			}
+		}
+
+		return output;
+	},
+	set: function set(key, data) {
+		if (typeof data === 'object') {
+			data = JSON.stringify(data);
+		}
+		window.localStorage[key] = data;
+	}
+};
+module.exports = exports['default'];
+
+},{}],102:[function(require,module,exports){
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
@@ -20225,7 +20270,7 @@ var store = new AuthStore();
 
 module.exports = store;
 
-},{"../config":91,"../lib/HttpService":96,"../lib/localStorage":100,"events":11}],102:[function(require,module,exports){
+},{"../config":91,"../lib/HttpService":96,"../lib/localStorage":101,"events":11}],103:[function(require,module,exports){
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
@@ -20323,7 +20368,7 @@ var store = new CatchsStore();
 
 module.exports = store;
 
-},{"../lib/HttpService":96,"../lib/localStorage":100,"URIjs":3,"events":11}],103:[function(require,module,exports){
+},{"../lib/HttpService":96,"../lib/localStorage":101,"URIjs":3,"events":11}],104:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20336,6 +20381,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+var _events = require('events');
+
+var _libHttpService = require('../lib/HttpService');
+
+var _libHttpService2 = _interopRequireDefault(_libHttpService);
+
+var _libLocalStorage = require('../lib/LocalStorage');
+
+var _libLocalStorage2 = _interopRequireDefault(_libLocalStorage);
+
+var _URIjs = require('URIjs');
+
+var _URIjs2 = _interopRequireDefault(_URIjs);
+
 var _AuthStoreJs = require('./AuthStore.js');
 
 var _AuthStoreJs2 = _interopRequireDefault(_AuthStoreJs);
@@ -20344,19 +20403,14 @@ var _libDispatcher = require('../lib/dispatcher');
 
 var _libDispatcher2 = _interopRequireDefault(_libDispatcher);
 
-var EventEmitter = require('events').EventEmitter;
-var HttpService = require('../lib/HttpService');
-var Storate = require('../lib/localStorage');
-var URI = require('URIjs');
-
-var storage = Storate.get('FriendsStore', 'object') || {};
+var storage = _libLocalStorage2['default'].get('FriendsStore', 'object') || {};
 
 var FriendsStore = (function () {
 	function FriendsStore() {
 		_classCallCheck(this, FriendsStore);
 
 		this.requestSize = 9999;
-		this.emitter = new EventEmitter();
+		this.emitter = new _events.EventEmitter();
 	}
 
 	_createClass(FriendsStore, [{
@@ -20376,7 +20430,7 @@ var FriendsStore = (function () {
 				data: friendship
 			};
 
-			HttpService(opts, function (err, res) {
+			(0, _libHttpService2['default'])(opts, function (err, res) {
 				console.log(err, res);
 				if (!err) {
 					_libDispatcher2['default'].emit('FriendsStore.friendshipUpdated.user:' + user.id, res);
@@ -20402,14 +20456,14 @@ var FriendsStore = (function () {
 		value: function getMoreFriends(userId) {
 			var _this = this;
 
-			var url = new URI('user/' + userId + '/friends');
+			var url = new _URIjs2['default']('user/' + userId + '/friends');
 			url.setSearch({ skip: 0, limit: this.requestSize });
 
 			var opt = {
 				endpoint: url
 			};
 
-			HttpService(opt, function (err, res) {
+			(0, _libHttpService2['default'])(opt, function (err, res) {
 				if (err) return false;
 
 				var data = res;
@@ -20426,7 +20480,7 @@ var FriendsStore = (function () {
 
 				_this.emitter.emit('update:' + userId);
 
-				Storate.set('FriendsStore', storage);
+				_libLocalStorage2['default'].set('FriendsStore', storage);
 			});
 		}
 	}, {
@@ -20452,7 +20506,7 @@ var FriendsStore = (function () {
 exports['default'] = FriendsStore;
 module.exports = exports['default'];
 
-},{"../lib/HttpService":96,"../lib/dispatcher":99,"../lib/localStorage":100,"./AuthStore.js":101,"URIjs":3,"events":11}],104:[function(require,module,exports){
+},{"../lib/HttpService":96,"../lib/LocalStorage":97,"../lib/dispatcher":100,"./AuthStore.js":102,"URIjs":3,"events":11}],105:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20506,7 +20560,7 @@ var PendingFriendshipsStore = (function () {
 exports['default'] = PendingFriendshipsStore;
 module.exports = exports['default'];
 
-},{"../lib/HttpService":96,"../lib/dispatcher":99}],105:[function(require,module,exports){
+},{"../lib/HttpService":96,"../lib/dispatcher":100}],106:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20629,7 +20683,7 @@ var SearchStore = (function () {
 exports['default'] = SearchStore;
 module.exports = exports['default'];
 
-},{"../lib/HttpService":96,"URIjs":3,"events":11}],106:[function(require,module,exports){
+},{"../lib/HttpService":96,"URIjs":3,"events":11}],107:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20640,7 +20694,7 @@ var Container = require('react-container');
 exports['default'] = Container;
 module.exports = exports['default'];
 
-},{"react-container":33}],107:[function(require,module,exports){
+},{"react-container":33}],108:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20664,7 +20718,7 @@ var ErrorView = React.createClass({
 exports['default'] = ErrorView;
 module.exports = exports['default'];
 
-},{"react":undefined,"react-container":33}],108:[function(require,module,exports){
+},{"react":undefined,"react-container":33}],109:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20687,7 +20741,7 @@ var Icon = React.createClass({
 exports["default"] = Icon;
 module.exports = exports["default"];
 
-},{"react":undefined}],109:[function(require,module,exports){
+},{"react":undefined}],110:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -20775,7 +20829,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],110:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],111:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -20839,7 +20893,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],111:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],112:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20884,7 +20938,7 @@ var Link = React.createClass({
 exports['default'] = Link;
 module.exports = exports['default'];
 
-},{"./Transitions":115,"blacklist":6,"react":undefined,"react-tappable":37}],112:[function(require,module,exports){
+},{"./Transitions":116,"blacklist":6,"react":undefined,"react-tappable":37}],113:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21132,7 +21186,7 @@ function createController () {
 exports['default'] = NavigationBar;
 module.exports = exports['default'];
 
-},{"classnames":13,"react-tappable":37,"react/addons":undefined}],113:[function(require,module,exports){
+},{"classnames":13,"react-tappable":37,"react/addons":undefined}],114:[function(require,module,exports){
 'use strict';
 
 var classnames = require('classnames');
@@ -21170,7 +21224,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"classnames":13,"react":undefined,"react-tappable":37}],114:[function(require,module,exports){
+},{"classnames":13,"react":undefined,"react-tappable":37}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21242,7 +21296,7 @@ var Label = React.createClass({
 });
 exports.Label = Label;
 
-},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],115:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],116:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21268,7 +21322,7 @@ var Transitions = {
 exports['default'] = Transitions;
 module.exports = exports['default'];
 
-},{"react":undefined}],116:[function(require,module,exports){
+},{"react":undefined}],117:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21291,7 +21345,7 @@ var View = React.createClass({
 exports["default"] = View;
 module.exports = exports["default"];
 
-},{"react":undefined}],117:[function(require,module,exports){
+},{"react":undefined}],118:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21472,7 +21526,7 @@ var ViewManager = React.createClass({
 exports['default'] = ViewManager;
 module.exports = exports['default'];
 
-},{"./ErrorView":107,"blacklist":6,"classnames":13,"react/addons":undefined}],118:[function(require,module,exports){
+},{"./ErrorView":108,"blacklist":6,"classnames":13,"react/addons":undefined}],119:[function(require,module,exports){
 'use strict';
 
 var animation = require('tween.js');
@@ -21533,7 +21587,7 @@ Mixins.ScrollContainerToTop = {
 	}
 };
 
-},{"react":undefined,"tween.js":78}],119:[function(require,module,exports){
+},{"react":undefined,"tween.js":78}],120:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21587,19 +21641,19 @@ function createApp() {
 	};
 }
 
-},{"./Container":106,"./Icon":108,"./LabelInput":109,"./LabelTextarea":110,"./Link":111,"./NavigationBar":112,"./Switch":113,"./Tabs":114,"./Transitions":115,"./View":116,"./ViewManager":117,"./animation":118,"react":undefined}],120:[function(require,module,exports){
+},{"./Container":107,"./Icon":109,"./LabelInput":110,"./LabelTextarea":111,"./Link":112,"./NavigationBar":113,"./Switch":114,"./Tabs":115,"./Transitions":116,"./View":117,"./ViewManager":118,"./animation":119,"react":undefined}],121:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
 	value: true
 });
-var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
 
 var _require = require('touchstonejs');
 
 var Link = _require.Link;
+var Container = _require.Container;
 
 var imageUrl = require('../filters/ImageUrl');
 
@@ -21690,7 +21744,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../components/LosangeThumbnail":86,"../filters/ImageUrl":93,"../stores/AuthStore":101,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],121:[function(require,module,exports){
+},{"../components/LosangeThumbnail":86,"../filters/ImageUrl":93,"../stores/AuthStore":102,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}],122:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21860,7 +21914,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../filters/ImageUrl":93,"../../lib/AssetService":94,"../../stores/AuthStore":101,"../../touchstone":119,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],122:[function(require,module,exports){
+},{"../../filters/ImageUrl":93,"../../lib/AssetService":94,"../../stores/AuthStore":102,"../../touchstone":120,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],123:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22157,7 +22211,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/LosangeThumbnail":86,"../../lib/AssetService":94,"../../lib/FormValidations":95,"../../stores/AuthStore":101,"../../touchstone":119,"react":undefined,"react-container":33,"react-sentry":36}],123:[function(require,module,exports){
+},{"../../components/LosangeThumbnail":86,"../../lib/AssetService":94,"../../lib/FormValidations":95,"../../stores/AuthStore":102,"../../touchstone":120,"react":undefined,"react-container":33,"react-sentry":36}],124:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -22275,7 +22329,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../stores/AuthStore":101,"../../touchstone":119,"../../touchstone/animation":118,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],124:[function(require,module,exports){
+},{"../../stores/AuthStore":102,"../../touchstone":120,"../../touchstone/animation":119,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],125:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22543,24 +22597,32 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/CoverImage":83,"../../components/ItemAvatar":85,"../../filters/Distance":92,"../../filters/ImageUrl":93,"../../stores/CatchsStore":102,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],125:[function(require,module,exports){
+},{"../../components/CoverImage":83,"../../components/ItemAvatar":85,"../../filters/Distance":92,"../../filters/ImageUrl":93,"../../stores/CatchsStore":103,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],126:[function(require,module,exports){
 'use strict';
 
-var animation = require('../../touchstone/animation');
-var Container = require('react-container');
-var Sentry = require('react-sentry');
-var React = require('react');
-var Tappable = require('react-tappable');
-var async = require('async');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _require = require('../../touchstone');
+var _react = require('react');
 
-var LabelTextarea = _require.LabelTextarea;
-var Transitions = _require.Transitions;
-var Link = _require.Link;
+var _react2 = _interopRequireDefault(_react);
 
-var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
+var _reactSentry = require('react-sentry');
+
+var _reactSentry2 = _interopRequireDefault(_reactSentry);
+
+var _reactTappable = require('react-tappable');
+
+var _reactTappable2 = _interopRequireDefault(_reactTappable);
+
+var _touchstonejs = require('touchstonejs');
+
+var _async = require('async');
+
+var _async2 = _interopRequireDefault(_async);
+
+var _events = require('events');
+
+var emitter = new _events.EventEmitter();
 
 var AuthStore = require('../../stores/AuthStore');
 var FriendsStore = require('../../stores/FriendsStore'),
@@ -22571,7 +22633,7 @@ var AssetService = require('../../lib/AssetService');
 
 var CatchsStore = require('../../stores/CatchsStore');
 
-var scrollable = Container.initScrollable();
+var scrollable = _touchstonejs.Container.initScrollable();
 
 var defaultData = {
 	formData: {
@@ -22596,7 +22658,7 @@ function getNavigation(props) {
 	};
 }
 
-module.exports = React.createClass({
+module.exports = _react2['default'].createClass({
 
 	displayName: 'ViewCatchForm',
 
@@ -22605,7 +22667,7 @@ module.exports = React.createClass({
 		getNavigation: getNavigation
 	},
 
-	mixins: [Sentry(), Transitions, animation.Mixins.ScrollContainerToTop],
+	mixins: [(0, _reactSentry2['default'])(), _touchstonejs.Mixins.Transitions, _touchstonejs.animation.Mixins.ScrollContainerToTop],
 
 	getInitialState: function getInitialState() {
 
@@ -22650,50 +22712,50 @@ module.exports = React.createClass({
 		//console.log(this.state.formData.recipents);
 		// get recipents model
 
-		return React.createElement(
-			Container,
+		return _react2['default'].createElement(
+			_touchstonejs.Container,
 			{ direction: 'column' },
-			React.createElement(
-				Container,
+			_react2['default'].createElement(
+				_touchstonejs.Container,
 				{ fill: true, scrollable: scrollable, onScroll: this.handleScroll, ref: 'scrollContainer' },
-				React.createElement(
+				_react2['default'].createElement(
 					'form',
 					null,
-					React.createElement('img', { src: this.state.picture, style: { width: '100%' } }),
-					React.createElement(LabelTextarea, {
+					_react2['default'].createElement('img', { src: this.state.picture, style: { width: '100%' } }),
+					_react2['default'].createElement(_touchstonejs.UI.LabelTextarea, {
 						label: 'Message',
 						first: true,
 						name: 'message',
 						ref: 'message',
 						value: this.state.formData.message,
 						onChange: this.handleFormChange }),
-					React.createElement(
+					_react2['default'].createElement(
 						'div',
 						null,
 						this.state.formData.recipents.map((function (userItem, index) {
 							var friend = this.friendsData[userItem];
-							return React.createElement(
-								Tappable,
+							return _react2['default'].createElement(
+								_reactTappable2['default'],
 								{ onTap: this.deleteUser.bind(this, userItem, friend), className: 'ListItem' },
 								friend.fullName
 							);
 						}).bind(this))
 					),
-					React.createElement(
+					_react2['default'].createElement(
 						'div',
 						null,
-						React.createElement(
-							Link,
+						_react2['default'].createElement(
+							_touchstonejs.Link,
 							{ to: 'main:users-browser', viewProps: { selectedFriends: this.state.formData.recipents }, transition: 'show-from-bottom', className: 'button' },
 							'Ajouter des amis'
 						)
 					),
-					React.createElement('br', null),
-					React.createElement(
+					_react2['default'].createElement('br', null),
+					_react2['default'].createElement(
 						'div',
 						null,
-						React.createElement(
-							Tappable,
+						_react2['default'].createElement(
+							_reactTappable2['default'],
 							{ onTap: this.handleFormSubmit, className: 'button button--raised' },
 							'Envoyer'
 						)
@@ -22705,7 +22767,6 @@ module.exports = React.createClass({
 
 	deleteUser: function deleteUser(userId, userModel) {
 		if (confirm('Supprimer ' + userModel.fullName + ' de la liste d\'envoi ?')) {
-			console.log(userId);
 			this.state.formData.recipents = this.state.formData.recipents.filter(function (user) {
 				return user != userId;
 			});
@@ -22718,7 +22779,7 @@ module.exports = React.createClass({
 		// update state
 		this.state.formData[event.target.name] = event.target.value;
 		dataStore = this.state;
-		/*async.nextTick(() => 
+		/*async.nextTick(() =>
   {
   	this.setState({ formData : this.state.formData });
   });*/
@@ -22733,16 +22794,14 @@ module.exports = React.createClass({
 			AssetService(this.state.picture, function (err, res) {
 				if (err) return false;
 
-				console.log(res);
 				data.asset = res.asset.id;
 
 				CatchsStore.sendCatch(data, function (err, res) {
-					console.log(err, res);
 					if (err) return false;
 
 					cleanDataStore();
 
-					async.nextTick(function () {
+					_async2['default'].nextTick(function () {
 						Toaster({
 							message: 'Catch envoyé !'
 						});
@@ -22753,12 +22812,11 @@ module.exports = React.createClass({
 			});
 		} else {
 			CatchsStore.sendCatch(data, function (err, res) {
-				console.log(err, res);
 				if (err) return false;
 
 				cleanDataStore();
 
-				async.nextTick(function () {
+				_async2['default'].nextTick(function () {
 					Toaster({
 						message: 'Catch envoyé !'
 					});
@@ -22770,7 +22828,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../lib/AssetService":94,"../../lib/Toaster":97,"../../stores/AuthStore":101,"../../stores/CatchsStore":102,"../../stores/FriendsStore":103,"../../touchstone":119,"../../touchstone/animation":118,"async":5,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],126:[function(require,module,exports){
+},{"../../lib/AssetService":94,"../../lib/Toaster":98,"../../stores/AuthStore":102,"../../stores/CatchsStore":103,"../../stores/FriendsStore":104,"async":5,"events":11,"react":undefined,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],127:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22965,7 +23023,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../touchstone":119,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],127:[function(require,module,exports){
+},{"../../touchstone":120,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],128:[function(require,module,exports){
 'use strict';
 
 var Container = require('react-container');
@@ -23086,7 +23144,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../components/CatchsList":81,"../../components/PullToRefreshContainer":87,"../../stores/CatchsStore":102,"../../touchstone":119,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],128:[function(require,module,exports){
+},{"../../components/CatchsList":81,"../../components/PullToRefreshContainer":87,"../../stores/CatchsStore":103,"../../touchstone":120,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],129:[function(require,module,exports){
 'use strict';
 
 var _require = require('touchstonejs');
@@ -23225,7 +23283,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../components/CheckBox":82,"../../stores/AuthStore":101,"../../stores/FriendsStore":103,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],129:[function(require,module,exports){
+},{"../../components/CheckBox":82,"../../stores/AuthStore":102,"../../stores/FriendsStore":104,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],130:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -23325,7 +23383,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../components/FriendshipButton.js":84,"../../filters/ImageUrl":93,"../../lib/dispatcher":99,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],130:[function(require,module,exports){
+},{"../../components/FriendshipButton.js":84,"../../filters/ImageUrl":93,"../../lib/dispatcher":100,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],131:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23440,7 +23498,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/UsersList":90,"../../stores/AuthStore":101,"../../stores/FriendsStore":103,"events":11,"react":undefined,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],131:[function(require,module,exports){
+},{"../../components/UsersList":90,"../../stores/AuthStore":102,"../../stores/FriendsStore":104,"events":11,"react":undefined,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],132:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23532,7 +23590,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/UsersList":90,"../../lib/dispatcher":99,"../../stores/PendingFriendshipsStore.js":104,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}],132:[function(require,module,exports){
+},{"../../components/UsersList":90,"../../lib/dispatcher":100,"../../stores/PendingFriendshipsStore.js":105,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}],133:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23644,4 +23702,4 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/PullToRefreshContainer":87,"../../components/UsersList":90,"../../stores/SearchStore":105,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}]},{},[79]);
+},{"../../components/PullToRefreshContainer":87,"../../components/UsersList":90,"../../stores/SearchStore":106,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}]},{},[79]);

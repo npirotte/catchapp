@@ -1,8 +1,7 @@
-var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
 
-var { Link } = require('touchstonejs');
+var { Link, Container } = require('touchstonejs');
 
 var imageUrl = require('../filters/ImageUrl');
 
@@ -62,7 +61,7 @@ export default React.createClass({
 				<Container justify align="center" direction="column">
 					<div>
 						<LosangeThumbnail src={src}></LosangeThumbnail>
-						
+
 						<div className={onlineClassName}>{this.state.isOnline ? 'online' : 'offline'}</div>
 						<div>
 							Bienvenue {this.state.profile.fullName} !

@@ -1,7 +1,5 @@
-var React = require('react');
-var Touchstone = require('../touchstone');
-
-var { NavigationBar } = Touchstone;
+import React from 'react';
+import NavigationBar from '../touchstone/NavigationBar';
 
 module.exports = React.createClass({
 	displayName: 'AppHeader',

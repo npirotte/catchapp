@@ -1,12 +1,12 @@
-var EventEmitter = require('events').EventEmitter;
-var HttpService = require('../lib/HttpService');
-var Storate = require('../lib/localStorage');
-var URI = require('URIjs');
+import { EventEmitter } from 'events';
+import HttpService from '../lib/HttpService';
+import LocalStorage from '../lib/LocalStorage';
+import URI from 'URIjs';
 
 import AuthStore from './AuthStore.js';
 import dispatcher from '../lib/dispatcher';
 
-var storage = Storate.get('FriendsStore', 'object') || {};
+var storage = LocalStorage.get('FriendsStore', 'object') || {};
 
 class FriendsStore {
 
@@ -79,7 +79,7 @@ class FriendsStore {
 
 			this.emitter.emit('update:' + userId);
 
-			Storate.set('FriendsStore', storage);
+			LocalStorage.set('FriendsStore', storage);
 
 		});
 	}
