@@ -1,4 +1,3 @@
-var animation = require('../../touchstone/animation');
 var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
@@ -20,7 +19,7 @@ module.exports = React.createClass({
 
 	displayName : 'ViewCatchsList',
 
-	mixins: [Sentry(), animation.Mixins.ScrollContainerToTop, Transitions],
+	mixins: [Sentry(), Transitions],
 
 	statics: {
 		navigationBar: 'main',
@@ -30,7 +29,8 @@ module.exports = React.createClass({
 				leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
 				rightIcon: 'ion-plus',
 				rightAction : emitter.emit.bind(emitter, 'createNewCatch'),
-				title: 'Goop\'s'
+				title: 'Goop\'s',
+				titleAction : emitter.emit.bind(emitter, 'navigationBarTitleAction')
 			};
 		}
 	},
@@ -64,6 +64,10 @@ module.exports = React.createClass({
 		emitter.once('createNewCatch', event => {
 			console.log(event);
 			this.transitionTo('main:catchs-form', {});
+		});
+
+		this.watch(emitter, 'navigationBarTitleAction', (event) => {
+			this.refs.pullToRefresh.scrollContainerToTop();
 		});
 
 	},

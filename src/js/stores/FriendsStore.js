@@ -46,6 +46,11 @@ class FriendsStore {
 		return storage[userId];
 	}
 
+	refresh(userId)
+	{
+		this.getMoreFriends(userId);
+	}
+
 	getMoreFriends(userId)
 	{
 		var url = new URI('user/' + userId + '/friends');

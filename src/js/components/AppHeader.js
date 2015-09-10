@@ -16,7 +16,8 @@ module.exports = React.createClass({
 		rightButtonDisabled: React.PropTypes.bool,
 		rightIcon: React.PropTypes.string,
 		rightLabel: React.PropTypes.string,
-		title: React.PropTypes.string
+		title: React.PropTypes.string,
+		titleAction: React.PropTypes.func
 	},
 	getInitialState () {
 		return {

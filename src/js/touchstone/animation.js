@@ -41,6 +41,7 @@ var Mixins = exports.Mixins = {};
 Mixins.ScrollContainerToTop = {
 	componentDidMount () {
 		window.addEventListener('statusTap', this.scrollContainerToTop);
+		console.log('ok');
 	},
 	componentWillUnmount () {
 		window.removeEventListener('statusTap', this.scrollContainerToTop);

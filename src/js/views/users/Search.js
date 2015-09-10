@@ -24,7 +24,8 @@ export default React.createClass({
       return {
 				leftIcon : 'ion-android-menu',
 				leftAction : emitter.emit.bind(emitter, 'navigationBarLeftAction'),
-				title : 'Rechercher'
+				title : 'Rechercher',
+        titleAction : emitter.emit.bind(emitter, 'navigationBarTitleAction')
 			};
     }
   },
@@ -36,6 +37,10 @@ export default React.createClass({
     // navbar actions
 		this.watch(emitter, 'navigationBarLeftAction', function () {
 			body.classList.toggle('android-menu-is-open');
+		});
+
+    this.watch(emitter, 'navigationBarTitleAction', (event) => {
+			this.refs.pullToRefresh.scrollContainerToTop();
 		});
 
     this.watch(searchStore.emitter, 'update', () => {
@@ -53,6 +58,7 @@ export default React.createClass({
 
   filter : function(value) {
     this.setState({query : value});
+    this.refs.pullToRefresh.scrollContainerToTop();
     searchStore.setQuery(value);
   },
 

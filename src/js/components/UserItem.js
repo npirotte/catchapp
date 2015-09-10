@@ -1,15 +1,26 @@
-var React = require('react');
-var { Link } = require('../touchstone');
+import React from 'react';
+import { Link } from 'touchstonejs';
+import moment from 'moment';
 
-var ItemAvatar = require('./ItemAvatar');
+import ItemAvatar from './ItemAvatar';
 
-var ImageUrl = require('../filters/ImageUrl');
+import ImageUrl from '../filters/ImageUrl';
+
+/* time a user is displayed active in minutes */
+const INACTIVITY_DELAY = 30;
 
 module.exports = React.createClass({
-	render()
+	render : function()
 	{
+
 		var imageUrl = this.props.userItem.asset ? ImageUrl(this.props.userItem.asset, 180) : null;
 		var fullName = this.props.userItem.fullName || (this.props.userItem.firstName + ' ' + this.props.userItem.lastName);
+
+		var now = moment();
+		var lastActivity = this.props.userItem.lastActivity ? moment(this.props.userItem.lastActivity) : null;
+		var lastActivityDisplay = lastActivity ? lastActivity.fromNow() : 'jamais';
+		var isActive = lastActivity ? !lastActivity.isBefore(now.subtract(INACTIVITY_DELAY, 'm')) : false;
+		var activeClass = 'ListItem__activity-display ListItem__activity-display--' + (isActive ? 'active' : 'inactive');
 
 		return (
 			<Link to="main:users-details" viewProps={this.props} transition="show-from-right" className="ListItem Person" component="div">
@@ -17,6 +28,10 @@ module.exports = React.createClass({
 				<div className="ListItem__content">
 					<div className="ListItem__heading">
 						{fullName}
+					</div>
+					<div className="ListItem__text">
+						<span className={activeClass}></span>
+						{lastActivityDisplay}
 					</div>
 				</div>
 				<div className="ListItem__chevron" />

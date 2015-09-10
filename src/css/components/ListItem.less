@@ -1,4 +1,4 @@
-// 
+//
 // Components
 // ==============================
 
@@ -29,18 +29,18 @@
 		.transition( background-color 10ms linear 40ms );
 		background-color: rgba(255, 255, 255, 0.05);
 	}
-	
+
 	// remove bottom margin
 	&:last-child {
 		margin-bottom: 0;
 	}
 
-	&--separated 
+	&--separated
 	{
 		border-bottom: solid 1px @palette-Grey-100;
 	}
 
-	&--small 
+	&--small
 	{
 		padding: 0.75em 1em;
 	}
@@ -48,13 +48,13 @@
 
 // 1
 
-.ListItem-separator 
+.ListItem-separator
 {
 	height: 0;
 	border-bottom: solid 1px @palette-Grey-100;
 	margin: 5px 0;
 
-	&--partial 
+	&--partial
 	{
 		margin: 0 0 0 70px;
 		border-bottom: solid 1px @palette-Grey-100;
@@ -80,14 +80,14 @@
 		background: gray;
 	}
 
-	&--small 
+	&--small
 	{
 		.avatar(40px);
 		margin: 0 5px;
 	}
 }
 
-.ListItem__icon 
+.ListItem__icon
 {
 	font-size: 1.4em;
 	width: 2em;
@@ -145,11 +145,22 @@
 	.ionicon(inherit, @ionicon-var-chevron-right, @ionicons-size-base);
 }
 
+// activity display
 
+.ListItem__activity-display {
+	@diam : 10px;
+	display: inline-block;
+	height: @diam;
+	width: @diam;
+	border-radius: @diam;
 
+	margin-right: @diam / 2;
 
+	&--active {
+		background: @app-primary;
+	}
 
-
-
-
-
+	&--inactive {
+		background: @palette-red-A400;
+	}
+}

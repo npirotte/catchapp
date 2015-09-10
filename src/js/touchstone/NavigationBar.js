@@ -145,7 +145,9 @@ var NavigationBar = React.createClass({
 
 		return (
 			<Transition transitionName={transitionName}>
-				{title}
+				<Tappable onTap={this.state.titleAction}>
+					{title}
+				</Tappable>
 			</Transition>
 		);
 	},

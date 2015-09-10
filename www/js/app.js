@@ -19113,7 +19113,7 @@ if (window.cordova) {
 		startApp();
 	}
 
-},{"./lib/device":97,"./stores/AuthStore":100,"./touchstone":118,"./views/Home":119,"./views/auth/Edit":120,"./views/auth/Register":121,"./views/auth/login":122,"./views/catchs/Details":123,"./views/catchs/Form":124,"./views/catchs/GPS":125,"./views/catchs/List":126,"./views/users/Browser":127,"./views/users/Details":128,"./views/users/List":129,"./views/users/PendingFriendships":130,"./views/users/Search":131,"react-sentry":36,"react/addons":undefined,"touchstonejs":43}],80:[function(require,module,exports){
+},{"./lib/device":98,"./stores/AuthStore":101,"./touchstone":119,"./views/Home":120,"./views/auth/Edit":121,"./views/auth/Register":122,"./views/auth/login":123,"./views/catchs/Details":124,"./views/catchs/Form":125,"./views/catchs/GPS":126,"./views/catchs/List":127,"./views/users/Browser":128,"./views/users/Details":129,"./views/users/List":130,"./views/users/PendingFriendships":131,"./views/users/Search":132,"react-sentry":36,"react/addons":undefined,"touchstonejs":43}],80:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19167,7 +19167,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../filters/Distance":91,"../filters/ImageUrl":92,"./ItemAvatar":85,"moment":32,"react":undefined,"touchstonejs":43}],81:[function(require,module,exports){
+},{"../filters/Distance":92,"../filters/ImageUrl":93,"./ItemAvatar":85,"moment":32,"react":undefined,"touchstonejs":43}],81:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19350,7 +19350,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../stores/FriendsStore.js":102,"react":undefined,"react-tappable":37}],85:[function(require,module,exports){
+},{"../stores/FriendsStore.js":103,"react":undefined,"react-tappable":37}],85:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19397,16 +19397,59 @@ module.exports = React.createClass({
 },{"react":undefined}],86:[function(require,module,exports){
 'use strict';
 
+var React = require('react');
+
+var IMG_CLASSNAME = 'losange-thumbnail';
+
+function _getInitial(input) {
+	return input[0];
+}
+
+module.exports = React.createClass({
+	displayName: 'exports',
+
+	render: function render() {
+		var className = IMG_CLASSNAME;
+		var src = this.props.src || './img/no-image.png';
+
+		return this.renderImage();
+	},
+
+	renderImage: function renderImage() {
+		var className = IMG_CLASSNAME;
+		var classNameImg = IMG_CLASSNAME + '--image ';
+
+		var src = this.props.src || './img/no-image.png';
+
+		return React.createElement(
+			'div',
+			{ className: className },
+			React.createElement(
+				'div',
+				{ style: { backgroundImage: 'url(' + src + ')' }, className: classNameImg },
+				' '
+			),
+			React.createElement('img', { style: { display: 'none' }, className: 'hidden', src: src })
+		);
+	}
+
+});
+
+},{"react":undefined}],87:[function(require,module,exports){
+'use strict';
+
 Object.defineProperty(exports, '__esModule', {
 	value: true
 });
+
+var _touchstonejs = require('touchstonejs');
+
 var React = require('react');
-var Container = require('react-container');
 var Hammer = require('react-hammerjs');
 
 var Spinner = require('./Spinner');
 
-var scrollable = Container.initScrollable();
+var scrollable = _touchstonejs.Container.initScrollable();
 var hammerConfig = { recognizers: { pan: { threshold: 0 } } };
 var maxPull = 83;
 var minTime = 600;
@@ -19414,6 +19457,8 @@ var minTime = 600;
 exports['default'] = React.createClass({
 
 	displayName: 'PullToRefreshContainer',
+
+	mixins: [_touchstonejs.animation.Mixins.ScrollContainerToTop],
 
 	getInitialState: function getInitialState() {
 		return {
@@ -19425,7 +19470,7 @@ exports['default'] = React.createClass({
 		var pullToRefreshStyle = { height: this.state.pullToRefreshHeight + 'px' };
 
 		return React.createElement(
-			Container,
+			_touchstonejs.Container,
 			{ direction: 'column' },
 			React.createElement(
 				'div',
@@ -19437,7 +19482,7 @@ exports['default'] = React.createClass({
 				)
 			),
 			React.createElement(
-				Container,
+				_touchstonejs.Container,
 				{ fill: true, scrollable: scrollable, ref: 'scrollContainer', onScroll: this.handleScroll },
 				React.createElement(
 					Hammer,
@@ -19521,7 +19566,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"./Spinner":87,"react":undefined,"react-container":33,"react-hammerjs":35}],87:[function(require,module,exports){
+},{"./Spinner":88,"react":undefined,"react-hammerjs":35,"touchstonejs":43}],88:[function(require,module,exports){
 /**
  * react-svg-loaders
  * https://github.com/yonatanmn/react-svg-loaders
@@ -19616,45 +19661,71 @@ var SvgSpinners = React.createClass({
 
 module.exports = SvgSpinners;
 
-},{"react":undefined}],88:[function(require,module,exports){
+},{"react":undefined}],89:[function(require,module,exports){
 'use strict';
 
-var React = require('react');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _require = require('../touchstone');
+var _react = require('react');
 
-var Link = _require.Link;
+var _react2 = _interopRequireDefault(_react);
 
-var ItemAvatar = require('./ItemAvatar');
+var _touchstonejs = require('touchstonejs');
 
-var ImageUrl = require('../filters/ImageUrl');
+var _moment = require('moment');
 
-module.exports = React.createClass({
+var _moment2 = _interopRequireDefault(_moment);
+
+var _ItemAvatar = require('./ItemAvatar');
+
+var _ItemAvatar2 = _interopRequireDefault(_ItemAvatar);
+
+var _filtersImageUrl = require('../filters/ImageUrl');
+
+var _filtersImageUrl2 = _interopRequireDefault(_filtersImageUrl);
+
+/* time a user is displayed active in minutes */
+var INACTIVITY_DELAY = 30;
+
+module.exports = _react2['default'].createClass({
 	displayName: 'exports',
 
 	render: function render() {
-		var imageUrl = this.props.userItem.asset ? ImageUrl(this.props.userItem.asset, 180) : null;
+
+		var imageUrl = this.props.userItem.asset ? (0, _filtersImageUrl2['default'])(this.props.userItem.asset, 180) : null;
 		var fullName = this.props.userItem.fullName || this.props.userItem.firstName + ' ' + this.props.userItem.lastName;
 
-		return React.createElement(
-			Link,
+		var now = (0, _moment2['default'])();
+		var lastActivity = this.props.userItem.lastActivity ? (0, _moment2['default'])(this.props.userItem.lastActivity) : null;
+		var lastActivityDisplay = lastActivity ? lastActivity.fromNow() : 'jamais';
+		var isActive = lastActivity ? !lastActivity.isBefore(now.subtract(INACTIVITY_DELAY, 'm')) : false;
+		var activeClass = 'ListItem__activity-display ListItem__activity-display--' + (isActive ? 'active' : 'inactive');
+
+		return _react2['default'].createElement(
+			_touchstonejs.Link,
 			{ to: 'main:users-details', viewProps: this.props, transition: 'show-from-right', className: 'ListItem Person', component: 'div' },
-			React.createElement(ItemAvatar, { src: imageUrl, name: fullName }),
-			React.createElement(
+			_react2['default'].createElement(_ItemAvatar2['default'], { src: imageUrl, name: fullName }),
+			_react2['default'].createElement(
 				'div',
 				{ className: 'ListItem__content' },
-				React.createElement(
+				_react2['default'].createElement(
 					'div',
 					{ className: 'ListItem__heading' },
 					fullName
+				),
+				_react2['default'].createElement(
+					'div',
+					{ className: 'ListItem__text' },
+					_react2['default'].createElement('span', { className: activeClass }),
+					lastActivityDisplay
 				)
 			),
-			React.createElement('div', { className: 'ListItem__chevron' })
+			_react2['default'].createElement('div', { className: 'ListItem__chevron' })
 		);
 	}
 });
 
-},{"../filters/ImageUrl":92,"../touchstone":118,"./ItemAvatar":85,"react":undefined}],89:[function(require,module,exports){
+},{"../filters/ImageUrl":93,"./ItemAvatar":85,"moment":32,"react":undefined,"touchstonejs":43}],90:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -19680,16 +19751,16 @@ module.exports = React.createClass({
 	}
 });
 
-},{"./UserItem":88,"react":undefined}],90:[function(require,module,exports){
+},{"./UserItem":89,"react":undefined}],91:[function(require,module,exports){
 'use strict';
 
 module.exports = {
-	//serverUrl : 'http://192.168.1.7:1337/'
+	serverUrl: 'http://192.168.1.7:1337/'
 	//serverUrl : 'http://192.168.1.50:1337/'
-	serverUrl: 'http://catch-catchapp.rhcloud.com/'
+	//serverUrl : 'http://catch-catchapp.rhcloud.com/'
 };
 
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19714,7 +19785,7 @@ function distance(lat1, lon1, lat2, lon2) {
 
 module.exports = exports['default'];
 
-},{}],92:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19742,7 +19813,7 @@ exports['default'] = function (data, imageSize) {
 
 module.exports = exports['default'];
 
-},{"../config":90}],93:[function(require,module,exports){
+},{"../config":91}],94:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19800,7 +19871,7 @@ exports['default'] = function (fileURL, cb) {
 
 module.exports = exports['default'];
 
-},{"../config":90,"../lib/localStorage":99}],94:[function(require,module,exports){
+},{"../config":91,"../lib/localStorage":100}],95:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19814,7 +19885,7 @@ function emailValidation(input) {
 	return input.match(emailReg);
 }
 
-},{}],95:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 'use strict';
 
 var async = require('async');
@@ -19900,7 +19971,7 @@ var engine = function engine(opts, callback) {
 
 module.exports = engine;
 
-},{"../config":90,"../lib/localStorage":99,"../stores/AuthStore":100,"async":5,"defaults":14,"httpify":17}],96:[function(require,module,exports){
+},{"../config":91,"../lib/localStorage":100,"../stores/AuthStore":101,"async":5,"defaults":14,"httpify":17}],97:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -19921,7 +19992,7 @@ exports["default"] = function (opts) {
 
 module.exports = exports["default"];
 
-},{}],97:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 'use strict';
 
 var map = {
@@ -19942,7 +20013,7 @@ module.exports = {
 	platform: deviceType
 };
 
-},{}],98:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -19956,7 +20027,7 @@ var dispatcher = new _events.EventEmitter();
 exports['default'] = dispatcher;
 module.exports = exports['default'];
 
-},{"events":11}],99:[function(require,module,exports){
+},{"events":11}],100:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -19993,7 +20064,7 @@ module.exports = {
 	}
 };
 
-},{}],100:[function(require,module,exports){
+},{}],101:[function(require,module,exports){
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
@@ -20154,7 +20225,7 @@ var store = new AuthStore();
 
 module.exports = store;
 
-},{"../config":90,"../lib/HttpService":95,"../lib/localStorage":99,"events":11}],101:[function(require,module,exports){
+},{"../config":91,"../lib/HttpService":96,"../lib/localStorage":100,"events":11}],102:[function(require,module,exports){
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
@@ -20252,7 +20323,7 @@ var store = new CatchsStore();
 
 module.exports = store;
 
-},{"../lib/HttpService":95,"../lib/localStorage":99,"URIjs":3,"events":11}],102:[function(require,module,exports){
+},{"../lib/HttpService":96,"../lib/localStorage":100,"URIjs":3,"events":11}],103:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20322,6 +20393,11 @@ var FriendsStore = (function () {
 			return storage[userId];
 		}
 	}, {
+		key: 'refresh',
+		value: function refresh(userId) {
+			this.getMoreFriends(userId);
+		}
+	}, {
 		key: 'getMoreFriends',
 		value: function getMoreFriends(userId) {
 			var _this = this;
@@ -20376,7 +20452,7 @@ var FriendsStore = (function () {
 exports['default'] = FriendsStore;
 module.exports = exports['default'];
 
-},{"../lib/HttpService":95,"../lib/dispatcher":98,"../lib/localStorage":99,"./AuthStore.js":100,"URIjs":3,"events":11}],103:[function(require,module,exports){
+},{"../lib/HttpService":96,"../lib/dispatcher":99,"../lib/localStorage":100,"./AuthStore.js":101,"URIjs":3,"events":11}],104:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20430,7 +20506,7 @@ var PendingFriendshipsStore = (function () {
 exports['default'] = PendingFriendshipsStore;
 module.exports = exports['default'];
 
-},{"../lib/HttpService":95,"../lib/dispatcher":98}],104:[function(require,module,exports){
+},{"../lib/HttpService":96,"../lib/dispatcher":99}],105:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20553,7 +20629,7 @@ var SearchStore = (function () {
 exports['default'] = SearchStore;
 module.exports = exports['default'];
 
-},{"../lib/HttpService":95,"URIjs":3,"events":11}],105:[function(require,module,exports){
+},{"../lib/HttpService":96,"URIjs":3,"events":11}],106:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20564,7 +20640,7 @@ var Container = require('react-container');
 exports['default'] = Container;
 module.exports = exports['default'];
 
-},{"react-container":33}],106:[function(require,module,exports){
+},{"react-container":33}],107:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20588,7 +20664,7 @@ var ErrorView = React.createClass({
 exports['default'] = ErrorView;
 module.exports = exports['default'];
 
-},{"react":undefined,"react-container":33}],107:[function(require,module,exports){
+},{"react":undefined,"react-container":33}],108:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -20611,7 +20687,7 @@ var Icon = React.createClass({
 exports["default"] = Icon;
 module.exports = exports["default"];
 
-},{"react":undefined}],108:[function(require,module,exports){
+},{"react":undefined}],109:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -20699,7 +20775,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],109:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],110:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -20763,7 +20839,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"blacklist":6,"classnames":13,"react/addons":undefined}],110:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react/addons":undefined}],111:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20808,7 +20884,7 @@ var Link = React.createClass({
 exports['default'] = Link;
 module.exports = exports['default'];
 
-},{"./Transitions":114,"blacklist":6,"react":undefined,"react-tappable":37}],111:[function(require,module,exports){
+},{"./Transitions":115,"blacklist":6,"react":undefined,"react-tappable":37}],112:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -20975,7 +21051,11 @@ var NavigationBar = React.createClass({
 		return React.createElement(
 			Transition,
 			{ transitionName: transitionName },
-			title
+			React.createElement(
+				Tappable,
+				{ onTap: this.state.titleAction },
+				title
+			)
 		);
 	},
 	renderRightButton: function renderRightButton() {
@@ -21052,7 +21132,7 @@ function createController () {
 exports['default'] = NavigationBar;
 module.exports = exports['default'];
 
-},{"classnames":13,"react-tappable":37,"react/addons":undefined}],112:[function(require,module,exports){
+},{"classnames":13,"react-tappable":37,"react/addons":undefined}],113:[function(require,module,exports){
 'use strict';
 
 var classnames = require('classnames');
@@ -21090,7 +21170,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"classnames":13,"react":undefined,"react-tappable":37}],113:[function(require,module,exports){
+},{"classnames":13,"react":undefined,"react-tappable":37}],114:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21162,7 +21242,7 @@ var Label = React.createClass({
 });
 exports.Label = Label;
 
-},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],114:[function(require,module,exports){
+},{"blacklist":6,"classnames":13,"react":undefined,"react-tappable":37}],115:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21188,7 +21268,7 @@ var Transitions = {
 exports['default'] = Transitions;
 module.exports = exports['default'];
 
-},{"react":undefined}],115:[function(require,module,exports){
+},{"react":undefined}],116:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21211,7 +21291,7 @@ var View = React.createClass({
 exports["default"] = View;
 module.exports = exports["default"];
 
-},{"react":undefined}],116:[function(require,module,exports){
+},{"react":undefined}],117:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21392,7 +21472,7 @@ var ViewManager = React.createClass({
 exports['default'] = ViewManager;
 module.exports = exports['default'];
 
-},{"./ErrorView":106,"blacklist":6,"classnames":13,"react/addons":undefined}],117:[function(require,module,exports){
+},{"./ErrorView":107,"blacklist":6,"classnames":13,"react/addons":undefined}],118:[function(require,module,exports){
 'use strict';
 
 var animation = require('tween.js');
@@ -21433,6 +21513,7 @@ var Mixins = exports.Mixins = {};
 Mixins.ScrollContainerToTop = {
 	componentDidMount: function componentDidMount() {
 		window.addEventListener('statusTap', this.scrollContainerToTop);
+		console.log('ok');
 	},
 	componentWillUnmount: function componentWillUnmount() {
 		window.removeEventListener('statusTap', this.scrollContainerToTop);
@@ -21452,7 +21533,7 @@ Mixins.ScrollContainerToTop = {
 	}
 };
 
-},{"react":undefined,"tween.js":78}],118:[function(require,module,exports){
+},{"react":undefined,"tween.js":78}],119:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21506,7 +21587,7 @@ function createApp() {
 	};
 }
 
-},{"./Container":105,"./Icon":107,"./LabelInput":108,"./LabelTextarea":109,"./Link":110,"./NavigationBar":111,"./Switch":112,"./Tabs":113,"./Transitions":114,"./View":115,"./ViewManager":116,"./animation":117,"react":undefined}],119:[function(require,module,exports){
+},{"./Container":106,"./Icon":108,"./LabelInput":109,"./LabelTextarea":110,"./Link":111,"./NavigationBar":112,"./Switch":113,"./Tabs":114,"./Transitions":115,"./View":116,"./ViewManager":117,"./animation":118,"react":undefined}],120:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21526,6 +21607,8 @@ var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 
 var AuthStore = require('../stores/AuthStore');
+
+var LosangeThumbnail = require('../components/LosangeThumbnail');
 
 exports['default'] = React.createClass({
 
@@ -21578,7 +21661,7 @@ exports['default'] = React.createClass({
 				React.createElement(
 					'div',
 					null,
-					React.createElement('img', { src: src, style: { width: '100%' } }),
+					React.createElement(LosangeThumbnail, { src: src }),
 					React.createElement(
 						'div',
 						{ className: onlineClassName },
@@ -21607,7 +21690,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../filters/ImageUrl":92,"../stores/AuthStore":100,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],120:[function(require,module,exports){
+},{"../components/LosangeThumbnail":86,"../filters/ImageUrl":93,"../stores/AuthStore":101,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],121:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21777,7 +21860,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../filters/ImageUrl":92,"../../lib/AssetService":93,"../../stores/AuthStore":100,"../../touchstone":118,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],121:[function(require,module,exports){
+},{"../../filters/ImageUrl":93,"../../lib/AssetService":94,"../../stores/AuthStore":101,"../../touchstone":119,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],122:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21800,6 +21883,8 @@ var emailValidation = _require2.emailValidation;
 var AuthStore = require('../../stores/AuthStore');
 
 var AssetService = require('../../lib/AssetService');
+
+var LosangeThumbnail = require('../../components/LosangeThumbnail');
 
 var scrollable = Container.initScrollable();
 
@@ -21898,13 +21983,15 @@ exports['default'] = React.createClass({
 		if (this.state.viewState !== 'image-picker') return false;
 
 		var src = this.state.picture || './img/no-image.png',
-		    style = { width: '100%' };
+		    style = { backgroundImage: 'url(' + src + ')' };
 
 		if (!this.state.picture) {
 			return React.createElement(
 				'div',
 				{ className: 'text-center' },
-				React.createElement('img', { src: src, style: style }),
+				React.createElement('br', null),
+				React.createElement(LosangeThumbnail, { src: src }),
+				React.createElement('br', null),
 				React.createElement(
 					'button',
 					{ className: 'button button-primary button--raised', onClick: this.pickPhoto },
@@ -21926,7 +22013,7 @@ exports['default'] = React.createClass({
 			return React.createElement(
 				'div',
 				{ className: 'text-center' },
-				React.createElement('img', { src: src, style: style }),
+				React.createElement(LosangeThumbnail, { src: src }),
 				React.createElement(
 					'button',
 					{ className: 'button button-primary button--raised', onClick: this.register },
@@ -22070,7 +22157,7 @@ exports['default'] = React.createClass({
 });
 module.exports = exports['default'];
 
-},{"../../lib/AssetService":93,"../../lib/FormValidations":94,"../../stores/AuthStore":100,"../../touchstone":118,"react":undefined,"react-container":33,"react-sentry":36}],122:[function(require,module,exports){
+},{"../../components/LosangeThumbnail":86,"../../lib/AssetService":94,"../../lib/FormValidations":95,"../../stores/AuthStore":101,"../../touchstone":119,"react":undefined,"react-container":33,"react-sentry":36}],123:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -22188,7 +22275,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../stores/AuthStore":100,"../../touchstone":118,"../../touchstone/animation":117,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],123:[function(require,module,exports){
+},{"../../stores/AuthStore":101,"../../touchstone":119,"../../touchstone/animation":118,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],124:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22197,35 +22284,58 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _touchstone = require('../../touchstone');
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactSentry = require('react-sentry');
+
+var _reactSentry2 = _interopRequireDefault(_reactSentry);
+
+var _reactTappable = require('react-tappable');
+
+var _reactTappable2 = _interopRequireDefault(_reactTappable);
+
+var _touchstonejs = require('touchstonejs');
 
 var _gmaps = require('gmaps');
 
 var _gmaps2 = _interopRequireDefault(_gmaps);
 
-var Container = require('react-container');
-var Sentry = require('react-sentry');
-var React = require('react');
-var moment = require('moment');
-var Tappable = require('react-tappable');
+var _moment = require('moment');
 
-var ImageUrl = require('../../filters/ImageUrl');
-var Distance = require('../../filters/Distance');
+var _moment2 = _interopRequireDefault(_moment);
 
-var ItemAvatar = require('../../components/ItemAvatar');
-var CoverImage = require('../../components/CoverImage');
+var _filtersImageUrl = require('../../filters/ImageUrl');
 
-var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
+var _filtersImageUrl2 = _interopRequireDefault(_filtersImageUrl);
 
-var CatchsStore = require('../../stores/CatchsStore');
+var _filtersDistance = require('../../filters/Distance');
+
+var _filtersDistance2 = _interopRequireDefault(_filtersDistance);
+
+var _componentsItemAvatar = require('../../components/ItemAvatar');
+
+var _componentsItemAvatar2 = _interopRequireDefault(_componentsItemAvatar);
+
+var _componentsCoverImage = require('../../components/CoverImage');
+
+var _componentsCoverImage2 = _interopRequireDefault(_componentsCoverImage);
+
+var _events = require('events');
+
+var _storesCatchsStore = require('../../stores/CatchsStore');
+
+var _storesCatchsStore2 = _interopRequireDefault(_storesCatchsStore);
+
+var emitter = new _events.EventEmitter();
 
 var scrollables = new Map();
 
 function getScrollable(catchId) {
 	var scrollable = scrollables.get(catchId);
 	if (!scrollable) {
-		scrollable = Container.initScrollable();
+		scrollable = _touchstonejs.Container.initScrollable();
 		scrollables.set(catchId, scrollable);
 	};
 
@@ -22268,13 +22378,14 @@ function getNavigation(props) {
 	return {
 		leftArrow: true,
 		title: 'Goop de ' + props.catchItem.sender.fullName,
-		leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction')
+		leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
+		titleAction: emitter.emit.bind(emitter, 'navigationBarTitleAction')
 	};
 }
 
-exports['default'] = React.createClass({
+exports['default'] = _react2['default'].createClass({
 
-	mixins: [Sentry(), _touchstone.Transitions],
+	mixins: [(0, _reactSentry2['default'])(), _touchstonejs.Mixins.Transitions, _touchstonejs.animation.Mixins.ScrollContainerToTop],
 
 	statics: {
 		navigationBar: 'main',
@@ -22311,87 +22422,91 @@ exports['default'] = React.createClass({
 			});
 		});
 
-		// android backbutton handler
-		this.watch(document, 'backbutton', function (event) {
-			self.transitionTo('main:catchs-list', {
-				transition: 'reveal-from-right',
-				viewProps: {}
-			});
+		this.watch(emitter, 'navigationBarTitleAction', function (event) {
+			_this2.scrollContainerToTop();
 		});
+
+		/*// android backbutton handler
+  this.watch(document, 'backbutton', event => {
+  	self.transitionTo('main:catchs-list', {
+  		transition: 'reveal-from-right',
+  		viewProps: {}
+  	});
+  });*/
 	},
 
 	render: function render() {
 
-		var catchImageUrl = ImageUrl(this.props.catchItem.asset, 960),
+		var catchImageUrl = (0, _filtersImageUrl2['default'])(this.props.catchItem.asset, 960),
 		    imageStyle = { width: '100%' };
 
-		var userThumbUrl = this.props.catchItem.sender.asset ? ImageUrl(this.props.catchItem.sender.asset) : null;
+		var userThumbUrl = this.props.catchItem.sender.asset ? (0, _filtersImageUrl2['default'])(this.props.catchItem.sender.asset) : null;
 
-		var fromNow = moment(this.props.catchItem.createdAt).fromNow();
+		var fromNow = (0, _moment2['default'])(this.props.catchItem.createdAt).fromNow();
 
-		return React.createElement(
-			Container,
+		return _react2['default'].createElement(
+			_touchstonejs.Container,
 			{ className: 'catch-details', direction: 'column' },
-			React.createElement(
-				Container,
+			_react2['default'].createElement(
+				_touchstonejs.Container,
 				{ fill: true, scrollable: getScrollable(this.props.catchItem.id), ref: 'scrollContainer' },
-				React.createElement(
+				_react2['default'].createElement(
 					'div',
 					null,
-					React.createElement(
+					_react2['default'].createElement(
 						'div',
 						{ className: 'catch-details__cover' },
-						React.createElement(CoverImage, { src: catchImageUrl, title: this.props.catchItem.message })
+						_react2['default'].createElement(_componentsCoverImage2['default'], { src: catchImageUrl, title: this.props.catchItem.message })
 					),
-					React.createElement(
-						_touchstone.Link,
+					_react2['default'].createElement(
+						_touchstonejs.Link,
 						{
 							to: 'main:users-details',
 							viewProps: { previousView: 'main:catchs-details', previousViewProps: this.props, userItem: this.props.catchItem.sender },
 							transition: 'show-from-right',
 							className: 'catch-details__sender ListItem ListItem--separated'
 						},
-						React.createElement(ItemAvatar, { className: 'ListItem__avatar--small', src: userThumbUrl, name: this.props.catchItem.sender.fullName }),
-						React.createElement(
+						_react2['default'].createElement(_componentsItemAvatar2['default'], { className: 'ListItem__avatar--small', src: userThumbUrl, name: this.props.catchItem.sender.fullName }),
+						_react2['default'].createElement(
 							'div',
 							{ className: 'ListItem__content' },
-							React.createElement(
+							_react2['default'].createElement(
 								'strong',
 								null,
 								this.props.catchItem.sender.fullName
 							)
 						)
 					),
-					React.createElement(
+					_react2['default'].createElement(
 						'div',
 						{ className: 'catch-details__infos list' },
-						React.createElement(
+						_react2['default'].createElement(
 							'div',
 							{ className: 'ListItem ListItem--small' },
-							React.createElement('i', { className: 'ListItem__icon icon ion-android-time' }),
-							React.createElement(
+							_react2['default'].createElement('i', { className: 'ListItem__icon icon ion-android-time' }),
+							_react2['default'].createElement(
 								'div',
 								{ className: 'ListItem__content' },
 								fromNow
 							)
 						),
-						React.createElement('div', { className: 'ListItem-separator--partial' }),
-						React.createElement(
+						_react2['default'].createElement('div', { className: 'ListItem-separator--partial' }),
+						_react2['default'].createElement(
 							'div',
 							{ className: 'ListItem ListItem--small' },
-							React.createElement('i', { className: 'ListItem__icon icon ion-ios-location' }),
-							React.createElement(
+							_react2['default'].createElement('i', { className: 'ListItem__icon icon ion-ios-location' }),
+							_react2['default'].createElement(
 								'div',
 								{ className: 'ListItem__content' },
 								this.state.location
 							)
 						),
-						React.createElement('div', { className: 'ListItem-separator--partial' }),
-						React.createElement(
+						_react2['default'].createElement('div', { className: 'ListItem-separator--partial' }),
+						_react2['default'].createElement(
 							'div',
 							{ className: 'ListItem ListItem--small' },
-							React.createElement('i', { className: 'ListItem__icon icon ion-android-walk' }),
-							React.createElement(
+							_react2['default'].createElement('i', { className: 'ListItem__icon icon ion-android-walk' }),
+							_react2['default'].createElement(
 								'div',
 								{ className: 'ListItem__content' },
 								this.state.distance,
@@ -22399,12 +22514,12 @@ exports['default'] = React.createClass({
 								this.state.duration
 							)
 						),
-						React.createElement('div', { className: 'ListItem-separator--partial' }),
-						React.createElement(
+						_react2['default'].createElement('div', { className: 'ListItem-separator--partial' }),
+						_react2['default'].createElement(
 							'div',
 							{ className: 'ListItem ListItem--small' },
-							React.createElement('i', { className: 'ListItem__icon icon ion-speakerphone' }),
-							React.createElement(
+							_react2['default'].createElement('i', { className: 'ListItem__icon icon ion-speakerphone' }),
+							_react2['default'].createElement(
 								'div',
 								{ className: 'ListItem__content' },
 								this.props.catchItem.message || 'Aucun message associé'
@@ -22413,22 +22528,22 @@ exports['default'] = React.createClass({
 					)
 				)
 			),
-			React.createElement(
+			_react2['default'].createElement(
 				'div',
 				{ className: 'Footer Footer--cta' },
-				React.createElement(
-					_touchstone.Link,
+				_react2['default'].createElement(
+					_touchstonejs.Link,
 					{ className: 'button button-primary', to: 'main:catchs-gps', viewProps: { catchItem: this.props.catchItem, routeData: this.state.fullRouteData, previousViewProps: this.props } },
 					'Y aller'
 				)
 			),
-			React.createElement('div', { ref: 'gMaps' })
+			_react2['default'].createElement('div', { ref: 'gMaps' })
 		);
 	}
 });
 module.exports = exports['default'];
 
-},{"../../components/CoverImage":83,"../../components/ItemAvatar":85,"../../filters/Distance":91,"../../filters/ImageUrl":92,"../../stores/CatchsStore":101,"../../touchstone":118,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],124:[function(require,module,exports){
+},{"../../components/CoverImage":83,"../../components/ItemAvatar":85,"../../filters/Distance":92,"../../filters/ImageUrl":93,"../../stores/CatchsStore":102,"events":11,"gmaps":16,"moment":32,"react":undefined,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],125:[function(require,module,exports){
 'use strict';
 
 var animation = require('../../touchstone/animation');
@@ -22655,7 +22770,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../lib/AssetService":93,"../../lib/Toaster":96,"../../stores/AuthStore":100,"../../stores/CatchsStore":101,"../../stores/FriendsStore":102,"../../touchstone":118,"../../touchstone/animation":117,"async":5,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],125:[function(require,module,exports){
+},{"../../lib/AssetService":94,"../../lib/Toaster":97,"../../stores/AuthStore":101,"../../stores/CatchsStore":102,"../../stores/FriendsStore":103,"../../touchstone":119,"../../touchstone/animation":118,"async":5,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],126:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22850,10 +22965,9 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../touchstone":118,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],126:[function(require,module,exports){
+},{"../../touchstone":119,"events":11,"gmaps":16,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],127:[function(require,module,exports){
 'use strict';
 
-var animation = require('../../touchstone/animation');
 var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
@@ -22878,7 +22992,7 @@ module.exports = React.createClass({
 
 	displayName: 'ViewCatchsList',
 
-	mixins: [Sentry(), animation.Mixins.ScrollContainerToTop, Transitions],
+	mixins: [Sentry(), Transitions],
 
 	statics: {
 		navigationBar: 'main',
@@ -22888,7 +23002,8 @@ module.exports = React.createClass({
 				leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
 				rightIcon: 'ion-plus',
 				rightAction: emitter.emit.bind(emitter, 'createNewCatch'),
-				title: 'Goop\'s'
+				title: 'Goop\'s',
+				titleAction: emitter.emit.bind(emitter, 'navigationBarTitleAction')
 			};
 		}
 	},
@@ -22921,6 +23036,10 @@ module.exports = React.createClass({
 		emitter.once('createNewCatch', function (event) {
 			console.log(event);
 			_this.transitionTo('main:catchs-form', {});
+		});
+
+		this.watch(emitter, 'navigationBarTitleAction', function (event) {
+			_this.refs.pullToRefresh.scrollContainerToTop();
 		});
 	},
 
@@ -22967,7 +23086,7 @@ module.exports = React.createClass({
 
 });
 
-},{"../../components/CatchsList":81,"../../components/PullToRefreshContainer":86,"../../stores/CatchsStore":101,"../../touchstone":118,"../../touchstone/animation":117,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],127:[function(require,module,exports){
+},{"../../components/CatchsList":81,"../../components/PullToRefreshContainer":87,"../../stores/CatchsStore":102,"../../touchstone":119,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],128:[function(require,module,exports){
 'use strict';
 
 var _require = require('touchstonejs');
@@ -23106,7 +23225,7 @@ module.exports = React.createClass({
 	}
 });
 
-},{"../../components/CheckBox":82,"../../stores/AuthStore":100,"../../stores/FriendsStore":102,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],128:[function(require,module,exports){
+},{"../../components/CheckBox":82,"../../stores/AuthStore":101,"../../stores/FriendsStore":103,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],129:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -23206,31 +23325,54 @@ module.exports = React.createClass({
 
 });
 
-},{"../../components/FriendshipButton.js":84,"../../filters/ImageUrl":92,"../../lib/dispatcher":98,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],129:[function(require,module,exports){
+},{"../../components/FriendshipButton.js":84,"../../filters/ImageUrl":93,"../../lib/dispatcher":99,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"touchstonejs":43}],130:[function(require,module,exports){
 'use strict';
 
-var animation = require('../../touchstone/animation');
-var Container = require('react-container');
-var Sentry = require('react-sentry');
-var React = require('react');
-var Tappable = require('react-tappable');
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
 
-var AuthStore = require('../../stores/AuthStore');
-var FriendsStore = require('../../stores/FriendsStore'),
-    _friendStore = new FriendsStore();
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var UsersList = require('../../components/UsersList');
+var _react = require('react');
 
-var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
+var _react2 = _interopRequireDefault(_react);
 
-var scrollable = Container.initScrollable();
+var _reactTappable = require('react-tappable');
 
-module.exports = React.createClass({
+var _reactTappable2 = _interopRequireDefault(_reactTappable);
+
+var _reactSentry = require('react-sentry');
+
+var _reactSentry2 = _interopRequireDefault(_reactSentry);
+
+var _touchstonejs = require('touchstonejs');
+
+var _storesAuthStore = require('../../stores/AuthStore');
+
+var _storesAuthStore2 = _interopRequireDefault(_storesAuthStore);
+
+var _storesFriendsStore = require('../../stores/FriendsStore');
+
+var _storesFriendsStore2 = _interopRequireDefault(_storesFriendsStore);
+
+var _componentsUsersList = require('../../components/UsersList');
+
+var _componentsUsersList2 = _interopRequireDefault(_componentsUsersList);
+
+var _events = require('events');
+
+var _friendStore = new _storesFriendsStore2['default']();
+
+var emitter = new _events.EventEmitter();
+
+var scrollable = _touchstonejs.Container.initScrollable();
+
+exports['default'] = _react2['default'].createClass({
 
 	displayName: 'ViewUsersList',
 
-	mixins: [Sentry(), animation.Mixins.ScrollContainerToTop],
+	mixins: [(0, _reactSentry2['default'])(), _touchstonejs.animation.Mixins.ScrollContainerToTop],
 
 	statics: {
 		navigationBar: 'main',
@@ -23238,16 +23380,16 @@ module.exports = React.createClass({
 			return {
 				leftIcon: 'ion-android-menu',
 				leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
-				title: 'Utilisateurs'
+				title: 'Utilisateurs',
+				titleAction: emitter.emit.bind(emitter, 'navigationBarTitleAction')
 			};
 		}
 	},
 
 	getInitialState: function getInitialState() {
-		this.userId = AuthStore.user().id;
+		this.userId = _storesAuthStore2['default'].user().id;
 
 		var friends = _friendStore.getFriends(this.userId);
-		console.log(_friendStore.getFriends);
 
 		return {
 			friends: friends
@@ -23255,6 +23397,7 @@ module.exports = React.createClass({
 	},
 
 	componentDidMount: function componentDidMount() {
+		var _this = this;
 
 		var body = document.getElementsByTagName('body')[0];
 
@@ -23269,6 +23412,12 @@ module.exports = React.createClass({
 			body.classList.toggle('android-menu-is-open');
 		});
 
+		this.watch(emitter, 'navigationBarTitleAction', function (event) {
+			_this.scrollContainerToTop();
+		});
+
+		_friendStore.refresh(this.userId);
+
 		this.watch(_friendStore.emitter, 'update:' + this.userId, this.getData);
 	},
 
@@ -23278,19 +23427,20 @@ module.exports = React.createClass({
 	},
 
 	render: function render() {
-		return React.createElement(
-			Container,
+		return _react2['default'].createElement(
+			_touchstonejs.Container,
 			{ direction: 'column' },
-			React.createElement(
-				Container,
+			_react2['default'].createElement(
+				_touchstonejs.Container,
 				{ fill: true, scrollable: scrollable, onScroll: this.handleScroll, ref: 'scrollContainer' },
-				React.createElement(UsersList, { users: this.state.friends })
+				_react2['default'].createElement(_componentsUsersList2['default'], { users: this.state.friends })
 			)
 		);
 	}
 });
+module.exports = exports['default'];
 
-},{"../../components/UsersList":89,"../../stores/AuthStore":100,"../../stores/FriendsStore":102,"../../touchstone/animation":117,"events":11,"react":undefined,"react-container":33,"react-sentry":36,"react-tappable":37}],130:[function(require,module,exports){
+},{"../../components/UsersList":90,"../../stores/AuthStore":101,"../../stores/FriendsStore":103,"events":11,"react":undefined,"react-sentry":36,"react-tappable":37,"touchstonejs":43}],131:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23382,7 +23532,7 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/UsersList":89,"../../lib/dispatcher":98,"../../stores/PendingFriendshipsStore.js":103,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}],131:[function(require,module,exports){
+},{"../../components/UsersList":90,"../../lib/dispatcher":99,"../../stores/PendingFriendshipsStore.js":104,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}],132:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23431,7 +23581,8 @@ exports['default'] = _react2['default'].createClass({
       return {
         leftIcon: 'ion-android-menu',
         leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction'),
-        title: 'Rechercher'
+        title: 'Rechercher',
+        titleAction: emitter.emit.bind(emitter, 'navigationBarTitleAction')
       };
     }
   },
@@ -23444,6 +23595,10 @@ exports['default'] = _react2['default'].createClass({
     // navbar actions
     this.watch(emitter, 'navigationBarLeftAction', function () {
       body.classList.toggle('android-menu-is-open');
+    });
+
+    this.watch(emitter, 'navigationBarTitleAction', function (event) {
+      _this.refs.pullToRefresh.scrollContainerToTop();
     });
 
     this.watch(searchStore.emitter, 'update', function () {
@@ -23461,6 +23616,7 @@ exports['default'] = _react2['default'].createClass({
 
   filter: function filter(value) {
     this.setState({ query: value });
+    this.refs.pullToRefresh.scrollContainerToTop();
     searchStore.setQuery(value);
   },
 
@@ -23488,4 +23644,4 @@ exports['default'] = _react2['default'].createClass({
 });
 module.exports = exports['default'];
 
-},{"../../components/PullToRefreshContainer":86,"../../components/UsersList":89,"../../stores/SearchStore":104,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}]},{},[79]);
+},{"../../components/PullToRefreshContainer":87,"../../components/UsersList":90,"../../stores/SearchStore":105,"events":11,"react":undefined,"react-sentry":36,"touchstonejs":43}]},{},[79]);

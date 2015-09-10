@@ -1,21 +1,20 @@
-var Container = require('react-container');
-var Sentry = require('react-sentry');
-var React = require('react');
-var moment = require('moment');
-var Tappable = require('react-tappable');
-import { animation, Transitions, Link } from '../../touchstone';
+import React from 'react';
+import Sentry from 'react-sentry';
+import Tappable from 'react-tappable';
+import { Container, animation, Mixins, Link } from 'touchstonejs';
 import GMaps from 'gmaps';
+import moment from 'moment';
 
-var ImageUrl = require('../../filters/ImageUrl');
-var Distance = require('../../filters/Distance');
+import ImageUrl from '../../filters/ImageUrl';
+import Distance from '../../filters/Distance';
 
-var ItemAvatar = require('../../components/ItemAvatar');
-var CoverImage = require('../../components/CoverImage');
+import ItemAvatar from '../../components/ItemAvatar';
+import CoverImage from '../../components/CoverImage';
 
-var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
+import { EventEmitter } from 'events';
+const emitter = new EventEmitter();
 
-var CatchsStore = require('../../stores/CatchsStore');
+import CatchsStore from '../../stores/CatchsStore';
 
 var scrollables = new Map();
 
@@ -35,15 +34,15 @@ var myPositionCache;
 function getTravel(context, mapElm, target)
 {
 	var map = new GMaps({
-		div: mapElm,
-		lat: myPositionCache.coords.latitude,
-		lng: myPositionCache.coords.longitude
+		div : mapElm,
+		lat : myPositionCache.coords.latitude,
+		lng : myPositionCache.coords.longitude
 	});
 
 	map.travelRoute({
-	  origin: [myPositionCache.coords.latitude, myPositionCache.coords.longitude],
-	  destination: target,
-	  travelMode: 'walking',
+	  origin : [myPositionCache.coords.latitude, myPositionCache.coords.longitude],
+	  destination : target,
+	  travelMode : 'walking',
 	  end : function(e)
 	  {
 	  	console.log(e);
@@ -67,31 +66,32 @@ function getTravel(context, mapElm, target)
 function getNavigation(props)
 {
 	return {
-		leftArrow: true,
-		title: 'Goop de ' + props.catchItem.sender.fullName,
-		leftAction: emitter.emit.bind(emitter, 'navigationBarLeftAction')
+		leftArrow : true,
+		title : 'Goop de ' + props.catchItem.sender.fullName,
+		leftAction : emitter.emit.bind(emitter, 'navigationBarLeftAction'),
+		titleAction : emitter.emit.bind(emitter, 'navigationBarTitleAction')
 	}
 }
 
 export default React.createClass({
 
-	mixins: [Sentry(), Transitions],
+	mixins : [Sentry(), Mixins.Transitions, animation.Mixins.ScrollContainerToTop],
 
-	statics: {
-		navigationBar: 'main',
+	statics : {
+		navigationBar : 'main',
 		getNavigation : getNavigation
 	},
 
 	displayName : 'ViewCatchsDetails',
 
-	getInitialState()
+	getInitialState : function()
 	{
 		return {
 			myPosition : null
 		}
 	},
 
-	componentDidMount() {
+	componentDidMount : function() {
 
 		var _this = this;
 
@@ -107,21 +107,25 @@ export default React.createClass({
 
 		this.watch(emitter, 'navigationBarLeftAction', event => {
 			this.transitionTo('main:catchs-list', {
-				transition: 'reveal-from-right',
-				viewProps: {}
+				transition : 'reveal-from-right',
+				viewProps : {}
 			});
 		});
 
-		// android backbutton handler
+		this.watch(emitter, 'navigationBarTitleAction', (event) => {
+			this.scrollContainerToTop();
+		});
+
+		/*// android backbutton handler
 		this.watch(document, 'backbutton', event => {
 			self.transitionTo('main:catchs-list', {
 				transition: 'reveal-from-right',
 				viewProps: {}
 			});
-		});
+		});*/
 	},
 
-	render () {
+	render : function() {
 
 		var catchImageUrl = ImageUrl(this.props.catchItem.asset, 960),
 			imageStyle = { width : '100%' };
@@ -139,7 +143,7 @@ export default React.createClass({
 						</div>
 						<Link
 							to="main:users-details"
-							viewProps={{previousView : 'main:catchs-details', previousViewProps: this.props, userItem : this.props.catchItem.sender}}
+							viewProps={{previousView : 'main:catchs-details', previousViewProps : this.props, userItem : this.props.catchItem.sender}}
 							transition="show-from-right"
 							className="catch-details__sender ListItem ListItem--separated"
 						>

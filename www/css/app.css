@@ -6444,7 +6444,7 @@ hr.dotted {
   animation: fadeOut 200ms linear;
 }
 .device--Android .NavigationBar {
-  background-color: #00e676;
+  background-color: transparent;
   color: white;
 }
 .device--Android .NavigationBar::after {
@@ -7808,14 +7808,15 @@ hr {
   position: relative;
   padding-top: 5px;
   padding-bottom: 20px;
+  margin-top: -1px;
   text-align: left;
   font-size: 16px;
-  background-color: transparent;
+  background-color: transparent !important;
   background-image: url('../img/triangle-pattern.png');
   background-repeat: no-repeat;
   background-position: center -54px;
   background-size: 200%;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .headerPage:before {
   content: "";
@@ -8002,6 +8003,19 @@ hr {
 .ListItem__chevron::before {
   content: "\f125";
 }
+.ListItem__activity-display {
+  display: inline-block;
+  height: 10px;
+  width: 10px;
+  border-radius: 10px;
+  margin-right: 5px;
+}
+.ListItem__activity-display--active {
+  background: #00e676;
+}
+.ListItem__activity-display--inactive {
+  background: #ff1744;
+}
 .PersonItem__star {
   display: inline-block;
   font-family: "Ionicons";
@@ -8122,6 +8136,33 @@ h3 {
 h4,
 h5 {
   font-size: 16px;
+}
+.losange-thumbnail {
+  width: 120px;
+  height: 120px;
+  position: relative;
+  border-radius: 20px;
+  border: 5px solid #00e676;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  margin: 25px auto;
+  overflow: hidden;
+}
+.losange-thumbnail--image {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  bottom: -20px;
+  left: -20px;
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.losange-thumbnail img {
+  display: none!important;
+  visibility: hidden!important;
 }
 .pull-to-refresh {
   overflow: hidden;
@@ -8430,6 +8471,7 @@ textarea.materialize-textarea:-webkit-autofill:active {
 .field-control {
   width: 100%;
   padding: 0;
+  position: relative;
 }
 .field-label,
 .View .field-label {
@@ -9422,6 +9464,10 @@ html,
 }
 img.preload {
   display: none;
+}
+.hidden {
+  display: none!important;
+  visibility: hidden!important;
 }
 .padding {
   padding-left: 15px;

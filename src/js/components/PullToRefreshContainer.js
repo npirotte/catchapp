@@ -1,6 +1,7 @@
 var React = require('react');
-var Container = require('react-container');
 var Hammer = require('react-hammerjs');
+
+import { Container, animation } from 'touchstonejs';
 
 var Spinner = require('./Spinner');
 
@@ -13,13 +14,15 @@ export default React.createClass({
 
 	displayName : 'PullToRefreshContainer',
 
-	getInitialState() {
+	mixins: [animation.Mixins.ScrollContainerToTop],
+
+	getInitialState : function() {
 		return {
 			pullToRefreshHeight : 0
 		}
 	},
 
-	render() {
+	render : function() {
 		var pullToRefreshStyle = { height : this.state.pullToRefreshHeight + 'px' };
 
 		return (
@@ -39,7 +42,7 @@ export default React.createClass({
 			)
 	},
 
-	loader ()
+	loader : function()
 	{
 		//if (!this.props.loading) return false;
 
@@ -65,7 +68,7 @@ export default React.createClass({
 	onPan(event) {
 
 		if(!this.props.onRefresh) return false;
-		
+
 		var scrollPosition = this.refs.scrollContainer.getDOMNode().scrollTop,
 			pullToRefreshElement = this.refs.pullToRefresh.getDOMNode(),
 			amount = 0;
