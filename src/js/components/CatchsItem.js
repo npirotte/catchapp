@@ -23,7 +23,7 @@ module.exports = React.createClass({
 
 		return (
 			<Link to="main:catchs-details" viewProps={this.props} transition="show-from-right" className="ListItem Person" component="div">
-				<ItemAvatar src={imageUrl} name={this.props.catchItem.sender.fullName} />
+				<ItemAvatar losange="true" color="" src={imageUrl} className="xs" name={this.props.catchItem.sender.fullName} />
 				<div className="ListItem__content">
 					<div className="ListItem__heading">
 						{this.props.catchItem.sender.fullName}

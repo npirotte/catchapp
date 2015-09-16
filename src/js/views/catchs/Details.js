@@ -147,7 +147,8 @@ export default React.createClass({
 							transition="show-from-right"
 							className="catch-details__sender ListItem ListItem--separated"
 						>
-							<ItemAvatar className="ListItem__avatar--small" src={userThumbUrl} name={this.props.catchItem.sender.fullName} />
+							<ItemAvatar losange="true" className="xs" src={userThumbUrl} name={this.props.catchItem.sender.fullName} />
+
 							<div className="ListItem__content">
 								<strong>{this.props.catchItem.sender.fullName}</strong>
 							</div>
