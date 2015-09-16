@@ -127,15 +127,15 @@ var MainViewController = React.createClass({
 				<Tabs.Navigator>
 					<ItemAvatar src={src} losange="true" className="sm" name={fullName} />
 					<Tabs.Tab value="home" onClick={this.handleChange.bind(this, 'home')}>
-						<span className="Tabs-Icon Tabs-Icon--event" />
+						<span className="Tabs-Icon Tabs-Icon--home" />
 						<Tabs.Label>Acceuil</Tabs.Label>
 					</Tabs.Tab>
 					<Tabs.Tab value="catchs-list" onTap={this.handleChange.bind(this, 'catchs-list')}>
-						<span className="Tabs-Icon Tabs-Icon--schedule" />
+						<span className="Tabs-Icon Tabs-Icon--catch" />
 						<Tabs.Label>Goops</Tabs.Label>
 					</Tabs.Tab>
 					<Tabs.Tab onClick={this.handleChange.bind(this, 'search')}>
-						<span className="Tabs-Icon Tabs-Icon--people" />
+						<span className="Tabs-Icon Tabs-Icon--search" />
 						<Tabs.Label>Rechercher</Tabs.Label>
 					</Tabs.Tab>
 					<Tabs.Tab value="users-list" onClick={this.handleChange.bind(this, 'users-list')}>
@@ -143,14 +143,14 @@ var MainViewController = React.createClass({
 						<Tabs.Label>Utilisateurs</Tabs.Label>
 					</Tabs.Tab>
 					<Tabs.Tab value="pending-friendships" onClick={this.handleChange.bind(this, 'pending-friendships')}>
-						<span className="Tabs-Icon Tabs-Icon--people" />
-						<Tabs.Label>Demander d amitié</Tabs.Label>
+						<span className="Tabs-Icon Tabs-Icon--request" />
+						<Tabs.Label>Demandes d amis</Tabs.Label>
 					</Tabs.Tab>
 					<Tabs.Tab value="auth-edit" onClick={this.handleChange.bind(this, 'auth-edit')}>
-						<span className="Tabs-Icon Tabs-Icon--people" />
+						<span className="Tabs-Icon Tabs-Icon--user" />
 						<Tabs.Label>Editer profil</Tabs.Label>
 					</Tabs.Tab>
-					<Tabs.Tab value="logoff" onClick={this.handleChange.bind(this, 'logoff')}>
+					<Tabs.Tab className="Tab--logoff" value="logoff" onClick={this.handleChange.bind(this, 'logoff')}>
 						<span className="Tabs-Icon Tabs-Icon--logoff" />
 						<Tabs.Label>Déconnexion</Tabs.Label>
 					</Tabs.Tab>

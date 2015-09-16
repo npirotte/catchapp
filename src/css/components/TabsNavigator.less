@@ -1,0 +1,56 @@
+.Tabs-Navigator-wrapper{
+	.Tabs-Navigator {
+		background-color: @app-primary;
+		bottom: 0;
+		box-shadow: 0 0 10px -1px rgba(0, 0, 0, 0.21);
+		color: white;
+		display: block;
+		height: auto;
+		left: 0;
+		position: absolute;
+		right: auto;
+		top: 0;
+		width: 66%;
+		z-index: 2;
+
+		padding-bottom: 80px;
+
+		// hide top border
+		&::after {
+			display: none;
+		}
+
+		> span{
+			width: 100%;
+
+			padding: @app-gutter;
+
+			position: relative;
+			display: block;
+
+			&:after{
+				content:"";
+				position: absolute;
+
+				left: @app-gutter;
+				right: @app-gutter;
+				bottom: 0px;
+				height: 1px;
+
+				background: @app-primary-dark; 
+			} 
+
+			&.Tab--logoff{
+				background: @app-primary-dark;
+
+			    position: absolute;
+			    bottom: 0;
+			    
+				&:after{
+					display: none;
+				}
+			}
+		}
+
+	}
+}

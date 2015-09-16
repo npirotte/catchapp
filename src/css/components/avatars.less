@@ -108,7 +108,15 @@
 	margin: 20px auto;
 }
 
-.Tabs-Navigator .item-avatar{
-	margin: 10px auto;
+.Tabs-Navigator{
+    .item-avatar{
+    	margin: 10px auto;
+
+        &--image_losange, &--initial_losange{
+            &:after{
+                .losange-replace-fill("@{app-primary}", "#FFFFFF");
+            }
+        }
+    }
 }
 

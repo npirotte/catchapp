@@ -326,10 +326,10 @@
 	.Tabs-Navigator {
 		.transition( all ease 200ms );
 		.translateX(-100%);
-		background-color: white;
+		background-color: @app-primary;
 		bottom: 0;
 		box-shadow: 0 0 10px -1px rgba(0, 0, 0, 0.21);
-		color: black;
+		color: white;
 		display: block;
 		height: auto;
 		left: 0;
@@ -375,22 +375,44 @@
 	}
 
 	// update icons
+	
+	// home
+	.is-selected > .Tabs-Icon--event::before,
+	.Tabs-Icon--home::before { content: @ionicon-var-home; }
+
+	// catch 
+	.is-selected > .Tabs-Icon--schedule::before,
+	.Tabs-Icon--catch::before { content: @ionicon-var-android-map; }
+
+	// people 
+	.is-selected > .Tabs-Icon--people::before,
+	.Tabs-Icon--people::before { content: @ionicon-var-person-stalker; }
+
+	// search 
+	.is-selected > .Tabs-Icon--people::before,
+	.Tabs-Icon--search::before { content: @ionicon-var-search; }
+
+	// request 
+	.is-selected > .Tabs-Icon--people::before,
+	.Tabs-Icon--request::before { content: @ionicon-var-person-add; }
+
+	// user 
+	.is-selected > .Tabs-Icon--me::before,
+	.Tabs-Icon--user::before { content: @ionicon-var-person; }
 
 	// schedule
 	.is-selected > .Tabs-Icon--schedule::before,
-	.Tabs-Icon--schedule::before { content: @ionicon-var-android-time; }
+	.Tabs-Icon--catch::before { content: @ionicon-var-map; }
 
 	// people
 	.is-selected > .Tabs-Icon--people::before,
-	.Tabs-Icon--people::before { content: @ionicon-var-android-people; }
-
-	// event
-	.is-selected > .Tabs-Icon--event::before,
-	.Tabs-Icon--event::before { content: @ionicon-var-android-star; }
+	.Tabs-Icon--people::before { content: @ionicon-var-person-stalker; }
 
 	// me
 	.is-selected > .Tabs-Icon--me::before,
-	.Tabs-Icon--me::before { content: @ionicon-var-android-contact; }
+	.Tabs-Icon--user::before { content: @ionicon-var-settings; }
+
+	//logof
 }
 .android-menu-is-open .Tabs-Navigator-wrapper {
 	.translateX(0);
