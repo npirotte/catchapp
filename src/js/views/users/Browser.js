@@ -13,6 +13,7 @@ var CheckBox = require('../../components/CheckBox');
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 
+
 const scrollable = Container.initScrollable();
 
 module.exports = React.createClass({
