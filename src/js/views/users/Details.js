@@ -25,6 +25,7 @@ function getNavigation(props)
 	}
 }
 
+
 module.exports = React.createClass({
 
 	displayName : 'ViewUserDetails',
