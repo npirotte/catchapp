@@ -2,6 +2,7 @@ var React = require('react');
 
 const AVATAR_CLASSNAME = 'item-avatar';
 
+
 function _getInitial(input)
 {
 	return input[0];
@@ -41,7 +42,7 @@ module.exports = React.createClass({
 
 		var className = AVATAR_CLASSNAME;
 		className += ' ' + AVATAR_CLASSNAME + '--initial' + AVATAR_CLASSNAME + '--initial--' + initial.toLowerCase();
-		
+
 		if(this.props.className){
 			className += ' ' + this.props.className
 		}
