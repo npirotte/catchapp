@@ -8,7 +8,7 @@ function _getInitial(input)
 }
 
 module.exports = React.createClass({
-
+ 
 	render ()
 	{
 		if( this.props.losange ){
@@ -35,7 +35,7 @@ module.exports = React.createClass({
 			);
 	},
 
-	renderInitial()
+	renderInitial()  
 	{
 		var initial = _getInitial(this.props.name);
 

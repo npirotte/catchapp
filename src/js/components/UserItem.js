@@ -13,7 +13,7 @@ module.exports = React.createClass({
 	render : function()
 	{
 
-		var imageUrl = this.props.userItem.asset ? ImageUrl(this.props.userItem.asset, 180) : null;
+		var imageUrl = this.props.userItem.asset ? ImageUrl(this.props.userItem.asset, 200) : null;
 		var fullName = this.props.userItem.fullName || (this.props.userItem.firstName + ' ' + this.props.userItem.lastName);
 
 		var now = moment();
@@ -24,7 +24,7 @@ module.exports = React.createClass({
 
 		return (
 			<Link to="main:users-details" viewProps={this.props} transition="show-from-right" className="ListItem Person" component="div">
-				<ItemAvatar src={imageUrl} name={fullName} />
+				<ItemAvatar src={imageUrl} losange="true" className="xs" name={fullName} />
 				<div className="ListItem__content">
 					<div className="ListItem__heading">
 						{fullName}

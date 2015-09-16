@@ -19,9 +19,16 @@ var {
 
 var {Tabs} = UI;
 
+var EventEmitter = require('events').EventEmitter;
+var emitter = new EventEmitter();
+
 var AuthStore = require('./stores/AuthStore');
 
-var device = require('./lib/device')
+var device = require('./lib/device');
+
+var imageUrl = require('./filters/ImageUrl');
+
+var ItemAvatar = require('./components/ItemAvatar');
 
 var App = React.createClass({
 	mixins : [createApp(), Sentry()],
@@ -51,6 +58,9 @@ var App = React.createClass({
 			return console.info('Do nothing by default; where applicable views have their own back button handler.');
 		});
 
+		this.watch(AuthStore.emitter, 'update', (event) => {
+			this.setState({profile : AuthStore.user()});
+		});
 	},
 
 	render : function () {
@@ -72,6 +82,19 @@ var App = React.createClass({
 });
 
 var MainViewController = React.createClass({
+	mixins : [Sentry()],
+
+	componentDidMount : function () {
+		this.watch(AuthStore.emitter, 'update', (event) => {
+			this.setState({profile : AuthStore.user()});
+		});
+	},  
+
+	getInitialState : function () {
+		return {
+			profile : AuthStore.user(),
+		}
+	},
 
 	handleChange : function (view)
 	{
@@ -93,10 +116,16 @@ var MainViewController = React.createClass({
 
 		const defaultView = 'home';
 
+		var src = this.state.profile.asset ? imageUrl(this.state.profile.asset, 200) : null,
+			fullName = this.state.profile.fullName || (this.state.profile.firstName + ' ' + this.state.profile.lastName);
+
 		return (
 			<Container>
+
+
 				<div className="Tabs-Navigator-wrapper">
 				<Tabs.Navigator>
+					<ItemAvatar src={src} losange="true" className="sm" name={fullName} />
 					<Tabs.Tab value="home" onClick={this.handleChange.bind(this, 'home')}>
 						<span className="Tabs-Icon Tabs-Icon--event" />
 						<Tabs.Label>Acceuil</Tabs.Label>

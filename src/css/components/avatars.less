@@ -1,0 +1,114 @@
+//polyogn image
+@avatar-xs : 60px;
+@avatar-sm : 120px;
+@avatar-md : 140px;
+@avatar-lg : 200px;
+
+.losange-replace-fill(@fill-background, @fill-losange) {
+    @src : "../img/losange.svg";
+
+    @escape-fill-background: escape(@fill-background);
+    @escape-fill-losange: escape(@fill-losange);
+    
+    @escape-default-background: escape("#FFFFFF");
+    @escape-default-losange: escape("#000000");
+
+    @data-uri: data-uri('image/svg+xml;charset=UTF-8', "@{src}");
+
+    @replace-src-background: replace("@{data-uri}", "@{escape-default-background}", "@{escape-fill-background}");
+    @replace-src-losange: replace("@{replace-src-background}", "@{escape-default-losange}", "@{escape-fill-losange}");
+
+    //render
+    background-image:e(@replace-src-losange);
+} 
+
+.avatar-size(@size){
+	width: @size;
+	height: @size;
+	line-height: @size;
+	font-size: @size - 30px;
+}
+
+
+.item-avatar{ 
+
+    .avatar-size(@avatar-md);
+
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+
+    text-align: center;
+    color: white;
+    text-transform: uppercase;
+
+    background-color: @app-primary;
+
+    &--image_losange, &--initial_losange{
+
+    	border-radius: 0;
+    	background-color: transparent;
+
+    	> div{
+	    	position: absolute;
+	    	left: 0px;
+	    	right: 0px;
+	    	bottom: 0px;
+	    	top: 0px;
+	    }
+	 
+	    &:after{
+	    	content: "";
+	    	position: absolute;
+	    	left: -1px;
+	    	right: -1px;
+	    	bottom: -1px;
+	    	top: -1px;
+	    	.losange-replace-fill("#FFFFFF", "@{app-primary}");
+
+	    	background-position: center center;
+		    background-size: 100%;
+		    background-repeat: no-repeat;
+	    }
+    }
+
+    &--initial_losange{
+    	> div{
+    		background-color: @app-primary;
+    	}
+	    &:after{
+	    	.losange-replace-fill("#FFFFFF", "transparent");
+	    }
+    }
+
+    &--image_losange, &--image{
+    	background-color: transparent;
+
+    	&, > div{
+    		background-color: @app-primary;
+	    	background-position: center center;
+		    background-size: cover;
+		    background-repeat: no-repeat;
+    	}
+    }
+
+    &.xs{
+		.avatar-size(@avatar-xs);
+    }
+    &.sm{
+		.avatar-size(@avatar-sm);
+    }
+    &.lg{
+		.avatar-size(@avatar-lg);
+    }
+
+}
+
+.item-avatar_home{
+	margin: 20px auto;
+}
+
+.Tabs-Navigator .item-avatar{
+	margin: 10px auto;
+}
+

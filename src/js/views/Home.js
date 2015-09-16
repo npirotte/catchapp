@@ -10,7 +10,7 @@ var emitter = new EventEmitter();
 
 var AuthStore = require('../stores/AuthStore');
 
-var LosangeThumbnail = require('../components/LosangeThumbnail');
+var ItemAvatar = require('../components/ItemAvatar');
 
 export default React.createClass({
 
@@ -49,25 +49,29 @@ export default React.createClass({
 		this.watch(AuthStore.emitter, 'update', (event) => {
 			this.setState({profile : AuthStore.user()});
 		});
+
 	},
 
 	render : function ()
 	{
-		var src = imageUrl(this.state.profile.asset, 200),
+		var src = this.state.profile.asset ? imageUrl(this.state.profile.asset, 200) : null,
+			fullName = this.state.profile.fullName || (this.state.profile.firstName + ' ' + this.state.profile.lastName),
 			onlineClassName = 'online-statut online-statut--' + (this.state.isOnline ? 'online' : 'offline');
 
 		return (
 			<Container direction="column" className="AuthLogin">
 				<Container justify align="center" direction="column">
 					<div>
-						<LosangeThumbnail src={src}></LosangeThumbnail>
+						<ItemAvatar losange="true" color="" className="item-avatar_home" name={fullName} src={src}></ItemAvatar>
 
 						<div className={onlineClassName}>{this.state.isOnline ? 'online' : 'offline'}</div>
+						<br/>
 						<div>
-							Bienvenue {this.state.profile.fullName} !
+							<h1> Bienvenue {this.state.profile.fullName} ! </h1>
 						</div>
+						<br/>
 						<div>
-							<Link to="main:catchs-form" viewProps={{previousView : 'main:home'}} transition="show-from-right" component="button" className="panel-button primary">
+							<Link className="button button-primary button--raised"  to="main:catchs-form" viewProps={{previousView : 'main:home'}} transition="show-from-right" component="button">
 								Envoyer un Goop
 							</Link>
 						</div>

@@ -9,7 +9,7 @@ var AuthStore = require('../../stores/AuthStore');
 
 var AssetService = require('../../lib/AssetService');
 
-var LosangeThumbnail = require('../../components/LosangeThumbnail');
+var ItemAvatar = require('../../components/ItemAvatar');
 
 const scrollable = Container.initScrollable();
 
@@ -95,7 +95,7 @@ export default React.createClass({
 			return (
 				<div className="text-center">
 					<br/>
-						<LosangeThumbnail src={src} ></LosangeThumbnail>
+						<ItemAvatar losange="true" color="" className="item-avatar_home" src={src}></ItemAvatar>
 					<br/>
 					
 						<button className="button button-primary button--raised" onClick={this.pickPhoto}>
