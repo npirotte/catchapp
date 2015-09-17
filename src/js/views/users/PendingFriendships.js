@@ -1,7 +1,8 @@
 import React from 'react';
 import Sentry from 'react-sentry';
 import { EventEmitter } from 'events';
-import { Container, animation } from 'touchstonejs';
+//import { Container, animation } from 'touchstonejs';
+var {Transitions, Container, animation } = require('../../touchstone');
 
 import dispatcher from '../../lib/dispatcher';
 
@@ -17,7 +18,7 @@ export default React.createClass({
 
   displayName : 'pendingFriendships',
 
-  mixins : [Sentry(), animation.Mixins.ScrollContainerToTop],
+  mixins : [Sentry(), animation.Mixins.ScrollContainerToTop, Transitions],
 
   statics : {
     navigationBar : 'main',
@@ -25,10 +26,14 @@ export default React.createClass({
       return {
 				leftIcon : 'ion-android-menu',
 				leftAction : emitter.emit.bind(emitter, 'navigationBarLeftAction'),
-				title : 'Demandes d\'amitié'
+        rightIcon: 'ion-plus',
+        rightAction : emitter.emit.bind(emitter, 'addNewFriends'),
+				title : 'Demandes d\'amitié',
+        titleAction : emitter.emit.bind(emitter, 'navigationBarTitleAction')
 			};
     }
   },
+
 
   getInitialState : function() {
     return {
@@ -47,6 +52,11 @@ export default React.createClass({
 
     this.watch(dispatcher, 'PendingFriendshipsStore.update', () => {
       this.setState({ pendingFriendships : pendingFriendshipsStore.getData() });
+    });
+
+    emitter.once('addNewFriends', event => {
+      console.log(event);
+      this.transitionTo('main:search', {});
     });
 
     pendingFriendshipsStore.refresh();

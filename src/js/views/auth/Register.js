@@ -95,7 +95,7 @@ export default React.createClass({
 			return (
 				<div className="text-center">
 					<br/>
-						<ItemAvatar losange="true" color="" className="item-avatar_home" src={src}></ItemAvatar>
+						<ItemAvatar losange="true" color="" className="center margin" src={src}></ItemAvatar>
 					<br/>
 					
 						<button className="button button-primary button--raised" onClick={this.pickPhoto}>

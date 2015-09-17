@@ -1,7 +1,7 @@
 var Sentry = require('react-sentry');
 var React = require('react');
 
-var { Link, Container } = require('touchstonejs');
+var { Link, Container, } = require('touchstonejs');
 
 var imageUrl = require('../filters/ImageUrl');
 
@@ -62,7 +62,7 @@ export default React.createClass({
 			<Container direction="column" className="AuthLogin">
 				<Container justify align="center" direction="column">
 					<div>
-						<ItemAvatar losange="true" color="" className="item-avatar_home" name={fullName} src={src}></ItemAvatar>
+						<ItemAvatar losange="true" color="" className="center margin" name={fullName} src={src}></ItemAvatar>
 
 						<div className={onlineClassName}>{this.state.isOnline ? 'online' : 'offline'}</div>
 						<br/>

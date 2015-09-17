@@ -12,6 +12,8 @@ import dispatcher from '../../lib/dispatcher';
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 
+var ItemAvatar = require('../../components/ItemAvatar');
+
 const scrollable = Container.initScrollable();
 
 function getNavigation(props)
@@ -71,14 +73,23 @@ module.exports = React.createClass({
 	},
 
 	render : function() {
-		var userImageUrl = ImageUrl(this.props.userItem.asset),
-			imageStyle = { width : '100%' };
+		var userImageUrl = ImageUrl(this.props.userItem.asset);
 
 		return (
-			<Container>
-				<img src={userImageUrl} style={imageStyle} />
-				{this.props.userItem.fullName}
-				<FriendshipButton user={this.state.user} />
+			<Container direction="column">
+				<Container justify align="center" direction="column">
+					<div>
+						<ItemAvatar src={userImageUrl} losange="true" className="center margin" name={this.props.userItem.fullName} />
+						<h1 className="text-center">{this.props.userItem.fullName}</h1>
+						<FriendshipButton user={this.state.user} />
+						<br/>
+						<div className="text-center">
+							<button className="button button-primary button--raised"  onClick={emitter.emit.bind(emitter, 'createNewCatch')}>
+								Envoyer un Goop
+							</button>
+						</div>
+					</div>
+				</Container>
 			</Container>
 			)
 	}

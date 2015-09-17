@@ -125,7 +125,7 @@ var MainViewController = React.createClass({
 
 				<div className="Tabs-Navigator-wrapper">
 				<Tabs.Navigator>
-					<ItemAvatar src={src} losange="true" className="sm" name={fullName} />
+					<ItemAvatar src={src} losange="true" className="sm center margin" name={fullName} />
 					<Tabs.Tab value="home" onClick={this.handleChange.bind(this, 'home')}>
 						<span className="Tabs-Icon Tabs-Icon--home" />
 						<Tabs.Label>Acceuil</Tabs.Label>
