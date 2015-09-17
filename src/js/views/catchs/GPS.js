@@ -139,16 +139,21 @@ export default React.createClass({
     return (
       <Container className="catch-details" direction="column">
         <div ref="gMap" style={mapStyle} />
-        <Container fill scrollable={getScrollable(this.props.catchItem.id)} ref="scrollContainer">
-          {this.state.duration}
-          <div className="List">
-            {this.state.steps.map((step, index) => {
-              return (
-                <div className="ListItem" key={index}>
-                  <span dangerouslySetInnerHTML={{__html : step.instructions}}/>
-                </div>
-              )
-            })}
+        <Container className="margin-top" fill scrollable={getScrollable(this.props.catchItem.id)} ref="scrollContainer">
+          <div>
+            <div className="padding">
+              <h2><i className="ion-android-walk text-primary"></i> - {this.state.duration}</h2>
+              <hr/>
+            </div>
+            <div className="List">
+              {this.state.steps.map((step, index) => {
+                return (
+                  <div className="ListItem" key={index}>
+                    <span dangerouslySetInnerHTML={{__html : step.instructions}}/>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </Container>
         <div className="Footer Footer--cta">

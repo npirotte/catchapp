@@ -73,10 +73,10 @@ export default React.createClass({
   render : function() {
       return (
         <Container direction="column">
+          <UI.SearchField onChange={this.filter} onCancel={this.onCancel} onClear={this.onCancel} value={this.state.query} type="text" placeholder="Rechercher" />
           <PullToRefreshContainer onRefresh={this.onRefresh}  onInfinite={this.loadMore} loading={this.state.loading} ref="pullToRefresh" >
             <UsersList users={this.state.results} previousView={'main:search'} previousViewProps={{ goBackState : this.state}} />
           </PullToRefreshContainer>
-          <UI.SearchField onChange={this.filter} onCancel={this.onCancel} onClear={this.onCancel} value={this.state.query} type="text" placeholder="Rechercher" />
         </Container>
       )
   }
