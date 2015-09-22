@@ -3,8 +3,8 @@ var Container = require('react-container');
 var Sentry = require('react-sentry');
 var React = require('react');
 var Tappable = require('react-tappable');
-var {LabelInput, Link, Transitions} = require('../../touchstone');
-var { animation, Transitions, Link } = require('../../touchstone');
+var {LabelInput, Link, Transitions, animation} = require('../../touchstone');
+//var { animation, Transitions, Link } = require('../../touchstone');
 
 var AuthStore = require('../../stores/AuthStore');
 

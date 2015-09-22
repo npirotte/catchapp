@@ -55,8 +55,7 @@ export default React.createClass({
 	render : function ()
 	{
 		var src = this.state.profile.asset ? imageUrl(this.state.profile.asset, 200) : null,
-			fullName = this.state.profile.fullName || (this.state.profile.firstName + ' ' + this.state.profile.lastName),
-			onlineClassName = 'online-statut online-statut--' + (this.state.isOnline ? 'online' : 'offline');
+			fullName = this.state.profile.fullName || (this.state.profile.firstName + ' ' + this.state.profile.lastName);
 
 		return (
 			<Container direction="column" className="AuthLogin">
@@ -64,7 +63,7 @@ export default React.createClass({
 					<div>
 						<ItemAvatar losange="true" color="" className="center margin" name={fullName} src={src}></ItemAvatar>
 
-						<div className={onlineClassName}>{this.state.isOnline ? 'online' : 'offline'}</div>
+						<div><span className={"ListItem__activity-display ListItem__activity-display--" + (this.state.isOnline ? 'active' : 'inactive')}  ></span>{this.state.isOnline ? 'online' : 'offline'}</div>
 						<br/>
 						<div>
 							<h1> Bienvenue {this.state.profile.fullName} ! </h1>
