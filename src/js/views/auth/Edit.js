@@ -10,6 +10,8 @@ var AuthStore = require('../../stores/AuthStore');
 
 var AssetService = require('../../lib/AssetService');
 
+var ItemAvatar = require('../../components/ItemAvatar');
+
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
 
@@ -51,23 +53,31 @@ export default React.createClass({
 
 	render ()
 	{
-		var src = this.state.picture || ImageUrl(this.state.user.asset);
+
+		var src = this.state.picture || ImageUrl(this.state.user.asset),
+			fullName = this.state.user.firstName + ' ' + this.state.user.lastName;
 
 		return (
-			<Container>
-				<Tappable onTap={this.pickImage}>
-					<img src={src} style={{width : "20%"}} />
-				</Tappable>
-				{this.renderErrors()}
-				<form onSubmit={this.handleFormSubmission}>
-					<LabelInput ref="lastName" label="Nom" defaultValue={this.state.user.lastName} />
-					<LabelInput ref="firstName" label="Prénom" defaultValue={this.state.user.firstName} />
-					<LabelInput ref="username" label="Email" value={this.state.user.username} readOnly={true} />
-					<br />
-					<button>
-						Enregister
-					</button>
-				</form>
+			<Container direction="column">
+				<Container justify align="center" direction="column">
+					<div className="padding">
+						<Tappable onTap={this.pickImage}>
+							<ItemAvatar losange="true" color="" className="center margin" name={fullName} src={src}></ItemAvatar>
+						</Tappable>
+						{this.renderErrors()}
+						<form onSubmit={this.handleFormSubmission}>
+							<LabelInput ref="lastName" label="Nom" defaultValue={this.state.user.lastName} />
+							<LabelInput ref="firstName" label="Prénom" defaultValue={this.state.user.firstName} />
+							<LabelInput ref="username" label="Email" value={this.state.user.username} readOnly={true} />
+							<br />
+							<div className="text-center">
+								<button className="button button-primary button--raised">
+									Enregister
+								</button>
+							</div>
+						</form>
+					</div>
+				</Container>
 			</Container>
 			)
 	},

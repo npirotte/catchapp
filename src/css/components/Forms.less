@@ -14,7 +14,7 @@ form .list-item{
     padding-left: 0;
 }
 
-input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
+input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea, .field {
     background-color: transparent;
     border: none;
     border-bottom: 1px solid @app-gray;
@@ -31,6 +31,8 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
     -moz-box-sizing: content-box;
     box-sizing: content-box;
     transition: all .3s;
+
+    line-height: 50px;
 
     &::-webkit-input-placeholder {
        color:  transparent;
@@ -71,10 +73,15 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
     &:-webkit-autofill:active {
         transition: background-color 5000s ease-in-out 0s;
     }
+
+    &.u-selectable{
+        color: @palette-Blue-Grey-300;
+        border-bottom-color: @palette-Blue-Grey-300;
+    }
 }
 
 .active{
-    input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea {
+    input[type=text], input[type=password], input[type=email], input[type=url], input[type=time], input[type=date], input[type=datetime-local], input[type=tel], input[type=number], input[type=search], textarea.materialize-textarea, .field {
         border-bottom-color: @app-gray;
 
         + .field-label{
@@ -91,6 +98,14 @@ input[type=text], input[type=password], input[type=email], input[type=url], inpu
 
         &:focus{
             border-bottom-color: @app-primary;
+        }
+
+        &.u-selectable{
+            border-bottom-color: @palette-Blue-Grey-300;
+
+            &, + .field-label{
+                color: @palette-Blue-Grey-300;
+            }
         }
     }
 }
